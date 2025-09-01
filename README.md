@@ -112,7 +112,7 @@ financiero-jisrl/
 
 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/tu-usuario/financiero-jisrl.git
+git clone https://github.com/albarracincristian/Financiero-JISRL
 cd financiero-jisrl
 ```
 
@@ -240,8 +240,8 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 ## 📞 Soporte
 
 Para soporte técnico o consultas:
-- 📧 Email: soporte@financiero-jisrl.com
-- 📱 WhatsApp: +XX XXX XXX XXXX
+- 📧 Email: albarracin.cristian@hotmail.com
+- 📱 WhatsApp: +549 0266 4842119
 - 🌐 Web: https://financiero-jisrl.com
 
 ## 🗺️ Roadmap
