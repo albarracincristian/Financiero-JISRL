@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom styles for the financial app */
+.financial-card {
+  @apply bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200;
+}
+
+.financial-input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200;
+}
+
+.financial-button {
+  @apply px-6 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.financial-button-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.financial-button-success {
+  @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+.financial-button-danger {
+  @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+.financial-button-secondary {
+  @apply bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500;
+}
+
+/* Navigation styles */
+.nav-link {
+  @apply flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200;
+}
+
+.nav-link-active {
+  @apply bg-blue-700 text-white;
+}
+
+.nav-link-inactive {
+  @apply text-blue-100 hover:bg-blue-800 hover:text-white;
+}
+
+/* Table styles */
+.financial-table {
+  @apply min-w-full divide-y divide-gray-200 bg-white shadow-sm rounded-lg overflow-hidden;
+}
+
+.financial-table-header {
+  @apply bg-gray-50;
+}
+
+.financial-table-header th {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.financial-table-body {
+  @apply bg-white divide-y divide-gray-200;
+}
+
+.financial-table-row {
+  @apply hover:bg-gray-50 transition-colors duration-150;
+}
+
+.financial-table-cell {
+  @apply px-6 py-4 whitespace-nowrap text-sm;
+}
+
+/* Badge styles */
+.financial-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.financial-badge-success {
+  @apply bg-green-100 text-green-800;
+}
+
+.financial-badge-warning {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.financial-badge-danger {
+  @apply bg-red-100 text-red-800;
+}
+
+.financial-badge-info {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.financial-badge-gray {
+  @apply bg-gray-100 text-gray-800;
+}
+
+/* KPI Card styles */
+.kpi-card {
+  @apply bg-white rounded-lg shadow-md p-6 border-l-4 transition-all duration-200 hover:shadow-lg;
+}
+
+.kpi-card-positive {
+  @apply border-green-500;
+}
+
+.kpi-card-negative {
+  @apply border-red-500;
+}
+
+.kpi-card-neutral {
+  @apply border-blue-500;
+}
+
+.kpi-card-warning {
+  @apply border-yellow-500;
+}
+
+/* Form styles */
+.financial-form {
+  @apply space-y-6;
+}
+
+.financial-form-group {
+  @apply space-y-2;
+}
+
+.financial-form-label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.financial-form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.financial-form-select {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.financial-form-textarea {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+/* Loading states */
+.loading-spinner {
+  @apply animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600;
+}
+
+.loading-overlay {
+  @apply fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .mobile-stack {
+    @apply flex-col space-y-2 space-x-0;
+  }
+  
+  .mobile-full {
+    @apply w-full;
+  }
+  
+  .mobile-hidden {
+    @apply hidden;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break {
+    page-break-after: always;
+  }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+  /* Dark mode styles can be added here in the future */
+}
+
+/* Animation utilities */
+.fade-in {
+  @apply animate-pulse;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-visible:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Custom scrollbar for webkit browsers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 rounded-full hover:bg-gray-500;
+}
