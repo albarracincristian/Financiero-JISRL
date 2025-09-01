@@ -232,10 +232,10 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 ## 👥 Equipo de Desarrollo
 
 - **Product Owner**: [Albarracin Cristian Bartolome]
-- **Tech Lead**: [Nombre]
-- **Frontend Developer**: [Nombre]
-- **Backend Developer**: [Nombre]
-- **QA Engineer**: [Nombre]
+- **Tech Lead**: [IA Asistente]
+- **Frontend Developer**: [IA Frontend]
+- **Backend Developer**: [IA Backend]
+- **QA Engineer**: [IA Tester]
 
 ## 📞 Soporte
 
