@@ -9,13 +9,21 @@ if (document.getElementById('btn')) {
 if (document.getElementById('feriados-table')) {
     let feriados = JSON.parse(localStorage.getItem('feriados')) || [];
 
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
     function renderFeriados() {
         const tbody = document.querySelector('#feriados-table tbody');
         tbody.innerHTML = '';
         feriados.forEach((feriado, index) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${feriado.date}</td>
+                <td>${formatDate(feriado.date)}</td>
                 <td>${feriado.name}</td>
                 <td><button onclick="deleteFeriado(${index})">Eliminar</button></td>
             `;
@@ -59,12 +67,26 @@ if (document.getElementById('feriados-table')) {
                 const workbook = XLSX.read(data, { type: 'array' });
                 const sheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                // Assume first row is headers: Fecha, Descripción
-                jsonData.shift(); // Remove header
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
                 jsonData.forEach(row => {
-                    if (row[0] && row[1]) {
-                        feriados.push({ date: row[0], name: row[1] });
+                    let dateVal = row['Fecha'] || row[0];
+                    let descVal = row['Descripción'] || row[1];
+                    if (dateVal && descVal) {
+                        let date = dateVal;
+                        let parsedDate = null;
+                        if (date instanceof Date && !isNaN(date.getTime())) {
+                            parsedDate = date;
+                        } else if (typeof date === 'string') {
+                            parsedDate = new Date(date);
+                            if (isNaN(parsedDate.getTime())) {
+                                parsedDate = null;
+                            }
+                        }
+                        if (parsedDate) {
+                            feriados.push({ date: parsedDate.toISOString().split('T')[0], name: descVal });
+                        } else {
+                            console.warn('Invalid date:', date);
+                        }
                     }
                 });
                 localStorage.setItem('feriados', JSON.stringify(feriados));
