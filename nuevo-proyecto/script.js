@@ -17,14 +17,28 @@ if (document.getElementById('feriados-table')) {
         return `${day}/${month}/${year}`;
     }
 
+    function getEstado(dateStr) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const feriadoDate = new Date(dateStr);
+        if (feriadoDate < today) {
+            return 'Pasado';
+        } else {
+            return 'Próximo';
+        }
+    }
+
     function renderFeriados() {
         const tbody = document.querySelector('#feriados-table tbody');
         tbody.innerHTML = '';
         feriados.forEach((feriado, index) => {
             const tr = document.createElement('tr');
+            const estado = getEstado(feriado.date);
+            const estadoClass = estado === 'Pasado' ? 'estado-pasado' : 'estado-proximo';
             tr.innerHTML = `
                 <td>${formatDate(feriado.date)}</td>
                 <td>${feriado.name}</td>
+                <td class="${estadoClass}">${estado}</td>
                 <td><button onclick="deleteFeriado(${index})">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
