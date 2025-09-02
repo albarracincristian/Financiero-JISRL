@@ -1,0 +1,45 @@
+document.getElementById('btn').addEventListener('click', function() {
+    document.getElementById('message').textContent = '¡Hola! Has hecho clic en el botón.';
+});
+
+// Feriados functionality
+let feriados = JSON.parse(localStorage.getItem('feriados')) || [];
+
+function renderFeriados() {
+    const tbody = document.querySelector('#feriados-table tbody');
+    tbody.innerHTML = '';
+    feriados.forEach((feriado, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${feriado.date}</td>
+            <td>${feriado.name}</td>
+            <td><button onclick="deleteFeriado(${index})">Eliminar</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function addFeriado() {
+    const name = document.getElementById('feriado-name').value.trim();
+    const date = document.getElementById('feriado-date').value;
+    if (name && date) {
+        feriados.push({ name, date });
+        localStorage.setItem('feriados', JSON.stringify(feriados));
+        document.getElementById('feriado-name').value = '';
+        document.getElementById('feriado-date').value = '';
+        renderFeriados();
+    } else {
+        alert('Por favor, ingresa el nombre y la fecha del feriado.');
+    }
+}
+
+function deleteFeriado(index) {
+    feriados.splice(index, 1);
+    localStorage.setItem('feriados', JSON.stringify(feriados));
+    renderFeriados();
+}
+
+document.getElementById('add-feriado-btn').addEventListener('click', addFeriado);
+
+// Load feriados on page load
+renderFeriados();
