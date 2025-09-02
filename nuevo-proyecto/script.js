@@ -113,4 +113,16 @@ if (document.getElementById('feriados-table')) {
 
     // Load feriados on page load
     renderFeriados();
+
+    // Export Excel functionality
+    document.getElementById('export-excel-btn').addEventListener('click', function() {
+        const data = [['Fecha', 'Descripción']];
+        feriados.forEach(feriado => {
+            data.push([formatDate(feriado.date), feriado.name]);
+        });
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Feriados');
+        XLSX.writeFile(wb, 'feriados.xlsx');
+    });
 }
