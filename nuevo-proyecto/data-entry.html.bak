@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry - Nueva Aplicación Web</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="color-scheme" content="light dark">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Entrada de datos para la app financiera">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="flujo-caja.html">Flujo Caja</a></li>
+            <li><a href="input.html">Input</a></li>
+            <li><a href="data-entry.html">Data Entry</a></li>
+            <li><a href="feriados.html">Feriados</a></li>
+        </ul>
+    </nav>
+
+    <section id="data-entry">
+        <h2>Data Entry</h2>
+        <p>Sección para entrada de datos.</p>
+
+        <div class="card">
+            <form id="entry-form">
+                <div class="form-row">
+                    <label for="date">Fecha</label>
+                    <input type="date" id="date" name="date" required />
+                </div>
+                <div class="form-row">
+                    <label for="type">Tipo</label>
+                    <select id="type" name="type" required>
+                        <option value="ingreso">Ingreso</option>
+                        <option value="gasto">Gasto</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="category">Categoría</label>
+                    <input type="text" id="category" name="category" placeholder="Ej: Ventas, Alquiler, Servicios" required />
+                </div>
+                <div class="form-row">
+                    <label for="description">Descripción</label>
+                    <input type="text" id="description" name="description" placeholder="Detalle opcional" />
+                </div>
+                <div class="form-row">
+                    <label for="amount">Monto</label>
+                    <input type="number" id="amount" name="amount" step="0.01" min="0" inputmode="decimal" required />
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Guardar</button>
+                    <button type="button" id="reset-form">Limpiar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="summary">
+            <div><strong>Ingresos:</strong> <span id="sum-in">0</span></div>
+            <div><strong>Gastos:</strong> <span id="sum-out">0</span></div>
+            <div><strong>Saldo:</strong> <span id="sum-balance">0</span></div>
+        </div>
+
+        <div class="toolbar">
+            <button id="export-csv">Exportar CSV</button>
+            <button id="clear-all">Borrar Todo</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="entries-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Categoría</th>
+                        <th>Descripción</th>
+                        <th style="text-align:right;">Monto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <script>
+            (function () {
+                const STORAGE_KEY = 'finapp_entries';
+                /** @type {{id:string,date:string,type:'ingreso'|'gasto',category:string,description:string,amount:number,createdAt:string}[]} */
+                let entries = [];
+
+                const $ = (sel) => document.querySelector(sel);
+                const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+                const form = $('#entry-form');
+                const dateEl = $('#date');
+                const typeEl = $('#type');
+                const categoryEl = $('#category');
+                const descEl = $('#description');
+                const amountEl = $('#amount');
+                const resetBtn = $('#reset-form');
+                const tbody = $('#entries-table tbody');
+                const sumInEl = $('#sum-in');
+                const sumOutEl = $('#sum-out');
+                const sumBalEl = $('#sum-balance');
+                const exportBtn = $('#export-csv');
+                const clearBtn = $('#clear-all');
+
+                function load() {
+                    try {
+                        const raw = localStorage.getItem(STORAGE_KEY);
+                        entries = raw ? JSON.parse(raw) : [];
+                        if (!Array.isArray(entries)) entries = [];
+                    } catch {
+                        entries = [];
+                    }
+                }
+
+                function save() {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+                }
+
+                function toCurrency(n) {
+                    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(n);
+                }
+
+                function render() {
+                    // Sort by date desc then createdAt desc
+                    entries.sort((a, b) => (b.date.localeCompare(a.date)) || (b.createdAt.localeCompare(a.createdAt)));
+
+                    // Table
+                    tbody.innerHTML = '';
+                    for (const e of entries) {
+                        const tr = document.createElement('tr');
+                        const sign = e.type === 'gasto' ? -1 : 1;
+                        tr.innerHTML = `
+                            <td>${e.date}</td>
+                            <td>${e.type === 'ingreso' ? 'Ingreso' : 'Gasto'}</td>
+                            <td>${escapeHtml(e.category)}</td>
+                            <td>${escapeHtml(e.description || '')}</td>
+                            <td style="text-align:right; ${sign < 0 ? 'color:#b00020;' : 'color:#116d00;'}">${toCurrency(e.amount * sign)}</td>
+                            <td>
+                                <button data-action="delete" data-id="${e.id}">Eliminar</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+
+                    // Summary
+                    const totalIn = entries.filter(e => e.type === 'ingreso').reduce((s, e) => s + e.amount, 0);
+                    const totalOut = entries.filter(e => e.type === 'gasto').reduce((s, e) => s + e.amount, 0);
+                    const balance = totalIn - totalOut;
+                    sumInEl.textContent = toCurrency(totalIn);
+                    sumOutEl.textContent = toCurrency(totalOut);
+                    sumBalEl.textContent = toCurrency(balance);
+                }
+
+                function escapeHtml(str) {
+                    return String(str)
+                        .replaceAll('&', '&amp;')
+                        .replaceAll('<', '&lt;')
+                        .replaceAll('>', '&gt;')
+                        .replaceAll('"', '&quot;')
+                        .replaceAll("'", '&#39;');
+                }
+
+                function addEntry(data) {
+                    const now = new Date();
+                    entries.push({
+                        id: String(now.getTime()) + Math.random().toString(16).slice(2),
+                        date: data.date,
+                        type: data.type,
+                        category: data.category.trim(),
+                        description: (data.description || '').trim(),
+                        amount: data.amount,
+                        createdAt: now.toISOString(),
+                    });
+                    save();
+                    render();
+                }
+
+                function deleteEntry(id) {
+                    const idx = entries.findIndex(e => e.id === id);
+                    if (idx >= 0) {
+                        entries.splice(idx, 1);
+                        save();
+                        render();
+                    }
+                }
+
+                function exportCSV() {
+                    const header = ['fecha','tipo','categoria','descripcion','monto'];
+                    const rows = entries.map(e => [
+                        e.date,
+                        e.type,
+                        csvEscape(e.category),
+                        csvEscape(e.description || ''),
+                        (e.type === 'gasto' ? '-' : '') + String(e.amount)
+                    ]);
+                    const csv = [header.join(','), ...rows.map(r => r.join(','))].join('\n');
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `data-entry-${new Date().toISOString().slice(0,10)}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                }
+
+                function csvEscape(v) {
+                    const s = String(v ?? '');
+                    if (s.includes('"') || s.includes(',') || s.includes('\n')) {
+                        return '"' + s.replaceAll('"', '""') + '"';
+                    }
+                    return s;
+                }
+
+                // Events
+                form.addEventListener('submit', (ev) => {
+                    ev.preventDefault();
+
+                    const date = dateEl.value;
+                    const type = /** @type {'ingreso'|'gasto'} */ (typeEl.value);
+                    const category = categoryEl.value;
+                    const description = descEl.value;
+                    const amount = parseFloat(String(amountEl.value).replace(',', '.'));
+
+                    if (!date) { alert('Selecciona una fecha.'); return; }
+                    if (!['ingreso','gasto'].includes(type)) { alert('Tipo inválido.'); return; }
+                    if (!category.trim()) { alert('La categoría es obligatoria.'); return; }
+                    if (!(amount >= 0)) { alert('Monto inválido.'); return; }
+
+                    addEntry({ date, type, category, description, amount });
+                    form.reset();
+                    // Set default type to ingreso after reset for convenience
+                    typeEl.value = 'ingreso';
+                    // Keep date to today for speed
+                    dateEl.valueAsDate = new Date();
+                });
+
+                resetBtn.addEventListener('click', () => {
+                    form.reset();
+                    typeEl.value = 'ingreso';
+                    dateEl.valueAsDate = new Date();
+                });
+
+                tbody.addEventListener('click', (ev) => {
+                    const btn = ev.target.closest('button[data-action]');
+                    if (!btn) return;
+                    const action = btn.getAttribute('data-action');
+                    const id = btn.getAttribute('data-id');
+                    if (action === 'delete' && id) {
+                        if (confirm('¿Eliminar este registro?')) deleteEntry(id);
+                    }
+                });
+
+                exportBtn.addEventListener('click', exportCSV);
+
+                clearBtn.addEventListener('click', () => {
+                    if (!entries.length) return;
+                    if (confirm('Esto borrará todos los registros. ¿Continuar?')) {
+                        entries = [];
+                        save();
+                        render();
+                    }
+                });
+
+                // Init
+                load();
+                render();
+                // Prefill today
+                dateEl.valueAsDate = new Date();
+            })();
+        </script>
+    </section>
+</body>
+</html>
+
+
