@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presupuesto Mensual - Aplicación</title>
+    <title>Data Entry - Matriz Mensual</title>
     <link rel="stylesheet" href="styles.css">
     <meta name="color-scheme" content="light dark">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,16 +12,16 @@
 <body>
     <nav>
         <ul>
-            <li><a href="index.html">Panel</a></li>
-            <li><a href="flujo-caja.html">Tesorería</a></li>
-            <li><a href="input.html">Operaciones</a></li>
-            <li><a href="data-entry.html">Presupuesto Mensual</a></li>
-            <li><a href="feriados.html">Calendario Laboral</a></li>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="flujo-caja.html">Flujo Caja</a></li>
+            <li><a href="input.html">Input</a></li>
+            <li><a href="data-entry.html">Data Entry</a></li>
+            <li><a href="feriados.html">Feriados</a></li>
         </ul>
     </nav>
 
     <section id="data-entry">
-        <h2>Presupuesto mensual</h2>
+        <h2>Matriz mensual</h2>
         <p>Replica de tu planilla mensual para cargar datos y calcular totales y promedios.</p>
 
         <div class="toolbar">
@@ -38,7 +38,7 @@
             </table>
         </div>
 
-        <!-- Librería local para leer archivos Excel (.xlsx) -->
+        <!-- LibrerÃ­a local para leer archivos Excel (.xlsx) -->
         <script src="vendor/xlsx.full.min.js"></script>
 
         <script>
@@ -255,21 +255,11 @@
                         .replace(/'/g, '&#39;');
                 }
 
-                function toTitleCase(str) {
-                    try {
-                        const lower = String(str ?? '').toLocaleLowerCase('es-AR');
-                        return lower.replace(/(^|[\s\-_/+&()])[\p{L}]/gu, m => m.toLocaleUpperCase('es-AR'));
-                    } catch {
-                        const lower = String(str ?? '').toLowerCase();
-                        return lower.replace(/(^|[\s\-_/+&()])[a-z]/g, s => s.toUpperCase());
-                    }
-                }
-
                 function renderHead() {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<th style="position:sticky; left:0; background:var(--bg,#fff); z-index:1;">${escapeHtml(toTitleCase('Mes'))}</th>` +
-                        cols.map(c => `<th>${escapeHtml(toTitleCase(c.label))}</th>`).join('') +
-                        `<th>${escapeHtml(toTitleCase(totalsHeaderLabel))}</th>`;
+                    tr.innerHTML = `<th style="position:sticky; left:0; background:var(--bg,#fff); z-index:1;">MES</th>` +
+                        cols.map(c => `<th>${escapeHtml(c.label)}</th>`).join('') +
+                        `<th>${escapeHtml(totalsHeaderLabel)}</th>`;
                     gridHead.innerHTML = '';
                     gridHead.appendChild(tr);
                 }
@@ -392,7 +382,7 @@
                     }
                     reader.onload = () => {
                         try {
-                            if (typeof XLSX === 'undefined') throw new Error('Librería XLSX no cargada');
+                            if (typeof XLSX === 'undefined') throw new Error('LibrerÃ­a XLSX no cargada');
                             const dataArr = new Uint8Array(/** @type {ArrayBuffer} */ (reader.result));
                             const wb = XLSX.read(dataArr, { type: 'array' });
                             const chosen = pickSheetName(wb);
@@ -402,7 +392,7 @@
                             applyImportedRows(rows);
                             save();
                             renderAll();
-                            alert(`Importación desde Excel completada (hoja: ${chosen}).`);
+                            alert(`ImportaciÃ³n desde Excel completada (hoja: ${chosen}).`);
                         } catch (e) {
                             console.error(e);
                             alert('No se pudo importar el Excel. Verifica la estructura.');
@@ -412,8 +402,8 @@
                 });
 
                 exportBtn.addEventListener('click', () => {
-                    if (typeof XLSX === 'undefined') { alert('Falta la Librería de Excel.'); return; }
-                    const header = [toTitleCase('Mes'), ...cols.map(c => toTitleCase(c.label)), toTitleCase(totalsHeaderLabel)];
+                    if (typeof XLSX === 'undefined') { alert('Falta la librerÃ­a de Excel.'); return; }
+                    const header = ['MES', ...cols.map(c => c.label), totalsHeaderLabel];
                     const body = months.map(m => {
                         const row = data[m.id] || {};
                         const cells = cols.map(c => {
@@ -457,7 +447,7 @@
                     const fmtInt = '#,##0';
                     function cellAt(r, c) { const addr = XLSX.utils.encode_cell({ r, c }); return ws[addr]; }
 
-                    // Rutas: fila 0 = header; filas 1..months = datos; Ãúltima fila = foot
+                    // Rutas: fila 0 = header; filas 1..months = datos; Ãºltima fila = foot
                     const firstDataRow = 1;
                     const lastDataRow = firstDataRow + months.length - 1;
                     const lastColIndex = colCount - 1;
@@ -473,7 +463,7 @@
                             if (cell && typeof cell.v === 'number') cell.z = fmtInt;
                         }
                     }
-                    // Fila de promedio (Ãúltima)
+                    // Fila de promedio (Ãºltima)
                     const footRow = lastDataRow + 1;
                     for (let ci = 1; ci < colCount; ci++) {
                         const cell = cellAt(footRow, ci);
@@ -552,7 +542,7 @@
                 seedDefaults();
                 renderAll();
 
-                // --- Utilidades de Importación CSV ---
+                // --- Utilidades de importaciÃ³n CSV ---
                 function normalizeLabel(s) {
                     if (!s) return '';
                     let out = String(s).trim();
