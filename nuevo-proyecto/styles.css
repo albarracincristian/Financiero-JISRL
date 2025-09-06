@@ -295,6 +295,11 @@ input.grid-input:focus {
     color: var(--text-muted);
 }
 
+/* Override: eliminar degradé en totales positivos */
+#monthly-grid td.row-total.positive {
+    background: none !important;
+}
+
 #monthly-grid tfoot th,
 #monthly-grid tfoot td {
     background-color: var(--surface-1);
