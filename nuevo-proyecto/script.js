@@ -25,8 +25,27 @@ if (document.getElementById('feriados-table')) {
         syncDateAppearance();
     }
 
+    // Helpers para fechas en horario local (evitar desfase por UTC)
+    function parseLocalDate(ymd) {
+        if (!ymd) return null;
+        const parts = ymd.split('-');
+        if (parts.length !== 3) return null;
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10);
+        const d = parseInt(parts[2], 10);
+        if (isNaN(y) || isNaN(m) || isNaN(d)) return null;
+        return new Date(y, m - 1, d);
+    }
+
+    function toYMD(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
     function formatDate(dateStr) {
-        const date = new Date(dateStr);
+        const date = parseLocalDate(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
@@ -36,7 +55,7 @@ if (document.getElementById('feriados-table')) {
     function getEstado(dateStr) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const feriadoDate = new Date(dateStr);
+        const feriadoDate = parseLocalDate(dateStr);
         if (feriadoDate < today) {
             return 'Pasado';
         } else {
@@ -61,11 +80,26 @@ if (document.getElementById('feriados-table')) {
         });
     }
 
+    function sortFeriados() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        feriados.sort((a, b) => {
+            const da = parseLocalDate(a.date);
+            const db = parseLocalDate(b.date);
+            const aPast = da < today;
+            const bPast = db < today;
+            if (aPast !== bPast) return aPast ? 1 : -1; // Próximos primero
+            return da - db; // Dentro de cada grupo, ascendente por fecha
+        });
+    }
+
     function addFeriado() {
         const name = document.getElementById('feriado-name').value.trim();
         const date = document.getElementById('feriado-date').value;
         if (name && date) {
             feriados.push({ name, date });
+            // Reordenar por fecha al agregar
+            sortFeriados();
             localStorage.setItem('feriados', JSON.stringify(feriados));
             document.getElementById('feriado-name').value = '';
             document.getElementById('feriado-date').value = '';
@@ -113,12 +147,14 @@ if (document.getElementById('feriados-table')) {
                             }
                         }
                         if (parsedDate) {
-                            feriados.push({ date: parsedDate.toISOString().split('T')[0], name: descVal });
+                            feriados.push({ date: toYMD(parsedDate), name: descVal });
                         } else {
                             console.warn('Invalid date:', date);
                         }
                     }
                 });
+                // Ordenar por fecha antes de guardar y renderizar
+                sortFeriados();
                 localStorage.setItem('feriados', JSON.stringify(feriados));
                 renderFeriados();
                 alert('Feriados importados exitosamente.');
@@ -127,7 +163,8 @@ if (document.getElementById('feriados-table')) {
         }
     });
 
-    // Load feriados on page load
+    // Load feriados on page load (ordenados)
+    sortFeriados();
     renderFeriados();
 
     // Export Excel functionality
