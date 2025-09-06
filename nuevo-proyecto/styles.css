@@ -186,6 +186,59 @@ section h2 {
     background-color: rgba(148, 163, 184, 0.08);
 }
 
+/* ====== Data Entry (monthly grid) ====== */
+#monthly-grid {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#monthly-grid th,
+#monthly-grid td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+#monthly-grid thead th {
+    background-color: var(--surface-2);
+    color: var(--text);
+    font-weight: 700;
+    box-shadow: inset 0 -2px 0 var(--primary);
+}
+
+#monthly-grid tbody tr:hover {
+    background-color: rgba(148, 163, 184, 0.08);
+}
+
+#monthly-grid th[style*="position:sticky"],
+#monthly-grid th:first-child {
+    background-color: var(--surface-1) !important; /* coherente con tarjetas */
+}
+
+/* Inputs de la grilla */
+input.grid-input {
+    width: 100%;
+    background-color: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.35rem 0.5rem;
+    font: inherit;
+    text-align: right;
+}
+
+input.grid-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
+}
+
+/* Totales y promedio con énfasis */
+#monthly-grid td.row-total,
+#monthly-grid tfoot td {
+    font-weight: 700;
+}
+
 #feriados-table button {
     background-color: #f44336;
     color: white;
