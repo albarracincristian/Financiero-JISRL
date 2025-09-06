@@ -81,6 +81,10 @@
                 ];
                 let cols = baseCols.slice();
                 let totalsHeaderLabel = 'TOTALES';
+                const STORAGE_TOTALS_LABEL_KEY = STORAGE_KEY + '_totals_label';
+                function saveTotalsLabel() {
+                    try { localStorage.setItem(STORAGE_TOTALS_LABEL_KEY, String(totalsHeaderLabel || 'TOTALES')); } catch {}
+                }
 
                 const gridHead = $('#grid-head');
                 const gridBody = $('#grid-body');
@@ -499,6 +503,8 @@
                 exportBtn.addEventListener('click', () => {
                     if (typeof XLSX === 'undefined') { alert('Falta la Librería de Excel.'); return; }
                     const header = [toTitleCase('Mes'), ...cols.map(c => toTitleCase(c.label)), toTitleCase(totalsHeaderLabel)];
+                    // Guardar etiqueta de Totales utilizada en export
+                    try { saveTotalsLabel(); } catch {}
                     const body = months.map(m => {
                         const row = data[m.id] || {};
                         const cells = cols.map(c => {
@@ -639,6 +645,7 @@
                         }
                         const idxTot = headerNorm.findIndex(h => h === 'TOTALES');
                         totalsHeaderLabel = idxTot >= 0 ? headerRaw[idxTot] : 'TOTALES';
+                        try { saveTotalsLabel(); } catch {}
                     }
                 } catch {}
                 // Si no habȧa headerRaw pero sȧ existen columnas guardadas, anexarlas
@@ -646,6 +653,21 @@
                     const known = new Set(cols.map(c => c.id));
                     for (const sc of savedCols) { if (!known.has(sc.id)) cols.push(sc); }
                 }
+                // Fusionar etiquetas y flags de columnas guardadas en las existentes
+                if (savedCols && savedCols.length) {
+                    const byId = Object.fromEntries(cols.map(c => [c.id, c]));
+                    for (const sc of savedCols) {
+                        if (byId[sc.id]) {
+                            if (sc.label) byId[sc.id].label = sc.label;
+                            if (typeof sc.currency === 'boolean') byId[sc.id].currency = sc.currency;
+                        }
+                    }
+                }
+                // Si no vino de Excel un header para TOTALES, cargar etiqueta guardada (si existe)
+                try {
+                    const savedTot = localStorage.getItem(STORAGE_TOTALS_LABEL_KEY);
+                    if (savedTot && String(savedTot).trim()) totalsHeaderLabel = String(savedTot);
+                } catch {}
                 seedDefaults();
                 renderAll();
 
@@ -1148,6 +1170,7 @@
                     cols = newCols;
                     const idxTot = header.findIndex(h => h === 'TOTALES');
                     totalsHeaderLabel = idxTot >= 0 ? headerRaw[idxTot] : 'TOTALES';
+                    try { saveTotalsLabel(); } catch {}
                     formulaCfg = formulaCfg || {};
                     formulaCfg.headerRaw = headerRaw;
                     try { saveFormula(); } catch {}

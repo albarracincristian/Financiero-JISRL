@@ -74,7 +74,13 @@ if (document.getElementById('feriados-table')) {
                 <td>${formatDate(feriado.date)}</td>
                 <td>${feriado.name}</td>
                 <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
-                <td><button onclick="deleteFeriado(${index})">Eliminar</button></td>
+                <td>
+                    <button class="icon-btn danger" title="Eliminar" aria-label="Eliminar" onclick="deleteFeriado(${index})">
+                        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                            <path fill="currentColor" d="M9 3h6a1 1 0 0 1 1 1v1h4v2H4V5h4V4a1 1 0 0 1 1-1zm1 2h4V4h-4v1zM7 10h2v9H7v-9zm4 0h2v9h-2v-9zm4 0h2v9h-2v-9z"/>
+                        </svg>
+                    </button>
+                </td>
             `;
             tbody.appendChild(tr);
         });

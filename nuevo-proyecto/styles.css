@@ -392,6 +392,21 @@ input.grid-input:focus {
     transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.02s ease;
 }
 
+#feriados-table .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    min-width: 0;
+    border-radius: 8px;
+}
+
+#feriados-table .icon-btn svg {
+    pointer-events: none;
+}
+
 #feriados-table button:hover {
     background: #dc2626;
 }
