@@ -28,6 +28,7 @@
             <button id="grid-import">Importar Excel</button>
             <button id="grid-export">Exportar Excel (Matriz)</button>
             <button id="grid-clear">Borrar Matriz</button>
+            <button id="grid-add-col">Agregar columna</button>
         </div>
         <input type="file" id="grid-import-file" accept=".xlsx,.xls" style="display:none" />
         <div class="table-wrapper">
@@ -88,6 +89,7 @@
                 const importFile = $('#grid-import-file');
                 const exportBtn = $('#grid-export');
                 const clearBtn = $('#grid-clear');
+                const addColBtn = $('#grid-add-col');
 
                 /** @type {Record<string, Record<string, number|string|null|undefined>>} */
                 let data = {};
@@ -106,6 +108,22 @@
                 }
                 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
                 function saveFormula() { localStorage.setItem(STORAGE_KEY + '_formula', JSON.stringify(formulaCfg || {})); }
+                const STORAGE_COLS_KEY = STORAGE_KEY + '_cols';
+                function saveCols() {
+                    try {
+                        const minimal = cols.map(c => ({ id: c.id, label: c.label, type: c.type || 'number', currency: !!c.currency }));
+                        localStorage.setItem(STORAGE_COLS_KEY, JSON.stringify(minimal));
+                    } catch {}
+                }
+                function loadCols() {
+                    try {
+                        const raw = localStorage.getItem(STORAGE_COLS_KEY);
+                        if (!raw) return null;
+                        const arr = JSON.parse(raw);
+                        if (!Array.isArray(arr)) return null;
+                        return arr.filter(x => x && x.id && x.label).map(x => ({ id: String(x.id), label: String(x.label), type: x.type || 'number', currency: !!x.currency }));
+                    } catch { return null; }
+                }
 
                 function seedDefaults() {
                     // Solo carga si no hay nada guardado
@@ -268,7 +286,15 @@
                 function renderHead() {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `<th style="position:sticky; left:0; background:var(--bg,#fff); z-index:1;">${escapeHtml(toTitleCase('Mes'))}</th>` +
-                        cols.map(c => `<th>${escapeHtml(toTitleCase(c.label))}</th>`).join('') +
+                        cols.map(c => `
+                            <th data-col="${c.id}">
+                                <span class="col-label">${escapeHtml(toTitleCase(c.label))}</span>
+                                <span class="col-actions" aria-hidden="true">
+                                    <button type="button" class="col-act" data-action="rename" title="Renombrar" aria-label="Renombrar">✎</button>
+                                    <button type="button" class="col-act danger" data-action="delete" title="Eliminar" aria-label="Eliminar">×</button>
+                                </span>
+                            </th>
+                        `).join('') +
                         `<th>${escapeHtml(toTitleCase(totalsHeaderLabel))}</th>`;
                     gridHead.innerHTML = '';
                     gridHead.appendChild(tr);
@@ -379,6 +405,65 @@
                 });
 
                 importBtn.addEventListener('click', () => importFile.click());
+
+                // Acciones de encabezado (renombrar/eliminar columna)
+                gridHead.addEventListener('click', (ev) => {
+                    const btn = ev.target.closest('button.col-act');
+                    if (!btn) return;
+                    const th = btn.closest('th[data-col]');
+                    const colId = th ? th.getAttribute('data-col') : null;
+                    if (!colId) return;
+                    const idx = cols.findIndex(c => c.id === colId);
+                    if (idx === -1) return;
+                    const action = btn.getAttribute('data-action');
+                    if (action === 'rename') {
+                        const current = cols[idx].label || cols[idx].id;
+                        const name = prompt('Nuevo nombre de columna:', current);
+                        if (!name || !String(name).trim()) return;
+                        cols[idx].label = String(name).trim();
+                        saveCols();
+                        renderAll();
+                    } else if (action === 'delete') {
+                        if (!confirm('¿Eliminar esta columna de la matriz?')) return;
+                        const removed = cols.splice(idx, 1)[0];
+                        // Quitar de sumCols si estuviera
+                        if (formulaCfg && Array.isArray(formulaCfg.sumCols)) {
+                            formulaCfg.sumCols = formulaCfg.sumCols.filter(id => id !== removed.id);
+                            saveFormula();
+                        }
+                        saveCols();
+                        renderAll();
+                    }
+                });
+
+                // Agregar columna dinámica
+                function slugFromLabel(label) {
+                    let s = String(label || '').trim();
+                    try { s = s.normalize('NFD').replace(/\p{Diacritic}/gu, ''); } catch {}
+                    s = s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+                    if (!s) s = 'col';
+                    let base = s; let i = 1;
+                    const exists = (id) => cols.some(c => c.id === id) || baseCols.some(c => c.id === id);
+                    while (exists(s)) { i++; s = base + '_' + i; }
+                    return s;
+                }
+
+                addColBtn.addEventListener('click', () => {
+                    const label = prompt('Nombre de la nueva columna:', 'Nueva columna');
+                    if (!label || !String(label).trim()) return;
+                    const isCurrency = confirm('¿Formatear como moneda (ARS)?');
+                    const id = slugFromLabel(label);
+                    cols.push({ id, label: String(label).trim(), type: 'number', currency: !!isCurrency });
+                    // Incluir en TOTALES si hay config explícita
+                    if (formulaCfg && Array.isArray(formulaCfg.sumCols)) {
+                        if (!formulaCfg.sumCols.includes(id)) {
+                            formulaCfg.sumCols.push(id);
+                            saveFormula();
+                        }
+                    }
+                    saveCols();
+                    renderAll();
+                });
 
                 importFile.addEventListener('change', (ev) => {
                     const file = importFile.files && importFile.files[0];
@@ -525,6 +610,8 @@
 
                 // Init
                 load();
+                // Intentar cargar columnas guardadas y fusionarlas
+                const savedCols = loadCols();
                 // Aplicar encabezados guardados, si existen
                 try {
                     if (formulaCfg && Array.isArray(formulaCfg.headerRaw)) {
@@ -545,10 +632,20 @@
                             if (!newCols.some(x => x.id === bc.id)) newCols.push(bc);
                         }
                         cols = newCols;
+                        // Anexar columnas personalizadas guardadas (no presentes en base/header)
+                        if (savedCols && savedCols.length) {
+                            const known = new Set(cols.map(c => c.id));
+                            for (const sc of savedCols) { if (!known.has(sc.id)) cols.push(sc); }
+                        }
                         const idxTot = headerNorm.findIndex(h => h === 'TOTALES');
                         totalsHeaderLabel = idxTot >= 0 ? headerRaw[idxTot] : 'TOTALES';
                     }
                 } catch {}
+                // Si no habȧa headerRaw pero sȧ existen columnas guardadas, anexarlas
+                if ((!formulaCfg || !Array.isArray(formulaCfg.headerRaw)) && savedCols && savedCols.length) {
+                    const known = new Set(cols.map(c => c.id));
+                    for (const sc of savedCols) { if (!known.has(sc.id)) cols.push(sc); }
+                }
                 seedDefaults();
                 renderAll();
 
