@@ -1,6 +1,31 @@
+/*
+  Tema oscuro con acento verde (inspirado en la captura).
+  Usa variables CSS para facilitar ajustes futuros.
+*/
+
+:root {
+    /* Colores base */
+    --bg: #0f172a;               /* fondo principal (slate-900) */
+    --surface-1: #111827;        /* tarjetas/nav (gray-900) */
+    --surface-2: #1f2937;        /* superficies elevadas (gray-800) */
+    --text: #e5e7eb;             /* texto principal */
+    --text-muted: #9ca3af;       /* texto secundario */
+    --border: #334155;           /* bordes sutiles */
+    --shadow: 0 6px 24px rgba(0,0,0,0.35);
+
+    /* Acento verde */
+    --primary: #22c55e;          /* emerald-500 */
+    --primary-600: #16a34a;      /* hover */
+    --primary-700: #15803d;      /* active */
+
+    /* Controles (estado y botón) */
+    --control-minw: 96px;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #002b3d, #005070);
+    background: var(--bg);
+    color: var(--text);
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -8,22 +33,24 @@ body {
 
 .container {
     text-align: center;
-    background-color: #ffffff;
+    background-color: var(--surface-1);
+    color: var(--text);
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 80, 112, 0.3);
-    border: 1px solid #b3d9ff;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
     margin: 2rem auto;
     max-width: 800px;
 }
 
 nav {
-    background-color: #ffffff;
+    background-color: var(--surface-1);
     padding: 1rem;
     margin: 1rem auto;
     max-width: 800px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 80, 112, 0.2);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
 nav ul {
@@ -36,29 +63,31 @@ nav ul {
 
 nav a {
     text-decoration: none;
-    color: #005070;
-    font-weight: bold;
+    color: var(--text);
+    font-weight: 600;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 nav a:hover {
-    background-color: #cce7ff;
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #ffffff;
 }
 
 section {
-    background-color: #ffffff;
+    background-color: var(--surface-1);
+    color: var(--text);
     padding: 2rem;
     margin: 1rem auto;
     max-width: 800px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 80, 112, 0.2);
-    border: 1px solid #b3d9ff;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
 section h2 {
-    color: #005070;
+    color: var(--text);
     margin-top: 0;
 }
 
@@ -75,25 +104,54 @@ section h2 {
 
 .add-feriado input {
     padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    background-color: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
     flex: 1;
     min-width: 150px;
 }
 
+/* Placeholders y estilo de date para que luzcan iguales */
+.add-feriado input::placeholder {
+    color: var(--text-muted);
+    opacity: 1; /* Safari/Firefox */
+}
+
+/* En WebKit, el date no usa placeholder; estilizamos su texto */
+.add-feriado input[type="date"]::-webkit-datetime-edit {
+    color: var(--text-muted);
+}
+
+/* Al tener valor o foco, usar color de texto normal */
+.add-feriado input:not([type="date"]):focus,
+.add-feriado input:not([type="date"]):not(:placeholder-shown) {
+    color: var(--text);
+}
+
+.add-feriado input[type="date"].has-value::-webkit-datetime-edit,
+.add-feriado input[type="date"]:focus::-webkit-datetime-edit {
+    color: var(--text);
+}
+
+/* Icono del date para que combine con el tema */
+.add-feriado input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) opacity(0.75);
+}
+
 .add-feriado button {
-    background-color: #005070;
-    color: white;
+    background-color: var(--primary);
+    color: #071108;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease, transform 0.05s ease;
 }
 
 .add-feriado button:hover {
-    background-color: #003d52;
+    background-color: var(--primary-600);
 }
 
 #feriados-table {
@@ -106,17 +164,26 @@ section h2 {
 #feriados-table td {
     padding: 0.75rem;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Centrar columnas Estado y Acciones */
+#feriados-table th:nth-child(3),
+#feriados-table td:nth-child(3),
+#feriados-table th:nth-child(4),
+#feriados-table td:nth-child(4) {
+    text-align: center;
 }
 
 #feriados-table th {
-    background-color: #005070;
-    color: white;
-    font-weight: bold;
+    background-color: var(--surface-2);
+    color: var(--text);
+    font-weight: 700;
+    box-shadow: inset 0 -2px 0 var(--primary);
 }
 
 #feriados-table tbody tr:hover {
-    background-color: #f9f9f9;
+    background-color: rgba(148, 163, 184, 0.08);
 }
 
 #feriados-table button {
@@ -124,7 +191,8 @@ section h2 {
     color: white;
     border: none;
     padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    border-radius: 6px;
+    min-width: var(--control-minw);
     cursor: pointer;
     font-size: 0.8rem;
 }
@@ -134,46 +202,49 @@ section h2 {
 }
 
 h1 {
-    color: #005070;
+    color: var(--text);
 }
 
 button {
-    background-color: #005070;
-    color: white;
+    background-color: var(--primary);
+    color: #071108;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease, transform 0.05s ease;
 }
 
 button:hover {
-    background-color: #003d52;
+    background-color: var(--primary-600);
 }
 
 #message {
     margin-top: 1rem;
-    font-weight: bold;
-    color: #004060;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Chip de estado dentro de la celda */
+.estado-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--control-minw);
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 .estado-pasado {
-    color: white;
-    background-color: rgba(128, 128, 128, 0.3);
-    border-radius: 4px;
-    padding: 0.1rem 0.2rem;
-    font-size: 0.6rem;
-    display: inline-block;
-    text-align: center;
+    color: #ffffff;
+    background-color: rgba(148, 163, 184, 0.25);
 }
 
 .estado-proximo {
-    color: white;
-    background-color: rgba(0, 128, 0, 0.3);
-    border-radius: 4px;
-    padding: 0.1rem 0.2rem;
-    font-size: 0.6rem;
-    display: inline-block;
-    text-align: center;
+    color: #ffffff;
+    background-color: rgba(34, 197, 94, 0.35);
 }

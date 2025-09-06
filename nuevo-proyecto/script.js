@@ -9,6 +9,22 @@ if (document.getElementById('btn')) {
 if (document.getElementById('feriados-table')) {
     let feriados = JSON.parse(localStorage.getItem('feriados')) || [];
 
+    // Mantener el color del input date consistente con el text input
+    const dateInput = document.getElementById('feriado-date');
+    if (dateInput) {
+        const syncDateAppearance = () => {
+            if (dateInput.value) {
+                dateInput.classList.add('has-value');
+            } else {
+                dateInput.classList.remove('has-value');
+            }
+        };
+        dateInput.addEventListener('input', syncDateAppearance);
+        dateInput.addEventListener('change', syncDateAppearance);
+        dateInput.addEventListener('blur', syncDateAppearance);
+        syncDateAppearance();
+    }
+
     function formatDate(dateStr) {
         const date = new Date(dateStr);
         const day = String(date.getDate()).padStart(2, '0');
@@ -38,7 +54,7 @@ if (document.getElementById('feriados-table')) {
             tr.innerHTML = `
                 <td>${formatDate(feriado.date)}</td>
                 <td>${feriado.name}</td>
-                <td class="${estadoClass}">${estado}</td>
+                <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
                 <td><button onclick="deleteFeriado(${index})">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
