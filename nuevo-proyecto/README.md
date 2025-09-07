@@ -1,18 +1,25 @@
-# Nueva Aplicación Web
+# Financiero JISRL – Frontend
 
-Esta es una aplicación web básica creada con HTML, CSS y JavaScript.
+Esta carpeta contiene la app web estática del proyecto. Para una descripción completa ver `../README.md`.
 
-## Estructura del Proyecto
+## Archivos
 
-- `index.html`: Archivo principal de la aplicación.
-- `styles.css`: Estilos CSS para la interfaz.
-- `script.js`: Lógica JavaScript para la interactividad.
+- `index.html`: Panel y navegación.
+- `flujo-caja.html`: Tesorería / Flujo de caja (WIP).
+- `input.html`: Operaciones (WIP).
+- `data-entry.html`: Presupuesto mensual (matriz editable e import/export Excel).
+- `feriados.html`: Calendario laboral con import/export.
+- `styles.css`: Estilos.
+- `script.js`: Lógica de Feriados y utilidades.
+- `vendor/xlsx.full.min.js`: Librería de Excel (SheetJS).
 
-## Cómo Ejecutar
+## Ejecutar
 
-Abre el archivo `index.html` en tu navegador web para ver la aplicación.
+- Abrir `index.html` en el navegador, o servir con:
+  - `python -m http.server 5500` dentro de `nuevo-proyecto` → `http://localhost:5500`
+  - `npx http-server . -p 5500 -o`
 
-## Funcionalidades
+## Persistencia
 
-- Página de bienvenida con un botón interactivo.
-- Al hacer clic en el botón, se muestra un mensaje.
+Se usa localStorage: no hay backend. Limpiar almacenamiento del navegador borra los datos.
+
