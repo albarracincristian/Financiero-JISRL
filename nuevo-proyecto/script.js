@@ -1,7 +1,7 @@
-// Check if elements exist before adding event listeners
+﻿// Check if elements exist before adding event listeners
 if (document.getElementById('btn')) {
     document.getElementById('btn').addEventListener('click', function() {
-        document.getElementById('message').textContent = '¡Hola! Has hecho clic en el botón.';
+        document.getElementById('message').textContent = 'Â¡Hola! Has hecho clic en el botÃ³n.';
     });
 }
 
@@ -59,7 +59,7 @@ if (document.getElementById('feriados-table')) {
         if (feriadoDate < today) {
             return 'Pasado';
         } else {
-            return 'Próximo';
+            return 'Pr\u00F3ximo';
         }
     }
 
@@ -94,7 +94,7 @@ if (document.getElementById('feriados-table')) {
             const db = parseLocalDate(b.date);
             const aPast = da < today;
             const bPast = db < today;
-            if (aPast !== bPast) return aPast ? 1 : -1; // Próximos primero
+            if (aPast !== bPast) return aPast ? 1 : -1; // PrÃ³ximos primero
             return da - db; // Dentro de cada grupo, ascendente por fecha
         });
     }
@@ -140,7 +140,7 @@ if (document.getElementById('feriados-table')) {
                 const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
                 jsonData.forEach(row => {
                     let dateVal = row['Fecha'] || row[0];
-                    let descVal = row['Descripción'] || row[1];
+                    let descVal = row['Descripcion'] || row[1];
                     if (dateVal && descVal) {
                         let date = dateVal;
                         let parsedDate = null;
@@ -175,7 +175,7 @@ if (document.getElementById('feriados-table')) {
 
     // Export Excel functionality
     document.getElementById('export-excel-btn').addEventListener('click', function() {
-        const data = [['Fecha', 'Descripción']];
+        const data = [['Fecha', 'Descripci\u00F3n']];
         feriados.forEach(feriado => {
             data.push([formatDate(feriado.date), feriado.name]);
         });
@@ -185,3 +185,4 @@ if (document.getElementById('feriados-table')) {
         XLSX.writeFile(wb, 'feriados.xlsx');
     });
 }
+

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presupuesto Mensual - Aplicaci�n</title>
+    <title>Presupuesto Mensual - Aplicación</title>
     <link rel="stylesheet" href="styles.css">
     <meta name="color-scheme" content="light dark">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +13,7 @@
     <nav>
         <ul>
             <li><a href="index.html">Panel</a></li>
-            <li><a href="flujo-caja.html">Tesorer�a</a></li>
+            <li><a href="flujo-caja.html">Tesorería</a></li>
             <li><a href="input.html">Operaciones</a></li>
             <li><a href="data-entry.html">Presupuesto Mensual</a></li>
             <li><a href="feriados.html">Calendario Laboral</a></li>
@@ -40,7 +40,7 @@
             </table>
         </div>
 
-        <!-- Librer�a local para leer archivos Excel (.xlsx) -->
+        <!-- Librería local para leer archivos Excel (.xlsx) -->
         <script src="vendor/xlsx.full.min.js"></script>
 
         <script>
@@ -296,7 +296,7 @@
                                 <span class="col-label">${escapeHtml(toTitleCase(c.label))}</span>
                                 <span class="col-actions" aria-hidden="true">
                                     <button type="button" class="col-act" data-action="rename" title="Renombrar" aria-label="Renombrar">?</button>
-                                    <button type="button" class="col-act danger" data-action="delete" title="Eliminar" aria-label="Eliminar">�</button>
+                                    <button type="button" class="col-act danger" data-action="delete" title="Eliminar" aria-label="Eliminar">×</button>
                                 </span>
                             </th>
                         `).join('') +
@@ -391,7 +391,7 @@
 
                 gridBody.addEventListener('input', handleChange);
 
-                // Dar una experiencia de edición cómoda para moneda
+                // Dar una experiencia de ediciÃ³n cÃ³moda para moneda
                 function unformatCurrencyDisplay(input) {
                     const n = parseNum(input.value);
                     input.value = (n === null || !Number.isFinite(n)) ? '' : String(n);
@@ -429,7 +429,7 @@
                         saveCols();
                         renderAll();
                     } else if (action === 'delete') {
-                        if (!confirm('�Eliminar esta columna de la matriz?')) return;
+                        if (!confirm('¿Eliminar esta columna de la matriz?')) return;
                         const removed = cols.splice(idx, 1)[0];
                         // Quitar de sumCols si estuviera
                         if (formulaCfg && Array.isArray(formulaCfg.sumCols)) {
@@ -441,7 +441,7 @@
                     }
                 });
 
-                // Agregar columna din�mica
+                // Agregar columna dinámica
                 function slugFromLabel(label) {
                     let s = String(label || '').trim();
                     try { s = s.normalize('NFD').replace(/\p{Diacritic}/gu, ''); } catch {}
@@ -456,10 +456,10 @@
                 addColBtn.addEventListener('click', () => {
                     const label = prompt('Nombre de la nueva columna:', 'Nueva columna');
                     if (!label || !String(label).trim()) return;
-                    const isCurrency = confirm('�Formatear como moneda (ARS)?');
+                    const isCurrency = confirm('¿Formatear como moneda (ARS)?');
                     const id = slugFromLabel(label);
                     cols.push({ id, label: String(label).trim(), type: 'number', currency: !!isCurrency });
-                    // Incluir en TOTALES si hay config expl�cita
+                    // Incluir en TOTALES si hay config explícita
                     if (formulaCfg && Array.isArray(formulaCfg.sumCols)) {
                         if (!formulaCfg.sumCols.includes(id)) {
                             formulaCfg.sumCols.push(id);
@@ -482,17 +482,17 @@
                     }
                     reader.onload = () => {
                         try {
-                            if (typeof XLSX === 'undefined') throw new Error('Librer�a XLSX no cargada');
+                            if (typeof XLSX === 'undefined') throw new Error('Librería XLSX no cargada');
                             const dataArr = new Uint8Array(/** @type {ArrayBuffer} */ (reader.result));
                             const wb = XLSX.read(dataArr, { type: 'array' });
                             const chosen = pickSheetName(wb);
                             const ws = wb.Sheets[chosen];
                             const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false });
-                            try { formulaCfg = extractFormulaConfigFromSheet(ws, rows); saveFormula(); } catch(e) { console.warn('No se extrajo config de fórmulas:', e); }
+                            try { formulaCfg = extractFormulaConfigFromSheet(ws, rows); saveFormula(); } catch(e) { console.warn('No se extrajo config de fÃ³rmulas:', e); }
                             applyImportedRows(rows);
                             save();
                             renderAll();
-                            alert(`Importaci�n desde Excel completada (hoja: ${chosen}).`);
+                            alert(`Importación desde Excel completada (hoja: ${chosen}).`);
                         } catch (e) {
                             console.error(e);
                             alert('No se pudo importar el Excel. Verifica la estructura.');
@@ -502,7 +502,7 @@
                 });
 
                 exportBtn.addEventListener('click', () => {
-                    if (typeof XLSX === 'undefined') { alert('Falta la Librer�a de Excel.'); return; }
+                    if (typeof XLSX === 'undefined') { alert('Falta la Librería de Excel.'); return; }
                     const header = [toTitleCase('Mes'), ...cols.map(c => toTitleCase(c.label)), toTitleCase(totalsHeaderLabel)];
                     // Guardar etiqueta de Totales utilizada en export
                     try { saveTotalsLabel(); } catch {}
@@ -537,19 +537,19 @@
                     const colCount = header.length;
                     const colMeta = [{ wch: 10 }]; // MES
                     for (let i = 0; i < cols.length; i++) {
-                        // ancho por defecto 18, algunos más angostos
+                        // ancho por defecto 18, algunos mÃ¡s angostos
                         const base = 18;
                         colMeta.push({ wch: Math.max(base, String(header[i+1]||'').length + 2) });
                     }
                     colMeta.push({ wch: 16 }); // Totales
                     ws['!cols'] = colMeta;
 
-                    // Formatos numéricos: kg con una decima; moneda/demás enteros con separador
+                    // Formatos numÃ©ricos: kg con una decima; moneda/demÃ¡s enteros con separador
                     const fmtKg = '#,##0.0';
                     const fmtInt = '#,##0';
                     function cellAt(r, c) { const addr = XLSX.utils.encode_cell({ r, c }); return ws[addr]; }
 
-                    // Rutas: fila 0 = header; filas 1..months = datos; ��ltima fila = foot
+                    // Rutas: fila 0 = header; filas 1..months = datos; Ãúltima fila = foot
                     const firstDataRow = 1;
                     const lastDataRow = firstDataRow + months.length - 1;
                     const lastColIndex = colCount - 1;
@@ -565,7 +565,7 @@
                             if (cell && typeof cell.v === 'number') cell.z = fmtInt;
                         }
                     }
-                    // Fila de promedio (��ltima)
+                    // Fila de promedio (Ãúltima)
                     const footRow = lastDataRow + 1;
                     for (let ci = 1; ci < colCount; ci++) {
                         const cell = cellAt(footRow, ci);
@@ -581,7 +581,7 @@
                     XLSX.utils.book_append_sheet(wb, ws, 'Matriz');
 
                     // Hoja de Resumen por rubro
-                    const summaryHeader = ['Rubro', 'Total', 'Promedio', 'Máximo', 'Mínimo'];
+                    const summaryHeader = ['Rubro', 'Total', 'Promedio', 'MÃ¡ximo', 'MÃ­nimo'];
                     const summaryBody = cols.map(c => {
                         const vals = months.map(m => parseNum(data[m.id]?.[c.id])).filter(v => v !== null);
                         const total = vals.reduce((a,b)=>a+b,0);
@@ -608,7 +608,7 @@
                 });
 
                 clearBtn.addEventListener('click', () => {
-                    if (confirm('Esto borrará la matriz mensual. ¿Continuar?')) {
+                    if (confirm('Esto borrarÃ¡ la matriz mensual. Â¿Continuar?')) {
                         data = {};
                         save();
                         renderAll();
@@ -672,7 +672,7 @@
                 seedDefaults();
                 renderAll();
 
-                // --- Utilidades de Importaci�n CSV ---
+                // --- Utilidades de Importación CSV ---
                 function normalizeLabel(s) {
                     if (!s) return '';
                     let out = String(s).trim();
@@ -696,7 +696,7 @@
                         }
                         if (candidates.length === 1) return candidates[0];
                         const list = (candidates.length ? candidates : names).map((n, i) => `${i+1}) ${n}`).join('\n');
-                        const input = prompt(`El archivo tiene varias hojas. Elegí una escribiendo el número:\n${list}`, '1');
+                        const input = prompt(`El archivo tiene varias hojas. ElegÃ­ una escribiendo el nÃºmero:\n${list}`, '1');
                         const idx = Math.max(1, Math.min((candidates.length ? candidates : names).length, parseInt(String(input || '1'), 10))) - 1;
                         return (candidates.length ? candidates : names)[idx];
                     } catch {
@@ -742,7 +742,7 @@
                         }
                     }
 
-                    // Construir mapa de fila->mes según columna MES del Excel
+                    // Construir mapa de fila->mes segÃºn columna MES del Excel
                     const alias = {
                         'ENE': 'ENE','ENERO':'ENE',
                         'FEB':'FEB','FEBRERO':'FEB',
@@ -766,7 +766,7 @@
                         }
                     }
 
-                    // Detectar fila de Promedio y fórmulas de pie por columna
+                    // Detectar fila de Promedio y fÃ³rmulas de pie por columna
                     let footRowIdx = -1;
                     for (let r = rows.length - 1; r >= 0; r--) {
                         const row = rows[r] || [];
@@ -783,11 +783,11 @@
                             try {
                                 const ast = parseExcelFooterFormula(cell.f, rowToMonth, c);
                                 if (ast) footAst[id] = ast;
-                            } catch (e) { console.warn('No se pudo parsear fórmula de pie en col', id, e); }
+                            } catch (e) { console.warn('No se pudo parsear fÃ³rmula de pie en col', id, e); }
                         }
                     }
 
-                    // Detectar fórmulas por fila en primera fila de datos
+                    // Detectar fÃ³rmulas por fila en primera fila de datos
                     const rowAst = {};
                     if (rows && rows.length) {
                         let dataRowIdx2 = 1;
@@ -802,14 +802,14 @@
                             try {
                                 const ast = parseExcelRowFormula(cell.f, normHeader, idByNormHeader, dataRowIdx2);
                                 if (ast) rowAst[id] = ast;
-                            } catch (e) { console.warn('No se pudo parsear fórmula de fila en col', id, e); }
+                            } catch (e) { console.warn('No se pudo parsear fÃ³rmula de fila en col', id, e); }
                         }
                     }
 
                     return { sumCols, footAst, rowAst };
                 }
 
-                // Parser para fórmulas por fila: referencias dentro de la misma fila
+                // Parser para fÃ³rmulas por fila: referencias dentro de la misma fila
                 function parseExcelRowFormula(formula, normHeader, idByNormHeader, rowIdx0) {
                     const src = String(formula).replace(/\s+/g, '').replace(/\$/g, '').toUpperCase();
                     const TOK = { NUM:'NUM', ID:'ID', OP:'OP', LP:'LP', RP:'RP', COMMA:'COMMA', COLON:'COLON' };
@@ -865,9 +865,9 @@
                     return parse();
                 }
 
-                // --- Parser/Evaluator simple para fórmulas de pie ---
+                // --- Parser/Evaluator simple para fÃ³rmulas de pie ---
                 function parseExcelFooterFormula(formula, rowToMonth, colIdx) {
-                    // Parser con operadores + - * /, paréntesis y funciones SUM/SUMA, PROMEDIO/AVERAGE, MAX, MIN.
+                    // Parser con operadores + - * /, parÃ©ntesis y funciones SUM/SUMA, PROMEDIO/AVERAGE, MAX, MIN.
                     const src = String(formula).replace(/\s+/g, '').replace(/\$/g, '').toUpperCase();
 
                     // Tokenizador simple
@@ -883,7 +883,7 @@
                             if (ch === ')') { yield {t:TOK.RP}; i++; continue; }
                             if (ch === ',') { yield {t:TOK.COMMA}; i++; continue; }
                             if (ch === ':') { yield {t:TOK.COLON}; i++; continue; }
-                            // Celda con letra seguida de número, lo manejará el parser combinando ID+NUM o ID+NUM:ID+NUM
+                            // Celda con letra seguida de nÃºmero, lo manejarÃ¡ el parser combinando ID+NUM o ID+NUM:ID+NUM
                             i++;
                         }
                     }
@@ -916,7 +916,7 @@
                         if (!tk) return { type:'const', value: 0 };
                         if (tk.t === TOK.NUM) { consume(); return { type:'const', value: Number(tk.v) }; }
                         if (tk.t === TOK.ID) {
-                            // Puede ser nombre de celda/rango o función
+                            // Puede ser nombre de celda/rango o funciÃ³n
                             const id = consume().v;
                             const next = peek();
                             if (next && next.t === TOK.NUM) {
@@ -942,7 +942,7 @@
                                 if (peek() && peek().t === TOK.RP) consume();
                                 return { type:id, args };
                             }
-                            // Identificador suelto no válido
+                            // Identificador suelto no vÃ¡lido
                             return { type:'const', value: 0 };
                         }
                         if (tk.t === TOK.LP) { consume(); const node = parse(); if (peek() && peek().t === TOK.RP) consume(); return node; }
@@ -969,10 +969,10 @@
                     if (!node) return 0;
                     function valuesOf(n) {
                         if (n.type === 'range') {
-                            // Mapear idx de columna Excel a nuestro id por header pos; como la fórmula proviene de esa misma columna, usamos el id actual
-                            // Encontrar id según col actual en header
-                            // Obtenemos por posición: cols están mapeadas al header en el mismo orden importado, pero aquí usamos el id ya calculado al construir footAst.
-                            // En range omitimos c y usamos la columna del AST asignada: se evaluará en compute with data column id externally.
+                            // Mapear idx de columna Excel a nuestro id por header pos; como la fÃ³rmula proviene de esa misma columna, usamos el id actual
+                            // Encontrar id segÃºn col actual en header
+                            // Obtenemos por posiciÃ³n: cols estÃ¡n mapeadas al header en el mismo orden importado, pero aquÃ­ usamos el id ya calculado al construir footAst.
+                            // En range omitimos c y usamos la columna del AST asignada: se evaluarÃ¡ en compute with data column id externally.
                             // Para simplicidad, el AST de pie fue guardado por columna; por lo tanto tomaremos el id de la columna evaluada desde el cierre superior.
                             return n.months.map(m => parseNum(data[m]?.[currentEvalColId])).filter(v => v !== null);
                         }
@@ -1018,7 +1018,7 @@
                             }
                         }
                         default: {
-                            // Si el nodo raíz es range/const
+                            // Si el nodo raÃ­z es range/const
                             const arr = valuesOf(node).filter(v => Number.isFinite(v));
                             return arr.length ? arr[0] : 0;
                         }
@@ -1148,9 +1148,9 @@
                     const headerRaw = (rows[headerRowIndex] || []).map(h => String(h ?? ''));
                     const header = headerRaw.map(normalizeLabel);
                     const idxMes = header.findIndex(h => h === 'MES');
-                    if (idxMes === -1) throw new Error('No se encontró la columna MES.');
+                    if (idxMes === -1) throw new Error('No se encontrÃ³ la columna MES.');
 
-                    // Mapeo y actualización de encabezados visibles
+                    // Mapeo y actualizaciÃ³n de encabezados visibles
                     const wantMap = Object.fromEntries(baseCols.map(c => [normalizeLabel(c.label), c.id]));
                     const colIndexById = {};
                     const newCols = [];
@@ -1164,7 +1164,7 @@
                             newCols.push({ ...base, label: headerRaw[c] || base.label });
                         }
                     }
-                    // Si faltan columnas conocidas, agrégalas al final
+                    // Si faltan columnas conocidas, agrÃ©galas al final
                     for (const bc of baseCols) {
                         if (!newCols.some(x => x.id === bc.id)) newCols.push(bc);
                     }
@@ -1215,5 +1215,6 @@
     </section>
 </body>
 </html>
+
 
 
