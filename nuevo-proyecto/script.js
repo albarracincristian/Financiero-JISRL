@@ -1,3 +1,35 @@
+// Tema claro/oscuro: aplicar preferencia y agregar toggle si existe
+(function() {
+    const THEME_KEY = 'finapp_theme';
+    const getPreferred = () => {
+        try {
+            const saved = localStorage.getItem(THEME_KEY);
+            if (saved === 'light' || saved === 'dark') return saved;
+        } catch {}
+        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    };
+    const apply = (t) => {
+        document.documentElement.setAttribute('data-theme', t);
+    };
+    apply(getPreferred());
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('theme-toggle-btn');
+        if (!btn) return;
+        const refresh = () => {
+            const t = document.documentElement.getAttribute('data-theme') || 'light';
+            btn.textContent = t === 'dark' ? 'Tema Claro' : 'Tema Oscuro';
+        };
+        refresh();
+        btn.addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            const next = cur === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem(THEME_KEY, next); } catch {}
+            refresh();
+        });
+    });
+})();
+
 // Check if elements exist before adding event listeners
 if (document.getElementById('btn')) {
     document.getElementById('btn').addEventListener('click', function() {
