@@ -81,17 +81,7 @@ nav a:hover {
     color: var(--text);
 }
 
-/* Botón de tema dentro del nav */
-nav .theme-btn {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-    padding: 0.5rem 0.9rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-}
-nav .theme-btn:hover { background-color: rgba(37, 99, 235, 0.12); }
+/* (removido) estilos de botón de tema */
 
 section {
     background: linear-gradient(180deg, #ffffff, #fafbfc);
@@ -405,25 +395,7 @@ input.grid-input:focus {
 }
 
 /* Tema oscuro: override de variables */
-html[data-theme="dark"] {
-    --bg: #0f172a;              /* slate-900 */
-    --surface-1: #111827;       /* gray-900 */
-    --surface-2: #1f2937;       /* gray-800 */
-    --text: #e5e7eb;            /* gray-200 */
-    --text-muted: #94a3b8;      /* slate-400 */
-    --border: #374151;          /* gray-700 */
-    --shadow: 0 8px 24px rgba(0,0,0,0.45);
-
-    --primary: #60a5fa;         /* blue-400 */
-    --primary-600: #3b82f6;     /* blue-500 */
-    --primary-700: #2563eb;     /* blue-600 */
-
-    --scrollbar-track: #0b1222;
-    --scrollbar-thumb: #334155;
-    --scrollbar-thumb-hover: #475569;
-    --scrollbar-thumb-active: #64748b;
-    --scrollbar-corner: #0b1222;
-}
+/* (removido) overrides de tema oscuro */
 
 #feriados-table .icon-btn {
     display: inline-flex;
