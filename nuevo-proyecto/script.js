@@ -243,7 +243,8 @@ if (document.getElementById('panel-cuentas-table')) {
         const da = parseLocalDate(a); const db = parseLocalDate(b);
         if (!da || !db) return null;
         const ms = db.getTime() - da.getTime();
-        return Math.round(ms / (1000*60*60*24)); // entero
+        const d = Math.round(ms / (1000*60*60*24));
+        return Math.max(0, d); // no negativo
     };
     const parseNum = (s) => {
         if (s == null) return null;
