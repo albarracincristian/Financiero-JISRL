@@ -145,12 +145,12 @@
         </div>
     </section>
 <script>
-// Fallback en Edge: ejecutar después de que terminen los scripts defer (onload)
+// Fallback temporal (ya unificado en script.js). Si script.js pobló, no hacer nada.
 window.addEventListener('load', function(){
   const tbody = document.getElementById('op-fechas-body');
   const table = document.getElementById('op-fechas-table');
   if (!tbody || !table) return;
-  if (tbody.children.length > 0) return; // si el script principal ya llenó, no hacemos nada
+  if (tbody.children.length > 0) return; // script.js ya llenó
 
   const toYMD = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const toDMY = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
@@ -212,6 +212,7 @@ window.addEventListener('load', function(){
       tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
     });
   }
+  // Solo como backup
   render();
 
   if (!table.__editFallback) {

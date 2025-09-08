@@ -222,6 +222,102 @@ if (document.getElementById('feriados-table')) {
 
 
 
+// === Fechas calculadas (robusto, Edge-friendly) ===
+// Render dinámico + edición (concepto y fecha) con overrides persistentes
+window.addEventListener('load', function () {
+    if (!document.getElementById('op-fechas')) return;
+    const tbody = document.getElementById('op-fechas-body');
+    const table = document.getElementById('op-fechas-table');
+    if (!tbody || !table) return;
+
+    const toYMD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const toDMY = (d) => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    const parseDMY = (s) => { const m=String(s||'').match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/); if(!m) return null; const dt=new Date(+m[3],+m[2]-1,+m[1]); return isNaN(dt.getTime())?null:dt; };
+    const ymdToDate = (ymd) => { const p=String(ymd||'').split('-'); if(p.length!==3) return null; const dt=new Date(+p[0],+p[1]-1,+p[2]); return isNaN(dt.getTime())?null:dt; };
+
+    // Feriados desde localStorage
+    const feriados = (()=>{ try { return JSON.parse(localStorage.getItem('feriados')||'[]')||[]; } catch { return []; } })();
+    const feriadosSet = new Set(feriados.map(f=>String(f.date)));
+    // Sábados son hábiles; Domingos NO; excluir feriados
+    const isBusiness = (d) => { const wd=d.getDay(); if (wd===0) return false; return !feriadosSet.has(toYMD(d)); };
+    const dim = (y,m)=> new Date(y,m+1,0).getDate();
+    const lastBusinessInRange = (y,m,a,b)=>{ const end=Math.min(dim(y,m),b), start=Math.max(1,a); for(let d=end; d>=start; d--){const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} for(let d=start-1; d>=1; d--){const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} return new Date(y,m,1); };
+    const lastBusinessOnOrBefore = (y,m,day)=> lastBusinessInRange(y,m,1,day);
+    const adjustToBusiness = (d)=>{ const dt=new Date(d.getFullYear(),d.getMonth(),d.getDate()); while(!isBusiness(dt)) dt.setDate(dt.getDate()-1); return dt; };
+    const nextMonthBusinessFrom = (d)=>{ const yN=d.getMonth()===11? d.getFullYear()+1 : d.getFullYear(); const mN=(d.getMonth()+1)%12; const day=Math.min(d.getDate(), dim(yN,mN)); return adjustToBusiness(new Date(yN,mN,day)); };
+
+    // Reglas con IDs estables
+    const rules = [
+        { id:'f931',  label:'Sueldos + F931 (últ. hábil 1-10)', type:'range', a:1, b:10 },
+        { id:'sicore',label:'SICORE (últ. hábil 9-11)',          type:'range', a:9, b:11 },
+        { id:'serv',  label:'Servicios (últ. hábil 1-10)',       type:'range', a:1, b:10 },
+        { id:'hon',   label:'Honorarios (últ. hábil 10-20)',     type:'range', a:10, b:20 },
+        { id:'gg',    label:'Gastos Generales (últ. hábil 1-10)',type:'range', a:1, b:10 },
+        { id:'iva',   label:'Impuesto IVA (últ. hábil 15-18)',   type:'range', a:15, b:18 },
+        { id:'iibb',  label:'IIBB/Percepciones (últ. hábil 8-11)',type:'range',a:8, b:11 },
+        { id:'gan',   label:'Ganancia (últ. hábil 8-11)',        type:'range', a:8, b:11 },
+        { id:'otros', label:'Otros (últ. hábil 1-10)',           type:'range', a:1, b:10 },
+        { id:'seg',   label:'Seguros (últ. hábil 25-27)',        type:'range', a:25,b:27 },
+        { id:'comb1', label:'Combustible 1 (últ. hábil ≤10)',    type:'before',day:10 },
+        { id:'comb2', label:'Combustible 2 (últ. hábil ≤25)',    type:'before',day:25 },
+        { id:'rentas',label:'Rentas Automotor (últ. hábil ≤15)', type:'before',day:15 },
+        { id:'nc',    label:'NC (últ. hábil 11-16)',             type:'range', a:11,b:16 }
+    ];
+
+    // Overrides persistentes
+    const OKEY='op_fechas_overrides_v1';
+    const loadO = ()=>{ try { return JSON.parse(localStorage.getItem(OKEY)||'{}')||{}; } catch { return {}; } };
+    const saveO = (o)=>{ try { localStorage.setItem(OKEY, JSON.stringify(o||{})); } catch {} };
+
+    const today=new Date(); today.setHours(0,0,0,0);
+    const y=today.getFullYear(); const m=today.getMonth();
+    const yNext=m===11? y+1 : y; const mNext=(m+1)%12;
+
+    function computeRows(){
+        const o = loadO();
+        return rules.map(r=>{
+            let d1 = r.type==='range' ? lastBusinessInRange(y,m,r.a,r.b) : lastBusinessOnOrBefore(y,m,r.day);
+            let d2 = r.type==='range' ? lastBusinessInRange(yNext,mNext,r.a,r.b) : lastBusinessOnOrBefore(yNext,mNext,r.day);
+            const e = o[r.id] || {};
+            const label = e.label || r.label;
+            if (e.d1) { const t=ymdToDate(e.d1); if (t) d1=adjustToBusiness(t); d2 = nextMonthBusinessFrom(d1); }
+            else if (e.d2) { const t=ymdToDate(e.d2); if (t) d2=adjustToBusiness(t); }
+            return { id:r.id, label, d1, d2 };
+        }).sort((a,b)=> a.d1 - b.d1);
+    }
+
+    function render(){
+        // Si alguien ya llenó (fallback anterior), no duplicar
+        if (tbody.children.length>0) return;
+        tbody.innerHTML='';
+        const rows = computeRows();
+        rows.forEach(({id,label,d1,d2})=>{
+            const tr=document.createElement('tr');
+            const td0=document.createElement('td'); const span=document.createElement('span'); span.className='concept-text'; span.textContent=label; const b=document.createElement('button'); b.className='edit-fecha'; b.textContent='✎'; b.title='Editar'; b.dataset.id=id; td0.appendChild(span); td0.appendChild(b);
+            const td1=document.createElement('td'); td1.textContent=toDMY(d1);
+            const td2=document.createElement('td'); td2.textContent=toDMY(d2);
+            tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+        });
+    }
+
+    render();
+
+    if (!table.__editUnified) {
+        table.addEventListener('click', (ev)=>{
+            const btn=ev.target.closest && ev.target.closest('.edit-fecha'); if(!btn) return;
+            const id=btn.dataset.id; const row=btn.closest('tr');
+            const curLabel=row.querySelector('.concept-text')?.textContent.trim()||'';
+            const curD1=row.cells[1].textContent.trim();
+            const newLabel=prompt('Editar concepto:',curLabel) ?? curLabel;
+            const newD1s=prompt('Editar Fecha (dd/mm/aaaa):',curD1)||''; const nd1=parseDMY(newD1s); if(!nd1) return;
+            const adj1=adjustToBusiness(nd1); const adj2=nextMonthBusinessFrom(adj1);
+            const o=loadO(); const e=o[id]||{}; if(newLabel && newLabel.trim()) e.label=newLabel.trim(); e.d1=toYMD(adj1); e.d2=toYMD(adj2); o[id]=e; saveO(o);
+            // Re-renderear base limpia
+            tbody.innerHTML=''; render();
+        });
+        table.__editUnified=true;
+    }
+});
 // --- Operaciones: Fechas calculadas (mes actual y siguiente) ---
 if (document.getElementById('op-fechas')) {
     // Utilidades de fecha
@@ -286,5 +382,6 @@ if (document.getElementById('op-fechas')) {
         });
     }
 }
+
 
 
