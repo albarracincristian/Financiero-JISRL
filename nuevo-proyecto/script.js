@@ -246,6 +246,14 @@ if (document.getElementById('panel-cuentas-table')) {
         const d = Math.round(ms / (1000*60*60*24));
         return Math.max(0, d); // no negativo
     };
+    const addDaysYMD = (ymd, n) => { const d=parseLocalDate(ymd); if(!d) return ''; const r=new Date(d); r.setDate(r.getDate()+n); return toYMD(r); };
+    const computeFechaPago = (proveedor, recepcion) => {
+        if (!recepcion) return '';
+        const p = String(proveedor||'').toUpperCase();
+        if (p === 'PEPSICO' || p === 'GEORGALOS') return addDaysYMD(recepcion, 16);
+        if (p === 'PERNOD RICARD' || p === 'PRONOVELTIES') return addDaysYMD(recepcion, 30);
+        return recepcion; // mismo día por defecto
+    };
     const parseNum = (s) => {
         if (s == null) return null;
         let t = String(s).trim();
@@ -344,7 +352,6 @@ if (document.getElementById('panel-cuentas-table')) {
     // Add
     const addBtn = document.getElementById('pc-add-btn');
     if (addBtn) addBtn.addEventListener('click', () => {
-        const fecha = document.getElementById('pc-fecha').value;
         const proveedor = document.getElementById('pc-prov').value.trim();
         const fechaPedido = document.getElementById('pc-fecha-pedido').value;
         const recepcion = document.getElementById('pc-recepcion').value;
@@ -352,7 +359,9 @@ if (document.getElementById('panel-cuentas-table')) {
         const cantidad = parseNum(document.getElementById('pc-cantidad').value);
         const costo = parseNum(document.getElementById('pc-costo').value);
         const pagado = document.getElementById('pc-pagado').checked;
-        if (!fecha || !PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Completar al menos Fecha y seleccionar Proveedor y Tipo válidos.'); return; }
+        if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Seleccioná Proveedor y Tipo válidos.'); return; }
+        const fecha = computeFechaPago(proveedor, recepcion);
+        if (!fecha) { alert('Ingresá fecha de Recepción para calcular Pagar/Cobrar.'); return; }
         const nLead = daysDiff(fechaPedido, recepcion);
         const lead = (nLead == null) ? '—' : (nLead === 0 ? '—' : String(nLead));
         cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
