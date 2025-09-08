@@ -437,6 +437,33 @@ if (document.getElementById('panel-cuentas-table')) {
 
     load();
 
+    // Autosize selects (#pc-prov, #pc-tipo) al contenido más largo
+    function autosizeSelect(sel){
+        if (!sel) return;
+        const cs = getComputedStyle(sel);
+        const span = document.createElement('span');
+        span.style.visibility = 'hidden';
+        span.style.position = 'fixed';
+        span.style.whiteSpace = 'pre';
+        span.style.font = `${cs.fontStyle} ${cs.fontVariant} ${cs.fontWeight} ${cs.fontSize} / ${cs.lineHeight} ${cs.fontFamily}`;
+        let max = 0;
+        for (const opt of sel.options){
+            span.textContent = opt.text || '';
+            document.body.appendChild(span);
+            const w = span.getBoundingClientRect().width;
+            if (w > max) max = w;
+            span.remove();
+        }
+        const padding = parseFloat(cs.paddingLeft||'0') + parseFloat(cs.paddingRight||'0') + 28; // caret
+        sel.style.width = Math.ceil(max + padding) + 'px';
+    }
+    const provSel = document.getElementById('pc-prov');
+    const tipoSel = document.getElementById('pc-tipo');
+    autosizeSelect(provSel); autosizeSelect(tipoSel);
+    provSel && provSel.addEventListener('change', ()=>autosizeSelect(provSel));
+    tipoSel && tipoSel.addEventListener('change', ()=>autosizeSelect(tipoSel));
+    window.addEventListener('resize', ()=>{ autosizeSelect(provSel); autosizeSelect(tipoSel); });
+
     // Actualizar lead visible en el formulario al cambiar fechas
     // No hay campo lead en el formulario; el valor se calcula al renderizar/guardar.
 }

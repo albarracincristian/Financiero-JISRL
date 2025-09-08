@@ -334,6 +334,9 @@ section h2 {
 #panel-cuentas-form select {
     min-width: 0; /* permite encoger dentro del grid */
 }
+/* En el formulario del panel, los selects deben ajustar su ancho al contenido */
+#panel-cuentas-form select { width: auto; max-width: 100%; justify-self: start; }
+#pc-prov, #pc-tipo { justify-self: start; }
 /* Distribución por columnas (fila 1) */
 #pc-prov { grid-column: span 2; }
 #pc-fecha-pedido { grid-column: span 2; }
