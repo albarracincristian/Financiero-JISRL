@@ -153,6 +153,14 @@ section#input { max-width: clamp(800px, 95vw, 1400px); }
 /* En tarjetas (Operaciones), evitamos duplicar líneas de encabezado */
 .card .mini-table thead th { box-shadow: none; }
 .card .mini-table { margin-top: 0.25rem; }
+
+/* Fechas calculadas: resaltar pasado vs próximo */
+#op-fechas-table td.date-past {
+    color: var(--text-muted);
+}
+#op-fechas-table td.date-upcoming {
+    font-weight: 600;
+}
 .mini-table td.right, .mini-table th.right { text-align: right; }
 
 @media (max-width: 1024px) {
