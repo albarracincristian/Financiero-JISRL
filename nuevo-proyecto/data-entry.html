@@ -390,7 +390,7 @@
                 }
 
                 gridBody.addEventListener('input', handleChange);
-                // Navegación con Enter: bajar a la próxima fila en la misma columna
+                // Navegación con Enter: moverse a la próxima columna en la misma fila
                 function focusGridCell(monthId, colId) {
                     const sel = `input.grid-input[data-month="${monthId}"][data-field="${colId}"]`;
                     const next = gridBody.querySelector(sel);
@@ -400,16 +400,16 @@
                         try { next.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch {}
                     }
                 }
-                function moveDownFrom(inputEl) {
+                function moveRightFrom(inputEl) {
                     const field = inputEl.getAttribute('data-field');
                     const monthId = inputEl.getAttribute('data-month');
-                    const idx = months.findIndex(m => m.id === monthId);
-                    if (idx === -1) return;
-                    for (let i = idx + 1; i < months.length; i++) {
-                        const mId = months[i].id;
-                        const sel = `input.grid-input[data-month="${mId}"][data-field="${field}"]`;
+                    const colIdx = cols.findIndex(c => c.id === field);
+                    if (colIdx === -1) return;
+                    for (let i = colIdx + 1; i < cols.length; i++) {
+                        const nextId = cols[i].id;
+                        const sel = `input.grid-input[data-month="${monthId}"][data-field="${nextId}"]`;
                         const cand = gridBody.querySelector(sel);
-                        if (cand) { focusGridCell(mId, field); return; }
+                        if (cand && !cand.readOnly) { focusGridCell(monthId, nextId); return; }
                     }
                 }
                 gridBody.addEventListener('keydown', (ev) => {
@@ -417,7 +417,7 @@
                     if (!input) return;
                     if (ev.key === 'Enter') {
                         ev.preventDefault();
-                        moveDownFrom(input);
+                        moveRightFrom(input);
                     }
                 });
 
