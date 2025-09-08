@@ -168,6 +168,14 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
     cursor: pointer;
 }
 
+/* Atenuar fila cuando está marcada como pagado/cobrado */
+.mini-table tbody tr.row-paid {
+    background-color: rgba(148, 163, 184, 0.12);
+}
+.mini-table tbody tr.row-paid td {
+    color: var(--text-muted) !important;
+}
+
 /* Alineación y anchos consistentes para la tabla del panel */
 #panel-cuentas-table th:nth-child(2),
 #panel-cuentas-table td:nth-child(2) { /* Lead (días) */

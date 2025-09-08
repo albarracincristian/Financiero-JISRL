@@ -334,6 +334,7 @@ if (document.getElementById('panel-cuentas-table')) {
                 <td class="right ${costoCls}">${toCurrency(costo)}</td>
                 <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
                 <td style="text-align:center"><input type="checkbox" data-idx="${idx}" ${it.pagado? 'checked':''}></td>`;
+            if (it.pagado) tr.classList.add('row-paid');
             tbody.appendChild(tr);
         });
     }
@@ -380,6 +381,7 @@ if (document.getElementById('panel-cuentas-table')) {
         if (!isNaN(i) && cuentas[i]) {
             cuentas[i].pagado = !!chk.checked;
             save();
+            renderCuentas();
         }
     });
 
