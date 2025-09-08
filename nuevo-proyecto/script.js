@@ -1,4 +1,22 @@
-﻿// Check if elements exist before adding event listeners
+﻿// Abrir automáticamente el selector de fecha al interactuar
+(function(){
+  const onReady = () => {
+    const inputs = document.querySelectorAll('input[type="date"]');
+    inputs.forEach((el) => {
+      const openPicker = () => {
+        try {
+          if (typeof el.showPicker === 'function') { el.showPicker(); }
+          else { el.focus(); el.click(); }
+        } catch {}
+      };
+      el.addEventListener('mousedown', (ev) => { ev.preventDefault(); el.focus(); openPicker(); });
+      el.addEventListener('focus', () => { openPicker(); });
+      el.addEventListener('keydown', (ev) => { if ((ev.key === 'Enter' || ev.key === ' ') && typeof el.showPicker === 'function') { ev.preventDefault(); el.showPicker(); } });
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onReady); else onReady();
+})();
+// Check if elements exist before adding event listeners
 if (document.getElementById('btn')) {
     document.getElementById('btn').addEventListener('click', function() {
         document.getElementById('message').textContent = 'Â¡Hola! Has hecho clic en el botÃ³n.';
@@ -185,4 +203,5 @@ if (document.getElementById('feriados-table')) {
         XLSX.writeFile(wb, 'feriados.xlsx');
     });
 }
+
 
