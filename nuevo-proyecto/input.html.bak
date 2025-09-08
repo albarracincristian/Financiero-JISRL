@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operaciones - Aplicaci�n</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="color-scheme" content="light dark">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Panel de operaciones con tarjetas organizadas">
+    <script defer src="vendor/xlsx.full.min.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Panel</a></li>
+            <li><a href="flujo-caja.html">Tesorer�a</a></li>
+            <li><a href="input.html">Operaciones</a></li>
+            <li><a href="data-entry.html">Presupuesto Mensual</a></li>
+            <li><a href="feriados.html">Calendario Laboral</a></li>
+            
+        </ul>
+    </nav>
+
+    <section id="input">
+        <h2>Operaciones</h2>
+        <p>Panel de operaciones: organizamos en tarjetas para luego completar cálculos y lógica.</p>
+
+        <div class="cards-grid">
+            <div class="card" id="op-datos-iniciales">
+                <h3>Completar datos (grises)</h3>
+                <div class="kv">
+                    <label for="op-saldo-inicial">Saldo inicial (incluye deuda anterior)</label>
+                    <input id="op-saldo-inicial" type="text" placeholder="$ 0">
+
+                    <label for="op-mes-curso">Mes en curso</label>
+                    <input id="op-mes-curso" type="number" min="1" max="12" placeholder="9">
+                </div>
+            </div>
+
+            <div class="card" id="op-objetivo-stock">
+                <h3>Objetivo y Stock</h3>
+                <div class="kv">
+                    <label for="op-dias-cobertura">D�as objetivo de cobertura (D�as)</label>
+                    <input id="op-dias-cobertura" type="number" placeholder="16">
+
+                    <label for="op-objetivo-retiro">Objetivo Retiro (Tn)</label>
+                    <input id="op-objetivo-retiro" type="number" step="0.1" placeholder="3,5">
+
+                    <label for="op-stock-actual">Stock actual (ton)</label>
+                    <input id="op-stock-actual" type="number" step="0.001" placeholder="3,514">
+
+                    <label for="op-tn-retiradas">Tn Retiradas a la fecha</label>
+                    <input id="op-tn-retiradas" type="number" step="0.01" placeholder="1,00">
+
+                    <label class="muted">D�as Stock en piso</label>
+                    <input type="number" step="0.1" placeholder="19,1">
+
+                    <label class="muted">Stock al Cierre (tn)</label>
+                    <input type="number" step="0.1" placeholder="-0,2">
+
+                    <label class="muted">Stock ideal (ton)</label>
+                    <input type="number" step="0.1" placeholder="2,9">
+                </div>
+            </div>
+
+            <div class="card emphasis" id="op-brecha-stock">
+                <h3>Brecha a Stock ideal</h3>
+                <div class="kv">
+                    <label class="muted">Falta Recuperar Stock KG ideal</label>
+                    <input type="text" placeholder="-3,112507143" readonly>
+
+                    <label class="muted">(ARS) Retiro faltante a stock ideal</label>
+                    <input type="text" placeholder="-$ 72.020.747" readonly>
+
+                    <label class="muted">Tn vs Obj + Stock ideal</label>
+                    <input type="text" placeholder="-5,61" readonly>
+
+                    <label class="muted">(ARS) Retiro faltante vs OBJ</label>
+                    <input type="text" placeholder="-$ 84.120.618,44" readonly>
+                </div>
+            </div>
+
+            <div class="card" id="op-periodo">
+                <h3>Periodo y D�as</h3>
+                <div class="kv">
+                    <label for="op-fecha-inicio">Fecha inicio</label>
+                    <input id="op-fecha-inicio" type="date">
+
+                    <label for="op-fecha-fin">Fecha fin</label>
+                    <input id="op-fecha-fin" type="date">
+
+                    <label class="muted">D�as Trabajados</label>
+                    <input type="number" placeholder="6">
+
+                    <label class="muted">D�as Laborales</label>
+                    <input type="number" placeholder="26">
+
+                    <label class="muted">D�as Restantes</label>
+                    <input type="number" placeholder="20">
+
+                    <label class="muted">Tn a Vender D�as restantes</label>
+                    <input type="number" placeholder="3,68">
+                </div>
+            </div>
+
+            <div class="card span-2" id="op-parametros">
+                <h3>Par�metros</h3>
+                <table class="mini-table">
+                    <thead><tr><th>Parámetro</th><th class="right">Valor</th></tr></thead>
+                    <tbody>
+                        <tr><td>KG/Lts base mensual (prom KG/Lts_Mensual)</td><td class="right">4,42</td></tr>
+                        <tr><td>ARS base mensual (prom ARS_Mensual)</td><td class="right">$ 123.687.566</td></tr>
+                        <tr><td>Costo total por OBJ Retiro</td><td class="right">$ 66.212.344</td></tr>
+                        <tr><td>Capacidad por equipo (ton)</td><td class="right">2,7</td></tr>
+                        <tr><td>Peso Lunes</td><td class="right">21%</td></tr>
+                        <tr><td>Peso Martes</td><td class="right">21%</td></tr>
+                        <tr><td>Peso Miércoles</td><td class="right">21%</td></tr>
+                        <tr><td>Peso Jueves</td><td class="right">20%</td></tr>
+                        <tr><td>Peso Viernes</td><td class="right">10%</td></tr>
+                        <tr><td>Peso Sábado</td><td class="right">7%</td></tr>
+                        <tr><td>Peso Domingo</td><td class="right">0%</td></tr>
+                        <tr><td>NC monto (+)</td><td class="right">$ 5.000.000</td></tr>
+                        <tr><td>Salarios - Sueldos</td><td class="right">$ 16.129.959</td></tr>
+                        <tr><td>Salarios - SICORE</td><td class="right">$ 1.340.052</td></tr>
+                        <tr><td>Servicios</td><td class="right">$ 294.867</td></tr>
+                        <tr><td>Honorarios</td><td class="right">$ 1.446.192</td></tr>
+                        <tr><tD�astos Generales</td><td class="right">$ 830.597</td></tr>
+                        <tr><td>IIBB / Percepciones</td><td class="right">$ 5.182.811</td></tr>
+                        <tr><td>Otros (prom)</td><td class="right">$ 835.119</td></tr>
+                        <tr><td>Imp. Ganancias</td><td class="right">$ 1.832.421</td></tr>
+                        <tr><td>Imp. IVA</td><td class="right">$ 3.018.511</td></tr>
+                        <tr><td>Combustible 1era Quincena</td><td class="right">$ 446.000</td></tr>
+                        <tr><td>Combustible 2da Quincena</td><td class="right">$ 502.000</td></tr>
+                        <tr><td>Seguros</td><td class="right">$ 149.353</td></tr>
+                        <tr><td>Rentas Patentes Automotor</td><td class="right">$ 149.353</td></tr>
+                        <tr><td>Recaudaci�n diaria estimada (ARS)</td><td class="right">$ 4.757.214,08</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" id="op-fechas">
+                <h3>Fechas calculadas</h3>
+                <table class="mini-table">
+                    <thead><tr><th>Fecha</th><th>Mes Sig</th></tr></thead>
+                    <tbody>
+                        <tr><td>Fecha Sueldos + F931 (últ. hábil 1-10)</td><td>2025-10-04</td></tr>
+                        <tr><td>Fecha SICORE (últ. hábil 9-11)</td><td>2025-10-11</td></tr>
+                        <tr><td>Fecha Servicios (últ. hábil 1-10)</td><td>2025-10-09</td></tr>
+                        <tr><td>Fecha Honorarios (últ. hábil 10-20)</td><td>2025-10-19</td></tr>
+                        <tr><td>Fecha Gastos Generales (últ. hábil 1-10)</td><td>2025-10-09</td></tr>
+                        <tr><td>Fecha Impuesto IVA (últ. hábil 15-18)</td><td>2025-10-17</td></tr>
+                        <tr><td>Fecha IIBB/Percepciones (últ. hábil 8-11)</td><td>2025-10-11</td></tr>
+                        <tr><td>Fecha Ganancia (últ. hábil 8-11)</td><td>2025-10-11</td></tr>
+                        <tr><td>Fecha Otros (últ. hábil 1-10)</td><td>2025-10-09</td></tr>
+                        <tr><td>Fecha Seguros (últ. hábil 15-27)</td><td>2025-10-21</td></tr>
+                        <tr><td>Fecha Combustible 1 (últ. hábil -15)</td><td>2025-10-10</td></tr>
+                        <tr><td>Fecha Combustible 2 (últ. hábil -25)</td><td>2025-10-20</td></tr>
+                        <tr><td>Fecha Rentas Automotor (últ. hábil -15)</td><td>2025-10-10</td></tr>
+                        <tr><td>Fecha NC (últ. hábil en 11-16)</td><td>2025-10-15</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" id="op-variables">
+                <h3>Variables</h3>
+                <table class="mini-table">
+                    <thead><tr><th>Variable</th><th class="right">Valor</th></tr></thead>
+                    <tbody>
+                        <tr><td>Lead time L (D�as) Cami�n Completo</td><td class="right">5</td></tr>
+                        <tr><td>Lead time L (D�as) Cami�n Parcial</td><td class="right">10</td></tr>
+                        <tr><td>Ventas diarias promedio (ton/día) μ</td><td class="right">0,18</td></tr>
+                        <tr><td>Desv�o estándar ventas diarias (ton/día) σ</td><td class="right">0,045</td></tr>
+                        <tr><td>T�rmino de pago (D�as) Cta Cte proveedor</td><td class="right">14</td></tr>
+                        <tr><td>D�as de Recaudaci�n para cubrir 1 equipo</td><td class="right">8,5</td></tr>
+                        <tr><td><strong>Cobertura por equipo (D�as)</strong></td><td class="right"><strong>14,7</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
+

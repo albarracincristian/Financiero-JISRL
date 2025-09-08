@@ -221,3 +221,83 @@ if (document.getElementById('feriados-table')) {
 
 
 
+
+// --- Operaciones: Fechas calculadas (mes actual y siguiente) ---
+if (document.getElementById('op-fechas')) {
+    // Utilidades de fecha
+    const toYMD = (d) => {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    };
+    const daysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
+    // Feriados: usar los guardados en localStorage
+    let feriadosSet = new Set();
+    try {
+        const arr = JSON.parse(localStorage.getItem('feriados') || '[]');
+        arr.forEach(f => { if (f && f.date) feriadosSet.add(String(f.date)); });
+    } catch {}
+    const isBusiness = (d) => {
+        const wd = d.getDay(); // 0=dom,6=sab
+        if (wd === 0 || wd === 6) return false;
+        return !feriadosSet.has(toYMD(d));
+    };
+    const lastBusinessInRange = (y, m, startDay, endDay) => {
+        const dim = daysInMonth(y, m);
+        const start = Math.max(1, startDay);
+        const end = Math.min(dim, endDay);
+        for (let d = end; d >= start; d--) {
+            const dt = new Date(y, m, d);
+            if (isBusiness(dt)) return dt;
+        }
+        // Fallback: buscar hacia atrás desde start-1
+        for (let d = start - 1; d >= 1; d--) {
+            const dt = new Date(y, m, d);
+            if (isBusiness(dt)) return dt;
+        }
+        return new Date(y, m, 1); // último recurso
+    };
+    const lastBusinessOnOrBefore = (y, m, day) => lastBusinessInRange(y, m, 1, day);
+
+    const rules = [
+        { label: 'Sueldos + F931 (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'SICORE (últ. hábil 9-11)', type: 'range', a: 9, b: 11 },
+        { label: 'Servicios (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'Honorarios (últ. hábil 10-20)', type: 'range', a: 10, b: 20 },
+        { label: 'Gastos Generales (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'Impuesto IVA (últ. hábil 15-18)', type: 'range', a: 15, b: 18 },
+        { label: 'IIBB/Percepciones (últ. hábil 8-11)', type: 'range', a: 8, b: 11 },
+        { label: 'Ganancia (últ. hábil 8-11)', type: 'range', a: 8, b: 11 },
+        { label: 'Otros (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'Seguros (últ. hábil 15-27)', type: 'range', a: 15, b: 27 },
+        { label: 'Combustible 1 (últ. hábil ≤15)', type: 'before', day: 15 },
+        { label: 'Combustible 2 (últ. hábil ≤25)', type: 'before', day: 25 },
+        { label: 'Rentas Automotor (últ. hábil ≤15)', type: 'before', day: 15 },
+        { label: 'NC (últ. hábil 11-16)', type: 'range', a: 11, b: 16 },
+    ];
+
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = today.getMonth(); // 0-based
+    const yNext = m === 11 ? y + 1 : y;
+    const mNext = (m + 1) % 12;
+
+    const tbody = document.getElementById('op-fechas-body');
+    if (tbody) {
+        tbody.innerHTML = '';
+        rules.forEach(r => {
+            let d1, d2;
+            if (r.type === 'range') {
+                d1 = lastBusinessInRange(y, m, r.a, r.b);
+                d2 = lastBusinessInRange(yNext, mNext, r.a, r.b);
+            } else {
+                d1 = lastBusinessOnOrBefore(y, m, r.day);
+                d2 = lastBusinessOnOrBefore(yNext, mNext, r.day);
+            }
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.label}</td><td>${toYMD(d1)}</td><td>${toYMD(d2)}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+}
