@@ -239,6 +239,13 @@ if (document.getElementById('panel-cuentas-table')) {
     };
     const toYMD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     const formatDMY = (ymd) => { const d=parseLocalDate(ymd); if(!d) return ''; const dd=String(d.getDate()).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); const yy=d.getFullYear(); return `${dd}/${mm}/${yy}`; };
+    const daysDiff = (a,b) => {
+        const da = parseLocalDate(a); const db = parseLocalDate(b);
+        if (!da || !db) return '';
+        const ms = db.getTime() - da.getTime();
+        const d = Math.round(ms / (1000*60*60*24));
+        return d.toFixed(1).replace('.', ',');
+    };
     const parseNum = (s) => {
         if (s == null) return null;
         let t = String(s).trim();
@@ -318,7 +325,6 @@ if (document.getElementById('panel-cuentas-table')) {
     const addBtn = document.getElementById('pc-add-btn');
     if (addBtn) addBtn.addEventListener('click', () => {
         const fecha = document.getElementById('pc-fecha').value;
-        const lead = document.getElementById('pc-lead').value;
         const proveedor = document.getElementById('pc-prov').value.trim();
         const fechaPedido = document.getElementById('pc-fecha-pedido').value;
         const recepcion = document.getElementById('pc-recepcion').value;
@@ -327,6 +333,7 @@ if (document.getElementById('panel-cuentas-table')) {
         const costo = parseNum(document.getElementById('pc-costo').value);
         const pagado = document.getElementById('pc-pagado').checked;
         if (!fecha || !PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Completar al menos Fecha y seleccionar Proveedor y Tipo válidos.'); return; }
+        const lead = daysDiff(fechaPedido, recepcion) || '—';
         cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
         save();
         renderCuentas();
@@ -365,7 +372,7 @@ if (document.getElementById('panel-cuentas-table')) {
             for (let r = start; r < rows.length; r++) {
                 const row = rows[r]; if (!row || row.length === 0) continue;
                 const fecha = row[0] || '';
-                const lead = row[1] || '';
+                const lead = daysDiff(row[3] || '', row[4] || '') || '';
                 const proveedorRaw = String(row[2] || '').toUpperCase().trim();
                 const proveedor = PROVEEDORES.includes(proveedorRaw) ? proveedorRaw : '';
                 const fechaPedido = row[3] || '';
@@ -395,6 +402,14 @@ if (document.getElementById('panel-cuentas-table')) {
     });
 
     load();
+
+    // Actualizar lead visible en el formulario al cambiar fechas
+    const pedidoEl = document.getElementById('pc-fecha-pedido');
+    const recepEl = document.getElementById('pc-recepcion');
+    const leadEl = document.getElementById('pc-lead');
+    const refreshLead = () => { if (leadEl) leadEl.value = daysDiff(pedidoEl.value, recepEl.value) || ''; };
+    if (pedidoEl) pedidoEl.addEventListener('change', refreshLead);
+    if (recepEl) recepEl.addEventListener('change', refreshLead);
 }
 
 
