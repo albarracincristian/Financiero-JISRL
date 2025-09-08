@@ -319,7 +319,7 @@ section h2 {
 
 #panel-cuentas-form { /* Form compacto para Flujo de pagos/cobros */
     display: grid;
-    grid-template-columns: max-content max-content max-content max-content max-content max-content;
+    grid-template-columns: max-content max-content max-content max-content max-content max-content max-content; /* + botón Agregar */
     gap: 0.5rem 0.6rem;
     align-items: end;
     margin-bottom: 0.5rem;
@@ -351,6 +351,7 @@ section h2 {
 #pc-tipo { grid-column: 4; }
 #pc-cantidad { grid-column: 5; }
 #pc-costo { grid-column: 6; }
+#pc-add-btn { grid-column: 7; align-self: end; }
 /* Acciones (botones) bajo el título, alineadas con el formulario */
 #panel-cuentas-form { position: relative; }
 #panel-cuentas-actions {
@@ -369,6 +370,7 @@ section h2 {
     #pc-tipo { grid-column: 1 / span 2; }
     #pc-cantidad { grid-column: 3; }
     #pc-costo { grid-column: 4; }
+    #pc-add-btn { grid-column: 4; justify-self: end; }
     /* acciones absolutas, sin cambio */
 }
 @media (max-width: 600px) {
@@ -378,6 +380,7 @@ section h2 {
     #pc-recepcion { grid-column: 2; }
     #pc-cantidad { grid-column: 1; }
     #pc-costo { grid-column: 2; }
+    #pc-add-btn { grid-column: 2; justify-self: end; }
     /* acciones absolutas, sin cambio */
 }
 

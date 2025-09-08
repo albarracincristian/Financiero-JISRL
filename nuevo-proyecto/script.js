@@ -464,6 +464,27 @@ if (document.getElementById('panel-cuentas-table')) {
     tipoSel && tipoSel.addEventListener('change', ()=>autosizeSelect(tipoSel));
     window.addEventListener('resize', ()=>{ autosizeSelect(provSel); autosizeSelect(tipoSel); });
 
+    // Navegación con Enter: pasar de campo en campo y al final ejecutar Agregar
+    const fieldOrder = ['pc-prov','pc-fecha-pedido','pc-recepcion','pc-tipo','pc-cantidad','pc-costo'];
+    function focusNext(currentId){
+        const idx = fieldOrder.indexOf(currentId);
+        if (idx === -1) return;
+        if (idx < fieldOrder.length - 1) {
+            const nextEl = document.getElementById(fieldOrder[idx+1]);
+            if (nextEl) nextEl.focus();
+        } else {
+            const add = document.getElementById('pc-add-btn');
+            if (add) add.click();
+        }
+    }
+    fieldOrder.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') { ev.preventDefault(); focusNext(id); }
+        });
+    });
+
     // Actualizar lead visible en el formulario al cambiar fechas
     // No hay campo lead en el formulario; el valor se calcula al renderizar/guardar.
 }
