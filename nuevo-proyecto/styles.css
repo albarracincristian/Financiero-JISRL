@@ -351,10 +351,16 @@ section h2 {
 #pc-tipo { grid-column: 4; }
 #pc-cantidad { grid-column: 5; }
 #pc-costo { grid-column: 6; }
-/* Fila 2: Botones alineados al final */
-#pc-add-btn { grid-column: 4; justify-self: end; }
-#pc-import-btn { grid-column: 5; justify-self: end; }
-#pc-export-btn { grid-column: 6; justify-self: start; }
+/* Acciones (botones) arriba a la derecha */
+#panel-cuentas { position: relative; }
+#panel-cuentas-actions {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: inline-flex;
+    gap: 0.5rem;
+}
+#panel-cuentas h3 { padding-right: 280px; }
 
 @media (max-width: 900px) {
     #panel-cuentas-form { grid-template-columns: max-content max-content max-content max-content; }
@@ -364,9 +370,7 @@ section h2 {
     #pc-tipo { grid-column: 1 / span 2; }
     #pc-cantidad { grid-column: 3; }
     #pc-costo { grid-column: 4; }
-    #pc-add-btn { grid-column: 2; }
-    #pc-import-btn { grid-column: 3; }
-    #pc-export-btn { grid-column: 4; }
+    /* botones permanecen arriba a la derecha */
 }
 @media (max-width: 600px) {
     #panel-cuentas-form { grid-template-columns: max-content max-content; }
@@ -375,7 +379,7 @@ section h2 {
     #pc-recepcion { grid-column: 2; }
     #pc-cantidad { grid-column: 1; }
     #pc-costo { grid-column: 2; }
-    #pc-add-btn, #pc-import-btn, #pc-export-btn { grid-column: 1 / span 2; justify-self: stretch; }
+    /* botones permanecen arriba a la derecha */
 }
 
 #feriados-table {

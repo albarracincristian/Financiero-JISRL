@@ -25,6 +25,11 @@
         
             <div class="card span-3" id="panel-cuentas">
                 <h3>Flujo de pagos/cobros</h3>
+                <div id="panel-cuentas-actions" class="card-actions">
+                    <button id="pc-add-btn" title="Agregar">Agregar</button>
+                    <button id="pc-import-btn" title="Importar Excel">Importar Excel</button>
+                    <button id="pc-export-btn" title="Exportar Excel">Exportar Excel</button>
+                </div>
                 <div class="add-feriado" id="panel-cuentas-form">
                     <select id="pc-prov" required>
                         <option value="PEPSICO">PEPSICO</option>
@@ -47,9 +52,6 @@
                     <input type="text" id="pc-cantidad" placeholder="Cantid. (Tn/Pallet)" inputmode="decimal">
                     <input type="text" id="pc-costo" placeholder="Costo AR$" inputmode="decimal">
                     <input type="file" id="pc-excel-file" accept=".xlsx,.xls" style="display:none">
-                    <button id="pc-add-btn" title="Agregar">Agregar</button>
-                    <button id="pc-import-btn" title="Importar Excel">Importar Excel</button>
-                    <button id="pc-export-btn" title="Exportar Excel">Exportar Excel</button>
                 </div>
                 <div class="table-wrapper">
                 <table class="mini-table" id="panel-cuentas-table">
