@@ -161,6 +161,28 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 .mini-table th:last-child,
 .mini-table td:last-child { width: 72px; text-align: center; }
 
+/* Alineación y anchos consistentes para la tabla del panel */
+#panel-cuentas-table th:nth-child(2),
+#panel-cuentas-table td:nth-child(2) { /* Lead (días) */
+    text-align: right;
+    width: 88px;
+}
+#panel-cuentas-table th:nth-child(7),
+#panel-cuentas-table td:nth-child(7) { /* Cantid. */
+    text-align: right;
+    width: 88px;
+}
+#panel-cuentas-table th:nth-child(8),
+#panel-cuentas-table td:nth-child(8) { /* Costo AR$ */
+    text-align: right;
+    min-width: 160px;
+}
+#panel-cuentas-table th:nth-child(9),
+#panel-cuentas-table td:nth-child(9) { /* Pagado */
+    text-align: center;
+    width: 72px;
+}
+
 /* Fechas calculadas: resaltar pasado vs próximo */
 #op-fechas-table td.date-past {
     color: var(--text-muted);
