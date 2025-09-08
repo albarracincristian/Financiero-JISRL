@@ -244,7 +244,7 @@ if (document.getElementById('panel-cuentas-table')) {
         if (!da || !db) return '';
         const ms = db.getTime() - da.getTime();
         const d = Math.round(ms / (1000*60*60*24));
-        return d.toFixed(1).replace('.', ',');
+        return String(d);
     };
     const parseNum = (s) => {
         if (s == null) return null;
@@ -273,9 +273,8 @@ if (document.getElementById('panel-cuentas-table')) {
         cuentas = rows.map((tr) => {
             const td = tr.querySelectorAll('td');
             const chk = tr.querySelector('input[type="checkbox"]');
-            return {
+            const it = {
                 fecha: (td[0]?.textContent||'').trim(),
-                lead: (td[1]?.textContent||'').trim(),
                 proveedor: (td[2]?.textContent||'').trim(),
                 fechaPedido: (td[3]?.textContent||'').trim(),
                 recepcion: (td[4]?.textContent||'').trim(),
@@ -284,6 +283,8 @@ if (document.getElementById('panel-cuentas-table')) {
                 costo: parseNum((td[7]?.textContent||'').trim()),
                 pagado: !!(chk && chk.checked)
             };
+            it.lead = daysDiff(it.fechaPedido, it.recepcion) || '';
+            return it;
         });
         localStorage.setItem(LS_KEY, JSON.stringify(cuentas));
     }
@@ -295,10 +296,11 @@ if (document.getElementById('panel-cuentas-table')) {
             const estadoClass = estado === 'Pasado' ? 'estado-pasado' : 'estado-proximo';
             const costo = Number(it.costo||0);
             const costoCls = costo >= 0 ? 'money positive' : 'money negative';
+            const leadVal = daysDiff(it.fechaPedido, it.recepcion) || (it.lead ?? '');
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${it.fecha||''}</td>
-                <td>${(it.lead ?? '').toString()}</td>
+                <td>${leadVal}</td>
                 <td>${it.proveedor||''}</td>
                 <td>${it.fechaPedido||''}</td>
                 <td>${it.recepcion||''}</td>
@@ -404,12 +406,7 @@ if (document.getElementById('panel-cuentas-table')) {
     load();
 
     // Actualizar lead visible en el formulario al cambiar fechas
-    const pedidoEl = document.getElementById('pc-fecha-pedido');
-    const recepEl = document.getElementById('pc-recepcion');
-    const leadEl = document.getElementById('pc-lead');
-    const refreshLead = () => { if (leadEl) leadEl.value = daysDiff(pedidoEl.value, recepEl.value) || ''; };
-    if (pedidoEl) pedidoEl.addEventListener('change', refreshLead);
-    if (recepEl) recepEl.addEventListener('change', refreshLead);
+    // No hay campo lead en el formulario; el valor se calcula al renderizar/guardar.
 }
 
 
