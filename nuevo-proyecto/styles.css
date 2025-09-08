@@ -183,6 +183,12 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
     width: 72px;
 }
 
+/* Centrar datos y encabezados en la tabla del panel */
+#panel-cuentas-table th,
+#panel-cuentas-table td {
+    text-align: center;
+}
+
 /* Fechas calculadas: resaltar pasado vs próximo */
 #op-fechas-table td.date-past {
     color: var(--text-muted);
