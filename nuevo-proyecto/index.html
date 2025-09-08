@@ -31,9 +31,11 @@
                     <input type="text" id="pc-prov" placeholder="Proveedor">
                     <input type="date" id="pc-fecha-pedido" placeholder="Fecha Pedido">
                     <input type="date" id="pc-recepcion" placeholder="Recepción">
-                    <select id="pc-tipo">
+                    <select id="pc-tipo" required>
                         <option value="FACTURA">FACTURA</option>
+                        <option value="NOTA DE CREDITO">NOTA DE CREDITO</option>
                         <option value="PAGO">PAGO</option>
+                        <option value="ACREDITACION">ACREDITACION</option>
                     </select>
                     <input type="text" id="pc-cantidad" placeholder="Cantid. (Tn/Pallet)" inputmode="decimal">
                     <input type="text" id="pc-costo" placeholder="Costo AR$" inputmode="decimal">
