@@ -650,3 +650,7 @@ section#input .cards-grid {
     cursor: pointer;
 }
 #op-fechas-table .edit-fecha:hover { background: rgba(37,99,235,0.10); }
+/* Estilo simple para montos */
+.money.positive { color: #16a34a; }
+.money.negative { color: #dc2626; }
+
