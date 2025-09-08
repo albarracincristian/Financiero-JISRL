@@ -268,6 +268,16 @@ if (document.getElementById('panel-cuentas-table')) {
 
     let cuentas = [];
 
+    function sortCuentas() {
+        cuentas.sort((a, b) => {
+            const da = parseLocalDate(a && a.fecha);
+            const db = parseLocalDate(b && b.fecha);
+            const ta = da ? da.getTime() : -Infinity;
+            const tb = db ? db.getTime() : -Infinity;
+            return tb - ta; // más recientes primero
+        });
+    }
+
     function seedFromExistingRows() {
         const rows = Array.from(tbody.querySelectorAll('tr'));
         cuentas = rows.map((tr) => {
@@ -287,6 +297,7 @@ if (document.getElementById('panel-cuentas-table')) {
             it.lead = (n == null) ? '' : (n === 0 ? '—' : String(n));
             return it;
         });
+        sortCuentas();
         localStorage.setItem(LS_KEY, JSON.stringify(cuentas));
     }
 
@@ -324,6 +335,7 @@ if (document.getElementById('panel-cuentas-table')) {
         if (!cuentas.length && tbody.children.length) {
             seedFromExistingRows();
         }
+        sortCuentas();
         renderCuentas();
     }
 
@@ -344,6 +356,7 @@ if (document.getElementById('panel-cuentas-table')) {
         const nLead = daysDiff(fechaPedido, recepcion);
         const lead = (nLead == null) ? '—' : (nLead === 0 ? '—' : String(nLead));
         cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
+        sortCuentas();
         save();
         renderCuentas();
         // limpiar
@@ -394,6 +407,7 @@ if (document.getElementById('panel-cuentas-table')) {
                 const pagado = String(row[8]||'').toLowerCase().trim() === 'true';
                 if (fecha && proveedor) cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
             }
+            sortCuentas();
             save();
             renderCuentas();
             alert('Registros importados correctamente.');
