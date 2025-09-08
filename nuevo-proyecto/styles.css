@@ -161,6 +161,13 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 .mini-table th:last-child,
 .mini-table td:last-child { width: 72px; text-align: center; }
 
+/* Mejorar usabilidad de checkboxes en tablas */
+.mini-table input[type="checkbox"] {
+    transform: scale(1.35);
+    transform-origin: center;
+    cursor: pointer;
+}
+
 /* Alineación y anchos consistentes para la tabla del panel */
 #panel-cuentas-table th:nth-child(2),
 #panel-cuentas-table td:nth-child(2) { /* Lead (días) */
