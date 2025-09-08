@@ -20,7 +20,19 @@
     <section id="flujo-caja">
         <h2>Tesorería</h2>
         <p>Sección para gestionar el flujo de caja.</p>
-        <!-- Placeholder for content -->
+        <div class="cards-grid">
+            <div class="card" id="panel-datos-iniciales">
+                <h3>Completar datos (grises)</h3>
+                <div class="kv">
+                    <label for="op-saldo-inicial">Saldo inicial (incluye deuda anterior)</label>
+                    <input id="op-saldo-inicial" type="text" placeholder="$ 0">
+
+                    <label for="op-mes-curso">Mes en curso</label>
+                    <input id="op-mes-curso" type="number" min="1" max="12" placeholder="9">
+                </div>
+            </div>
+        </div>
     </section>
+    <script src="script.js"></script>
 </body>
 </html>
