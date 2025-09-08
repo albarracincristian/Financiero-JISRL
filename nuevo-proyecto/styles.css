@@ -147,12 +147,16 @@ section#input { max-width: clamp(800px, 95vw, 1400px); }
     font: inherit;
 }
 
-.mini-table { width: 100%; border-collapse: collapse; }
-.mini-table th, .mini-table td { padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); }
+.mini-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.mini-table th, .mini-table td { padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); box-sizing: border-box; }
 .mini-table thead th { background: var(--surface-2); font-weight: 700; box-shadow: inset 0 -2px 0 var(--primary); }
 /* En tarjetas (Operaciones), evitamos duplicar líneas de encabezado */
 .card .mini-table thead th { box-shadow: none; }
 .card .mini-table { margin-top: 0.25rem; }
+
+/* Alinear correctamente la última columna ('Pagado') dentro de la tarjeta */
+.mini-table th:last-child,
+.mini-table td:last-child { width: 72px; text-align: center; }
 
 /* Fechas calculadas: resaltar pasado vs próximo */
 #op-fechas-table td.date-past {
