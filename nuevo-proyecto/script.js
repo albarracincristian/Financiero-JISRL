@@ -1,4 +1,4 @@
-﻿// Abrir automáticamente el selector de fecha al interactuar
+﻿// Abrir automáticamente el selector de fecha en clic, pero permitir tipeo
 (function(){
   const onReady = () => {
     const inputs = document.querySelectorAll('input[type="date"]');
@@ -9,9 +9,13 @@
           else { el.focus(); el.click(); }
         } catch {}
       };
-      el.addEventListener('mousedown', (ev) => { ev.preventDefault(); el.focus(); openPicker(); });
-      el.addEventListener('focus', () => { openPicker(); });
-      el.addEventListener('keydown', (ev) => { if ((ev.key === 'Enter' || ev.key === ' ') && typeof el.showPicker === 'function') { ev.preventDefault(); el.showPicker(); } });
+      el.addEventListener('mousedown', () => { setTimeout(openPicker, 0); });
+      el.addEventListener('keydown', (ev) => {
+        if ((ev.key === 'Enter' || ev.key === ' ') && typeof el.showPicker === 'function' && el.id !== 'feriado-date') {
+          ev.preventDefault();
+          el.showPicker();
+        }
+      });
     });
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onReady); else onReady();
@@ -140,6 +144,17 @@ if (document.getElementById('feriados-table')) {
     }
 
     document.getElementById('add-feriado-btn').addEventListener('click', addFeriado);
+    // Permitir agregar con Enter desde nombre o fecha
+    ['feriado-name','feriado-date'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('keydown', function(ev) {
+            if (ev.key === 'Enter') {
+                ev.preventDefault();
+                addFeriado();
+            }
+        });
+    });
 
     // Import Excel functionality
     document.getElementById('import-excel-btn').addEventListener('click', function() {
@@ -203,5 +218,6 @@ if (document.getElementById('feriados-table')) {
         XLSX.writeFile(wb, 'feriados.xlsx');
     });
 }
+
 
 
