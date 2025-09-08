@@ -218,11 +218,7 @@ window.addEventListener('load', function(){
     table.addEventListener('click', (ev)=>{
       const btn=ev.target.closest && ev.target.closest('.edit-fecha'); if(!btn) return;
       const id=btn.dataset.id; const row=btn.closest('tr');
-      const curD1=row.cells[1].textContent.trim();
-      const newD1s=prompt('Editar Fecha (dd/mm/aaaa):',curD1)||''; const nd1=parseDMY(newD1s); if(!nd1) return;
-      const adj1 = adjustToBusiness(nd1);
-      const adj2 = nextMonthBusinessFrom(adj1);
-      const o=loadO(); const e=o[id]||{}; e.d1=toYMD(adj1); e.d2=toYMD(adj2); o[id]=e; saveO(o); render();
+      const curLabel=row.querySelector('.concept-text')?.textContent.trim()||'';\n      const newLabel=prompt('Editar concepto:',curLabel) ?? curLabel;\n      const curD1=row.cells[1].textContent.trim();\n      const newD1s=prompt('Editar Fecha (dd/mm/aaaa):',curD1)||'';\n      const nd1=parseDMY(newD1s); if(!nd1) return;\n      const adj1 = adjustToBusiness(nd1);\n      const adj2 = nextMonthBusinessFrom(adj1);\n      const o=loadO(); const e=o[id]||{}; if(newLabel && newLabel.trim()) e.label=newLabel.trim(); e.d1=toYMD(adj1); e.d2=toYMD(adj2); o[id]=e; saveO(o); render();
     });
     table.__editFallback=true;
   }
@@ -230,6 +226,7 @@ window.addEventListener('load', function(){
 </script>
 </body>
 </html>
+
 
 
 
