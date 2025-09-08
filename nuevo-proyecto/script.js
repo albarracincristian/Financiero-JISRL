@@ -296,7 +296,10 @@ if (document.getElementById('panel-cuentas-table')) {
             const estado = getEstado(it.fecha);
             const estadoClass = estado === 'Pasado' ? 'estado-pasado' : 'estado-proximo';
             const costo = Number(it.costo||0);
-            const costoCls = costo >= 0 ? 'money positive' : 'money negative';
+            // Invertir colores: negativo = verde (positive), positivo = rojo (negative)
+            let costoCls = '';
+            if (costo < 0) costoCls = 'money positive';
+            else if (costo > 0) costoCls = 'money negative';
             const nLead = daysDiff(it.fechaPedido, it.recepcion);
             let leadVal = (nLead == null) ? (it.lead ?? '') : String(nLead);
             if (leadVal === '0') leadVal = '—';
