@@ -405,11 +405,23 @@
                     const monthId = inputEl.getAttribute('data-month');
                     const colIdx = cols.findIndex(c => c.id === field);
                     if (colIdx === -1) return;
+                    // Intentar moverse a la derecha en la misma fila
                     for (let i = colIdx + 1; i < cols.length; i++) {
                         const nextId = cols[i].id;
                         const sel = `input.grid-input[data-month="${monthId}"][data-field="${nextId}"]`;
                         const cand = gridBody.querySelector(sel);
                         if (cand && !cand.readOnly) { focusGridCell(monthId, nextId); return; }
+                    }
+                    // Wrap-around: primera columna editable de la fila siguiente
+                    let rowIdx = months.findIndex(m => m.id === monthId);
+                    if (rowIdx === -1) return;
+                    rowIdx = (rowIdx + 1) % months.length;
+                    const nextMonthId = months[rowIdx].id;
+                    for (let i = 0; i < cols.length; i++) {
+                        const nextId = cols[i].id;
+                        const sel = `input.grid-input[data-month="${nextMonthId}"][data-field="${nextId}"]`;
+                        const cand = gridBody.querySelector(sel);
+                        if (cand && !cand.readOnly) { focusGridCell(nextMonthId, nextId); return; }
                     }
                 }
                 gridBody.addEventListener('keydown', (ev) => {
@@ -1245,6 +1257,7 @@
     </section>
 </body>
 </html>
+
 
 
 
