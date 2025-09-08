@@ -164,17 +164,17 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 /* Alineación y anchos consistentes para la tabla del panel */
 #panel-cuentas-table th:nth-child(2),
 #panel-cuentas-table td:nth-child(2) { /* Lead (días) */
-    text-align: right;
+    text-align: center;
     width: 88px;
 }
 #panel-cuentas-table th:nth-child(7),
 #panel-cuentas-table td:nth-child(7) { /* Cantid. */
-    text-align: right;
+    text-align: center;
     width: 88px;
 }
 #panel-cuentas-table th:nth-child(8),
 #panel-cuentas-table td:nth-child(8) { /* Costo AR$ */
-    text-align: right;
+    text-align: center;
     min-width: 160px;
 }
 #panel-cuentas-table th:nth-child(9),
@@ -188,6 +188,10 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 #panel-cuentas-table td {
     text-align: center;
 }
+
+/* Anula la alineación derecha por clase .right solo en esta tabla */
+#panel-cuentas-table td.right,
+#panel-cuentas-table th.right { text-align: center; }
 
 /* Fechas calculadas: resaltar pasado vs próximo */
 #op-fechas-table td.date-past {
