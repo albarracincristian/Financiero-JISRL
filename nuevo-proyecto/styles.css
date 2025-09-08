@@ -317,6 +317,48 @@ section h2 {
     background-color: var(--primary-600);
 }
 
+#panel-cuentas-form { /* Form compacto para Flujo de pagos/cobros */
+    display: grid;
+    grid-template-columns: repeat(6, minmax(120px, 1fr));
+    gap: 0.5rem;
+    align-items: end;
+    margin-bottom: 0.5rem;
+}
+#panel-cuentas-form input,
+#panel-cuentas-form select,
+#panel-cuentas-form button {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.6rem;
+}
+#panel-cuentas-form input,
+#panel-cuentas-form select {
+    min-width: 0; /* permite encoger dentro del grid */
+}
+/* Distribución por columnas (fila 1) */
+#pc-prov { grid-column: span 2; }
+#pc-fecha-pedido { grid-column: span 2; }
+#pc-recepcion { grid-column: span 2; }
+/* Fila 2 */
+#pc-tipo { grid-column: span 3; }
+#pc-cantidad { grid-column: span 1; }
+#pc-costo { grid-column: span 1; }
+#pc-add-btn { grid-column: 6; justify-self: end; }
+#pc-import-btn { grid-column: 5; justify-self: end; }
+#pc-export-btn { grid-column: 6; justify-self: start; }
+
+@media (max-width: 900px) {
+    #panel-cuentas-form { grid-template-columns: repeat(4, minmax(120px, 1fr)); }
+    #pc-tipo { grid-column: span 2; }
+    #pc-import-btn { grid-column: 3; }
+    #pc-export-btn { grid-column: 4; }
+}
+@media (max-width: 600px) {
+    #panel-cuentas-form { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    #pc-prov, #pc-fecha-pedido, #pc-recepcion, #pc-tipo { grid-column: span 2; }
+    #pc-cantidad, #pc-costo { grid-column: span 1; }
+    #pc-add-btn, #pc-import-btn, #pc-export-btn { grid-column: span 1; justify-self: stretch; }
+}
+
 #feriados-table {
     width: 100%;
     border-collapse: collapse;
