@@ -351,16 +351,15 @@ section h2 {
 #pc-tipo { grid-column: 4; }
 #pc-cantidad { grid-column: 5; }
 #pc-costo { grid-column: 6; }
-/* Acciones (botones) arriba a la derecha */
-#panel-cuentas { position: relative; }
+/* Acciones (botones) bajo el título, alineadas con el formulario */
 #panel-cuentas-actions {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    grid-column: 4 / 7;
+    justify-self: end;
+    align-self: start;
     display: inline-flex;
     gap: 0.5rem;
+    margin-top: 0.15rem;
 }
-#panel-cuentas h3 { padding-right: 280px; }
 
 @media (max-width: 900px) {
     #panel-cuentas-form { grid-template-columns: max-content max-content max-content max-content; }
@@ -370,7 +369,7 @@ section h2 {
     #pc-tipo { grid-column: 1 / span 2; }
     #pc-cantidad { grid-column: 3; }
     #pc-costo { grid-column: 4; }
-    /* botones permanecen arriba a la derecha */
+    #panel-cuentas-actions { grid-column: 3 / 5; }
 }
 @media (max-width: 600px) {
     #panel-cuentas-form { grid-template-columns: max-content max-content; }
@@ -379,7 +378,7 @@ section h2 {
     #pc-recepcion { grid-column: 2; }
     #pc-cantidad { grid-column: 1; }
     #pc-costo { grid-column: 2; }
-    /* botones permanecen arriba a la derecha */
+    #panel-cuentas-actions { grid-column: 1 / 3; justify-self: end; }
 }
 
 #feriados-table {
