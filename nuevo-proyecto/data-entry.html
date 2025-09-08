@@ -390,6 +390,36 @@
                 }
 
                 gridBody.addEventListener('input', handleChange);
+                // Navegación con Enter: bajar a la próxima fila en la misma columna
+                function focusGridCell(monthId, colId) {
+                    const sel = `input.grid-input[data-month="${monthId}"][data-field="${colId}"]`;
+                    const next = gridBody.querySelector(sel);
+                    if (next) {
+                        next.focus();
+                        try { next.select(); } catch {}
+                        try { next.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch {}
+                    }
+                }
+                function moveDownFrom(inputEl) {
+                    const field = inputEl.getAttribute('data-field');
+                    const monthId = inputEl.getAttribute('data-month');
+                    const idx = months.findIndex(m => m.id === monthId);
+                    if (idx === -1) return;
+                    for (let i = idx + 1; i < months.length; i++) {
+                        const mId = months[i].id;
+                        const sel = `input.grid-input[data-month="${mId}"][data-field="${field}"]`;
+                        const cand = gridBody.querySelector(sel);
+                        if (cand) { focusGridCell(mId, field); return; }
+                    }
+                }
+                gridBody.addEventListener('keydown', (ev) => {
+                    const input = ev.target && ev.target.closest && ev.target.closest('input.grid-input');
+                    if (!input) return;
+                    if (ev.key === 'Enter') {
+                        ev.preventDefault();
+                        moveDownFrom(input);
+                    }
+                });
 
                 // Dar una experiencia de ediciÃ³n cÃ³moda para moneda
                 function unformatCurrencyDisplay(input) {
@@ -1215,6 +1245,7 @@
     </section>
 </body>
 </html>
+
 
 
 
