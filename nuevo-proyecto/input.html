@@ -150,11 +150,14 @@ window.addEventListener('load', function(){
   const tbody = document.getElementById('op-fechas-body');
   const table = document.getElementById('op-fechas-table');
   if (!tbody || !table) return;
-  if (tbody.children.length > 0) return;
+  if (tbody.children.length > 0) return; // si el script principal ya llenó, no hacemos nada
+
   const toYMD = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const toDMY = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
   const parseDMY = s => { const m=String(s||'').match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/); if(!m) return null; const dt=new Date(+m[3],+m[2]-1,+m[1]); return isNaN(dt.getTime())?null:dt; };
   const ymdToDate = ymd => { const p=String(ymd||'').split('-'); if(p.length!==3) return null; const dt=new Date(+p[0],+p[1]-1,+p[2]); return isNaN(dt.getTime())?null:dt; };
+
+  // Base proporcionada (se puede overridear sin perder info)
   const BASE = [
     {id:'sicore', label:'SICORE (últ. hábil 9-11)', d1:'2025-09-11', d2:'2025-10-11'},
     {id:'serv', label:'Servicios (últ. hábil 1-10)', d1:'2025-09-10', d2:'2025-10-10'},
@@ -162,31 +165,71 @@ window.addEventListener('load', function(){
     {id:'gg', label:'Gastos Generales (últ. hábil 1-10)', d1:'2025-09-10', d2:'2025-10-09'},
     {id:'iva', label:'Impuesto IVA (últ. hábil 15-18)', d1:'2025-09-18', d2:'2025-10-17'},
     {id:'iibb', label:'IIBB/Percepciones (últ. hábil 8-11)', d1:'2025-09-11', d2:'2025-10-11'},
-    {id:'gan', label:'Ganancia (últ. Hábil 8-11)', d1:'2025-09-11', d2:'2025-10-11'},
+    {id:'gan', label:'Ganancia (últ. hábil 8-11)', d1:'2025-09-11', d2:'2025-10-11'},
     {id:'otros', label:'Otros (últ. hábil 1-10)', d1:'2025-09-10', d2:'2025-10-09'},
-    {id:'seg', label:'Seguros (ult. Habil 25-27)', d1:'2025-09-27', d2:'2025-10-27'},
-    {id:'comb1', label:'Combustible 1 (ult. Habil -10)', d1:'2025-09-10', d2:'2025-10-10'},
-    {id:'comb2', label:'Combustible 2 (ult. Habil -25)', d1:'2025-09-25', d2:'2025-10-25'},
-    {id:'rentas', label:'Rentas Automotor (ult. Habil -15)', d1:'2025-09-15', d2:'2025-10-15'},
-    {id:'nc', label:'NC (últ. hábil en 11-16)', d1:'2025-09-15', d2:'2025-10-15'}
+    {id:'seg', label:'Seguros (últ. hábil 25-27)', d1:'2025-09-27', d2:'2025-10-27'},
+    {id:'comb1', label:'Combustible 1 (últ. hábil ≤10)', d1:'2025-09-10', d2:'2025-10-10'},
+    {id:'comb2', label:'Combustible 2 (últ. hábil ≤25)', d1:'2025-09-25', d2:'2025-10-25'},
+    {id:'rentas', label:'Rentas Automotor (últ. hábil ≤15)', d1:'2025-09-15', d2:'2025-10-15'},
+    {id:'nc', label:'NC (últ. hábil 11-16)', d1:'2025-09-15', d2:'2025-10-15'}
   ];
+
+  // Feriados + días hábiles
+  const feriados = (()=>{ try { return JSON.parse(localStorage.getItem('feriados')||'[]')||[]; } catch { return []; } })();
+  const feriadosSet = new Set(feriados.map(f=>String(f.date)));
+  const isBusiness = d => { const wd=d.getDay(); if (wd===0||wd===6) return false; return !feriadosSet.has(toYMD(d)); };
+  const dim = (y,m)=> new Date(y,m+1,0).getDate();
+  const adjustToBusiness = d => { const dt=new Date(d.getFullYear(),d.getMonth(),d.getDate()); while(!isBusiness(dt)) dt.setDate(dt.getDate()-1); return dt; };
+  const nextMonthBusinessFrom = d => { const yN = d.getMonth()===11? d.getFullYear()+1 : d.getFullYear(); const mN=(d.getMonth()+1)%12; const day=Math.min(d.getDate(), dim(yN,mN)); return adjustToBusiness(new Date(yN,mN,day)); };
+
+  // Overrides persistentes
   const OKEY='op_fechas_overrides_v1';
   const loadO = () => { try { return JSON.parse(localStorage.getItem(OKEY)||'{}')||{}; } catch { return {}; } };
   const saveO = (o) => { try { localStorage.setItem(OKEY, JSON.stringify(o||{})); } catch {} };
+
   function render(){
     tbody.innerHTML='';
     const ovr = loadO();
-    const rows = BASE.map(r=>{ const e=ovr[r.id]||{}; const label=e.label||r.label; const d1=e.d1?ymdToDate(e.d1):new Date(r.d1); const d2=e.d2?ymdToDate(e.d2):new Date(r.d2); return {id:r.id,label,d1,d2}; });
-    rows.forEach(row=>{ const tr=document.createElement('tr'); const td0=document.createElement('td'); const span=document.createElement('span'); span.className='concept-text'; span.textContent=row.label; const b=document.createElement('button'); b.className='edit-fecha'; b.textContent='✎'; b.title='Editar'; b.dataset.id=row.id; td0.appendChild(span); td0.appendChild(b); const td1=document.createElement('td'); td1.textContent=toDMY(row.d1); const td2=document.createElement('td'); td2.textContent=toDMY(row.d2); tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr); });
+    const rows = BASE.map(r=>{
+      let d1 = ovr[r.id]?.d1 ? ymdToDate(ovr[r.id].d1) : new Date(r.d1);
+      let d2;
+      if (ovr[r.id]?.d1) {
+        d1 = adjustToBusiness(d1);
+        d2 = nextMonthBusinessFrom(d1);
+      } else if (ovr[r.id]?.d2) {
+        d2 = adjustToBusiness(ymdToDate(ovr[r.id].d2));
+      } else {
+        d2 = new Date(r.d2);
+      }
+      const label = ovr[r.id]?.label || r.label;
+      return {id:r.id,label,d1,d2};
+    });
+    rows.forEach(row=>{
+      const tr=document.createElement('tr');
+      const td0=document.createElement('td'); const span=document.createElement('span'); span.className='concept-text'; span.textContent=row.label; const b=document.createElement('button'); b.className='edit-fecha'; b.textContent='✎'; b.title='Editar fecha'; b.dataset.id=row.id; td0.appendChild(span); td0.appendChild(b);
+      const td1=document.createElement('td'); td1.textContent=toDMY(row.d1);
+      const td2=document.createElement('td'); td2.textContent=toDMY(row.d2);
+      tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+    });
   }
   render();
+
   if (!table.__editFallback) {
-    table.addEventListener('click', (ev)=>{ const btn=ev.target.closest && ev.target.closest('.edit-fecha'); if(!btn) return; const id=btn.dataset.id; const row=btn.closest('tr'); const curLabel=row.querySelector('.concept-text').textContent.trim(); const curD1=row.cells[1].textContent.trim(); const curD2=row.cells[2].textContent.trim(); const newLabel=prompt('Editar concepto:',curLabel) ?? curLabel; const newD1s=prompt('Editar Fecha (dd/mm/aaaa):',curD1)||''; const newD2s=prompt('Editar Mes siguiente (dd/mm/aaaa):',curD2)||''; const o=loadO(); const e=o[id]||{}; if(newLabel && newLabel.trim()) e.label=newLabel.trim(); const nd1=parseDMY(newD1s); if(nd1) e.d1=toYMD(nd1); const nd2=parseDMY(newD2s); if(nd2) e.d2=toYMD(nd2); o[id]=e; saveO(o); render(); });
+    table.addEventListener('click', (ev)=>{
+      const btn=ev.target.closest && ev.target.closest('.edit-fecha'); if(!btn) return;
+      const id=btn.dataset.id; const row=btn.closest('tr');
+      const curD1=row.cells[1].textContent.trim();
+      const newD1s=prompt('Editar Fecha (dd/mm/aaaa):',curD1)||''; const nd1=parseDMY(newD1s); if(!nd1) return;
+      const adj1 = adjustToBusiness(nd1);
+      const adj2 = nextMonthBusinessFrom(adj1);
+      const o=loadO(); const e=o[id]||{}; e.d1=toYMD(adj1); e.d2=toYMD(adj2); o[id]=e; saveO(o); render();
+    });
     table.__editFallback=true;
   }
 });
 </script>
 </body>
 </html>
+
 
 
