@@ -274,7 +274,7 @@ if (document.getElementById('panel-cuentas-table')) {
             const db = parseLocalDate(b && b.fecha);
             const ta = da ? da.getTime() : -Infinity;
             const tb = db ? db.getTime() : -Infinity;
-            return tb - ta; // más recientes primero
+            return ta - tb; // más antiguos primero (orden invertido)
         });
     }
 
