@@ -177,7 +177,7 @@ window.addEventListener('load', function(){
   // Feriados + días hábiles
   const feriados = (()=>{ try { return JSON.parse(localStorage.getItem('feriados')||'[]')||[]; } catch { return []; } })();
   const feriadosSet = new Set(feriados.map(f=>String(f.date)));
-  const isBusiness = d => { const wd=d.getDay(); if (wd===0||wd===6) return false; return !feriadosSet.has(toYMD(d)); };
+  const isBusiness = d => { const wd=d.getDay(); if (wd===0) return false; return !feriadosSet.has(toYMD(d)); };
   const dim = (y,m)=> new Date(y,m+1,0).getDate();
   const adjustToBusiness = d => { const dt=new Date(d.getFullYear(),d.getMonth(),d.getDate()); while(!isBusiness(dt)) dt.setDate(dt.getDate()-1); return dt; };
   const nextMonthBusinessFrom = d => { const yN = d.getMonth()===11? d.getFullYear()+1 : d.getFullYear(); const mN=(d.getMonth()+1)%12; const day=Math.min(d.getDate(), dim(yN,mN)); return adjustToBusiness(new Date(yN,mN,day)); };
@@ -230,6 +230,7 @@ window.addEventListener('load', function(){
 </script>
 </body>
 </html>
+
 
 
 
