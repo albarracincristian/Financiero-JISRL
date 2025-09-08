@@ -636,3 +636,17 @@ section#input .cards-grid {
 /* Ajustar alturas: parámetros según contenido; fechas un poco más alta */
 #op-parametros { min-height: auto; }
 #op-fechas { min-height: 560px; }
+
+/* Botón editar en Fechas calculadas */
+#op-fechas-table .edit-fecha {
+    float: right;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    font-size: 12px;
+    line-height: 1.1;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#op-fechas-table .edit-fecha:hover { background: rgba(37,99,235,0.10); }

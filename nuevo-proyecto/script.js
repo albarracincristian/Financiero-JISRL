@@ -232,39 +232,8 @@ if (document.getElementById('op-fechas')) {
         return `${y}-${m}-${day}`;
     };
     const daysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
-    const toDMY = (d) => {
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${day}/${m}/${y}`;
-    };
-    // Feriados: usar los guardados en localStorage
-    let feriadosSet = new Set();
-    try {
-        const arr = JSON.parse(localStorage.getItem('feriados') || '[]');
-        arr.forEach(f => { if (f && f.date) feriadosSet.add(String(f.date)); });
-    } catch {}
-    const isBusiness = (d) => {
-        const wd = d.getDay(); // 0=dom,6=sab
-        if (wd === 0 || wd === 6) return false;
-        return !feriadosSet.has(toYMD(d));
-    };
-    const lastBusinessInRange = (y, m, startDay, endDay) => {
-        const dim = daysInMonth(y, m);
-        const start = Math.max(1, startDay);
-        const end = Math.min(dim, endDay);
-        for (let d = end; d >= start; d--) {
-            const dt = new Date(y, m, d);
-            if (isBusiness(dt)) return dt;
-        }
-        // Fallback: buscar hacia atrás desde start-1
-        for (let d = start - 1; d >= 1; d--) {
-            const dt = new Date(y, m, d);
-            if (isBusiness(dt)) return dt;
-        }
-        return new Date(y, m, 1); // último recurso
-    };
-    const lastBusinessOnOrBefore = (y, m, day) => lastBusinessInRange(y, m, 1, day);
+    const toDMY = (d) => { const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return ${day}//; };
+    // Feriados: usar los guardados en localStorage\n    let feriadosSet = new Set();\n    try { const arr = JSON.parse(localStorage.getItem('feriados') || '[]'); arr.forEach(f=>{ if(f&&f.date) feriadosSet.add(String(f.date)); }); } catch {}\n    const isBusiness = (d) => { const wd=d.getDay(); if(wd===0||wd===6) return false; return !feriadosSet.has(toYMD(d)); };\n    const lastBusinessInRange = (y,m,a,b)=>{ const dim=(yy,mm)=> new Date(yy,mm+1,0).getDate(); const end=Math.min(dim(y,m),b), start=Math.max(1,a); for(let d=end; d>=start; d--){ const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} for(let d=start-1; d>=1; d--){ const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} return new Date(y,m,1); };\n    const lastBusinessOnOrBefore = (y,m,day)=> lastBusinessInRange(y,m,1,day);
 
     const rules = [
         { label: 'Sueldos + F931 (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
@@ -317,4 +286,5 @@ if (document.getElementById('op-fechas')) {
         });
     }
 }
+
 
