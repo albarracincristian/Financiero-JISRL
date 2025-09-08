@@ -627,3 +627,12 @@ table {
     }
 }
 
+
+/* Layout específico de Operaciones: 2 columnas (más ancho Fechas) */
+section#input .cards-grid {
+    grid-template-columns: 1fr 1.6fr;
+}
+
+/* Ajustar alturas: parámetros según contenido; fechas un poco más alta */
+#op-parametros { min-height: auto; }
+#op-fechas { min-height: 560px; }
