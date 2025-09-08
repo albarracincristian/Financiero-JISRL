@@ -28,7 +28,16 @@
                 <div class="add-feriado" id="panel-cuentas-form">
                     <input type="date" id="pc-fecha" placeholder="Pagar/Cobrar">
                     <input type="number" id="pc-lead" placeholder="Lead (días)">
-                    <input type="text" id="pc-prov" placeholder="Proveedor">
+                    <select id="pc-prov" required>
+                        <option value="PEPSICO">PEPSICO</option>
+                        <option value="PERNOD RICARD">PERNOD RICARD</option>
+                        <option value="PRONOVELTIES">PRONOVELTIES</option>
+                        <option value="GEORGALOS">GEORGALOS</option>
+                        <option value="ACREDITACION">ACREDITACION</option>
+                        <option value="CTA CTE">CTA CTE</option>
+                        <option value="BANCO">BANCO</option>
+                        <option value="OTROS">OTROS</option>
+                    </select>
                     <input type="date" id="pc-fecha-pedido" placeholder="Fecha Pedido">
                     <input type="date" id="pc-recepcion" placeholder="Recepción">
                     <select id="pc-tipo" required>

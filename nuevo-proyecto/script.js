@@ -225,6 +225,7 @@ if (document.getElementById('panel-cuentas-table')) {
     const table = document.getElementById('panel-cuentas-table');
     const tbody = table.querySelector('tbody');
     const TIPOS = ['FACTURA','NOTA DE CREDITO','PAGO','ACREDITACION'];
+    const PROVEEDORES = ['PEPSICO','PERNOD RICARD','PRONOVELTIES','GEORGALOS','ACREDITACION','CTA CTE','BANCO','OTROS'];
 
     // Helpers de fecha y número
     const parseLocalDate = (ymd) => {
@@ -325,7 +326,7 @@ if (document.getElementById('panel-cuentas-table')) {
         const cantidad = parseNum(document.getElementById('pc-cantidad').value);
         const costo = parseNum(document.getElementById('pc-costo').value);
         const pagado = document.getElementById('pc-pagado').checked;
-        if (!fecha || !proveedor || !TIPOS.includes(tipo)) { alert('Completar al menos Fecha, Proveedor y un Tipo válido.'); return; }
+        if (!fecha || !PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Completar al menos Fecha y seleccionar Proveedor y Tipo válidos.'); return; }
         cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
         save();
         renderCuentas();
@@ -365,7 +366,8 @@ if (document.getElementById('panel-cuentas-table')) {
                 const row = rows[r]; if (!row || row.length === 0) continue;
                 const fecha = row[0] || '';
                 const lead = row[1] || '';
-                const proveedor = row[2] || '';
+                const proveedorRaw = String(row[2] || '').toUpperCase().trim();
+                const proveedor = PROVEEDORES.includes(proveedorRaw) ? proveedorRaw : '';
                 const fechaPedido = row[3] || '';
                 const recepcion = row[4] || '';
                 const tipoRaw = String(row[5] || '').toUpperCase().trim();
