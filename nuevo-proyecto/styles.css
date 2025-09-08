@@ -163,6 +163,19 @@ section#input { max-width: clamp(800px, 95vw, 1400px); }
 }
 .mini-table td.right, .mini-table th.right { text-align: right; }
 
+/* Igualar altura y comportamiento de Parametros y Fechas calculadas */
+#op-parametros,
+#op-fechas {
+    display: flex;
+    flex-direction: column;
+    min-height: 560px; /* altura objetivo similar */
+}
+#op-parametros .mini-table,
+#op-fechas .mini-table {
+    flex: 1 1 auto;
+    overflow: auto;
+}
+
 @media (max-width: 1024px) {
     .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
