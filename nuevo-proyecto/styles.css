@@ -1,4 +1,4 @@
-/*
+﻿/*
   Tema oscuro con acento verde (inspirado en la captura).
   Usa variables CSS para facilitar ajustes futuros.
 */
@@ -18,7 +18,7 @@
     --primary-600: #1d4ed8;      /* hover */
     --primary-700: #1e40af;      /* active */
 
-    /* Controles (estado y botón) */
+    /* Controles (estado y botÃ³n) */
     --control-minw: 96px;
 }
 
@@ -27,7 +27,7 @@ body {
     background: var(--bg);
     color: var(--text);
     margin: 0;
-    padding: 0; /* el nav será sticky, no necesitamos offset */
+    padding: 0; /* el nav serÃ¡ sticky, no necesitamos offset */
     min-height: 100vh;
 }
 
@@ -45,7 +45,7 @@ body {
 
 nav {
     position: sticky;
-    top: 8px; /* deja un pequeño respiro con el borde superior */
+    top: 8px; /* deja un pequeÃ±o respiro con el borde superior */
     background: linear-gradient(180deg, #ffffff, #f7f9fb);
     padding: 1rem;
     margin: 0.75rem auto;
@@ -81,7 +81,7 @@ nav a:hover {
     color: var(--text);
 }
 
-/* (removido) estilos de botón de tema */
+/* (removido) estilos de botÃ³n de tema */
 
 section {
     background: linear-gradient(180deg, #ffffff, #fafbfc);
@@ -150,6 +150,9 @@ section#input { max-width: clamp(800px, 95vw, 1400px); }
 .mini-table { width: 100%; border-collapse: collapse; }
 .mini-table th, .mini-table td { padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); }
 .mini-table thead th { background: var(--surface-2); font-weight: 700; box-shadow: inset 0 -2px 0 var(--primary); }
+/* En tarjetas (Operaciones), evitamos duplicar líneas de encabezado */
+.card .mini-table thead th { box-shadow: none; }
+.card .mini-table { margin-top: 0.25rem; }
 .mini-table td.right, .mini-table th.right { text-align: right; }
 
 @media (max-width: 1024px) {
@@ -159,10 +162,10 @@ section#input { max-width: clamp(800px, 95vw, 1400px); }
     .cards-grid { grid-template-columns: 1fr; }
 }
 
-/* Permitir que la página de Presupuesto mensual se expanda cuando haya espacio
+/* Permitir que la pÃ¡gina de Presupuesto mensual se expanda cuando haya espacio
    para mostrar la tabla completa sin scroll horizontal innecesario. */
 section#data-entry {
-    /* Dinámico: mínimo 800px, hasta 95vw, con tope 1400px */
+    /* DinÃ¡mico: mÃ­nimo 800px, hasta 95vw, con tope 1400px */
     max-width: clamp(800px, 95vw, 1400px);
 }
 
@@ -286,7 +289,7 @@ section h2 {
     box-shadow: inset 0 -2px 0 var(--primary);
 }
 
-/* Controles de edición en encabezados del grid */
+/* Controles de ediciÃ³n en encabezados del grid */
 #monthly-grid thead th { position: relative; }
 #monthly-grid thead th .col-actions {
     display: inline-flex;
@@ -313,7 +316,7 @@ section h2 {
     background-color: rgba(148, 163, 184, 0.12);
 }
 
-/* Data Entry: rotulado via JS a Title Case; no transform CSS para evitar afectar acrónimos */
+/* Data Entry: rotulado via JS a Title Case; no transform CSS para evitar afectar acrÃ³nimos */
 
 /* Columna de meses (sticky, estilo similar a encabezado) */
 #monthly-grid tbody th,
@@ -353,7 +356,7 @@ input.grid-input:focus {
     text-align: right;
 }
 
-/* Suave énfasis de totales positivos */
+/* Suave Ã©nfasis de totales positivos */
 #monthly-grid td.row-total.positive {
     background: linear-gradient(90deg, rgba(37,99,235,0.10), rgba(37,99,235,0.00));
 }
@@ -362,7 +365,7 @@ input.grid-input:focus {
     color: var(--text-muted);
 }
 
-/* Override: eliminar degradé en totales positivos */
+/* Override: eliminar degradÃ© en totales positivos */
 #monthly-grid td.row-total.positive {
     background: none !important;
 }
@@ -523,7 +526,7 @@ button:focus-visible {
 ::-webkit-scrollbar-corner {
     background: var(--scrollbar-corner);
 }
-/* Ocultar flechas del scrollbar en WebKit (evita los triángulos oscuros) */
+/* Ocultar flechas del scrollbar en WebKit (evita los triÃ¡ngulos oscuros) */
 ::-webkit-scrollbar-button {
     width: 0;
     height: 0;
@@ -534,14 +537,14 @@ button:focus-visible {
 .table-wrapper {
     overflow: auto;
     max-width: 100%;
-    margin-top: 1rem; /* separación estándar arriba de cualquier tabla */
+    margin-top: 1rem; /* separaciÃ³n estÃ¡ndar arriba de cualquier tabla */
 }
 
 .toolbar {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin: 0 0 1rem 0; /* misma separación que feriados */
+    margin: 0 0 1rem 0; /* misma separaciÃ³n que feriados */
 }
 
 /* Tablas anchas: forzar ancho y permitir scroll horizontal */
@@ -569,7 +572,7 @@ table {
         display: inline-block;
     }
 
-    /* Reducir densidad de tablas en móvil */
+    /* Reducir densidad de tablas en mÃ³vil */
     #monthly-grid th,
     #monthly-grid td,
     #feriados-table th,
@@ -602,3 +605,4 @@ table {
         font-size: 0.9rem;
     }
 }
+
