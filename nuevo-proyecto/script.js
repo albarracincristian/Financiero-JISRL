@@ -219,6 +219,180 @@ if (document.getElementById('feriados-table')) {
     });
 }
 
+// Panel: Flujo de pagos/cobros (CRUD simple + import/export)
+if (document.getElementById('panel-cuentas-table')) {
+    const LS_KEY = 'panel_cuentas_v1';
+    const table = document.getElementById('panel-cuentas-table');
+    const tbody = table.querySelector('tbody');
+
+    // Helpers de fecha y número
+    const parseLocalDate = (ymd) => {
+        if (!ymd) return null;
+        const p = String(ymd).split('-');
+        if (p.length !== 3) return null;
+        const y = +p[0], m = +p[1], d = +p[2];
+        if (!y || !m || !d) return null;
+        const dt = new Date(y, m - 1, d);
+        return isNaN(dt.getTime()) ? null : dt;
+    };
+    const toYMD = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const formatDMY = (ymd) => { const d=parseLocalDate(ymd); if(!d) return ''; const dd=String(d.getDate()).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); const yy=d.getFullYear(); return `${dd}/${mm}/${yy}`; };
+    const parseNum = (s) => {
+        if (s == null) return null;
+        let t = String(s).trim();
+        if (!t) return null;
+        t = t.replace(/\$/g,'').replace(/\s/g,'');
+        t = t.replace(/\./g,'').replace(/,/g,'.');
+        const n = parseFloat(t);
+        return isNaN(n) ? null : n;
+    };
+    const toCurrency = (n) => {
+        const sign = (n||0) < 0 ? '-' : '';
+        const abs = Math.abs(n||0);
+        return `${sign}$ ${abs.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+    };
+    const getEstado = (ymd) => {
+        const today = new Date(); today.setHours(0,0,0,0);
+        const dt = parseLocalDate(ymd);
+        return (dt && dt < today) ? 'Pasado' : 'Próximo';
+    };
+
+    let cuentas = [];
+
+    function seedFromExistingRows() {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        cuentas = rows.map((tr) => {
+            const td = tr.querySelectorAll('td');
+            const chk = tr.querySelector('input[type="checkbox"]');
+            return {
+                fecha: (td[0]?.textContent||'').trim(),
+                lead: (td[1]?.textContent||'').trim(),
+                proveedor: (td[2]?.textContent||'').trim(),
+                fechaPedido: (td[3]?.textContent||'').trim(),
+                recepcion: (td[4]?.textContent||'').trim(),
+                tipo: (td[5]?.textContent||'').trim(),
+                cantidad: parseNum((td[6]?.textContent||'').trim()),
+                costo: parseNum((td[7]?.textContent||'').trim()),
+                pagado: !!(chk && chk.checked)
+            };
+        });
+        localStorage.setItem(LS_KEY, JSON.stringify(cuentas));
+    }
+
+    function renderCuentas() {
+        tbody.innerHTML = '';
+        cuentas.forEach((it, idx) => {
+            const estado = getEstado(it.fecha);
+            const estadoClass = estado === 'Pasado' ? 'estado-pasado' : 'estado-proximo';
+            const costo = Number(it.costo||0);
+            const costoCls = costo >= 0 ? 'money positive' : 'money negative';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${it.fecha||''}</td>
+                <td>${(it.lead ?? '').toString()}</td>
+                <td>${it.proveedor||''}</td>
+                <td>${it.fechaPedido||''}</td>
+                <td>${it.recepcion||''}</td>
+                <td>${it.tipo||''}</td>
+                <td class="right">${it.cantidad==null? '—' : String(it.cantidad).replace('.', ',')}</td>
+                <td class="right ${costoCls}">${toCurrency(costo)}</td>
+                <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
+                <td style="text-align:center"><input type="checkbox" data-idx="${idx}" ${it.pagado? 'checked':''}></td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function load() {
+        try { cuentas = JSON.parse(localStorage.getItem(LS_KEY)||'[]')||[]; } catch { cuentas = []; }
+        if (!cuentas.length && tbody.children.length) {
+            seedFromExistingRows();
+        }
+        renderCuentas();
+    }
+
+    function save() { localStorage.setItem(LS_KEY, JSON.stringify(cuentas)); }
+
+    // Add
+    const addBtn = document.getElementById('pc-add-btn');
+    if (addBtn) addBtn.addEventListener('click', () => {
+        const fecha = document.getElementById('pc-fecha').value;
+        const lead = document.getElementById('pc-lead').value;
+        const proveedor = document.getElementById('pc-prov').value.trim();
+        const fechaPedido = document.getElementById('pc-fecha-pedido').value;
+        const recepcion = document.getElementById('pc-recepcion').value;
+        const tipo = document.getElementById('pc-tipo').value;
+        const cantidad = parseNum(document.getElementById('pc-cantidad').value);
+        const costo = parseNum(document.getElementById('pc-costo').value);
+        const pagado = document.getElementById('pc-pagado').checked;
+        if (!fecha || !proveedor || !tipo) { alert('Completar al menos Fecha, Proveedor y Tipo.'); return; }
+        cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
+        save();
+        renderCuentas();
+        // limpiar
+        ['pc-fecha','pc-lead','pc-prov','pc-fecha-pedido','pc-recepcion','pc-cantidad','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        document.getElementById('pc-pagado').checked = false;
+    });
+
+    // Toggle pagado
+    tbody.addEventListener('change', (ev) => {
+        const chk = ev.target.closest && ev.target.closest('input[type="checkbox"][data-idx]');
+        if (!chk) return;
+        const i = parseInt(chk.getAttribute('data-idx'), 10);
+        if (!isNaN(i) && cuentas[i]) {
+            cuentas[i].pagado = !!chk.checked;
+            save();
+        }
+    });
+
+    // Import/Export Excel
+    const importBtn = document.getElementById('pc-import-btn');
+    const exportBtn = document.getElementById('pc-export-btn');
+    const fileInput = document.getElementById('pc-excel-file');
+    if (importBtn && fileInput) importBtn.addEventListener('click', () => fileInput.click());
+    if (fileInput) fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
+            const start = 1; // asumir primera fila encabezado
+            for (let r = start; r < rows.length; r++) {
+                const row = rows[r]; if (!row || row.length === 0) continue;
+                const fecha = row[0] || '';
+                const lead = row[1] || '';
+                const proveedor = row[2] || '';
+                const fechaPedido = row[3] || '';
+                const recepcion = row[4] || '';
+                const tipo = row[5] || '';
+                const cantidad = parseNum(row[6] || '');
+                const costo = parseNum(row[7] || '');
+                const pagado = String(row[8]||'').toLowerCase().trim() === 'true';
+                if (fecha && proveedor) cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
+            }
+            save();
+            renderCuentas();
+            alert('Registros importados correctamente.');
+        };
+        reader.readAsArrayBuffer(file);
+    });
+    if (exportBtn) exportBtn.addEventListener('click', () => {
+        const data = [['Pagar/Cobrar','Lead (días)','Proveedor','Fecha Pedido','Recepción','Tipo','Cantidad','Costo','Estado','Pagado']];
+        cuentas.forEach(it => {
+            data.push([it.fecha, it.lead, it.proveedor, it.fechaPedido, it.recepcion, it.tipo, it.cantidad ?? '', it.costo ?? '', getEstado(it.fecha), it.pagado ? 'true':'false']);
+        });
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Flujo');
+        XLSX.writeFile(wb, 'flujo-pagos.xlsx');
+    });
+
+    load();
+}
+
 
 
 
