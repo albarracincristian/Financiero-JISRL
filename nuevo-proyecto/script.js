@@ -358,7 +358,7 @@ if (document.getElementById('panel-cuentas-table')) {
         const tipo = document.getElementById('pc-tipo').value;
         const cantidad = parseNum(document.getElementById('pc-cantidad').value);
         const costo = parseNum(document.getElementById('pc-costo').value);
-        const pagado = document.getElementById('pc-pagado').checked;
+        const pagado = false; // El checkbox de la fila se gestiona en la tabla
         if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Seleccioná Proveedor y Tipo válidos.'); return; }
         const fecha = computeFechaPago(proveedor, recepcion);
         if (!fecha) { alert('Ingresá fecha de Recepción para calcular Pagar/Cobrar.'); return; }
@@ -370,7 +370,6 @@ if (document.getElementById('panel-cuentas-table')) {
         renderCuentas();
         // limpiar
         ['pc-fecha','pc-lead','pc-prov','pc-fecha-pedido','pc-recepcion','pc-cantidad','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-        document.getElementById('pc-pagado').checked = false;
     });
 
     // Toggle pagado
