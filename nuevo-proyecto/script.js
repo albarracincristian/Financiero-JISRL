@@ -241,10 +241,9 @@ if (document.getElementById('panel-cuentas-table')) {
     const formatDMY = (ymd) => { const d=parseLocalDate(ymd); if(!d) return ''; const dd=String(d.getDate()).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); const yy=d.getFullYear(); return `${dd}/${mm}/${yy}`; };
     const daysDiff = (a,b) => {
         const da = parseLocalDate(a); const db = parseLocalDate(b);
-        if (!da || !db) return '';
+        if (!da || !db) return null;
         const ms = db.getTime() - da.getTime();
-        const d = Math.round(ms / (1000*60*60*24));
-        return String(d);
+        return Math.round(ms / (1000*60*60*24)); // entero
     };
     const parseNum = (s) => {
         if (s == null) return null;
@@ -283,7 +282,8 @@ if (document.getElementById('panel-cuentas-table')) {
                 costo: parseNum((td[7]?.textContent||'').trim()),
                 pagado: !!(chk && chk.checked)
             };
-            it.lead = daysDiff(it.fechaPedido, it.recepcion) || '';
+            const n = daysDiff(it.fechaPedido, it.recepcion);
+            it.lead = (n == null) ? '' : (n === 0 ? '—' : String(n));
             return it;
         });
         localStorage.setItem(LS_KEY, JSON.stringify(cuentas));
@@ -296,7 +296,9 @@ if (document.getElementById('panel-cuentas-table')) {
             const estadoClass = estado === 'Pasado' ? 'estado-pasado' : 'estado-proximo';
             const costo = Number(it.costo||0);
             const costoCls = costo >= 0 ? 'money positive' : 'money negative';
-            const leadVal = daysDiff(it.fechaPedido, it.recepcion) || (it.lead ?? '');
+            const nLead = daysDiff(it.fechaPedido, it.recepcion);
+            let leadVal = (nLead == null) ? (it.lead ?? '') : String(nLead);
+            if (leadVal === '0') leadVal = '—';
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${it.fecha||''}</td>
@@ -335,7 +337,8 @@ if (document.getElementById('panel-cuentas-table')) {
         const costo = parseNum(document.getElementById('pc-costo').value);
         const pagado = document.getElementById('pc-pagado').checked;
         if (!fecha || !PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Completar al menos Fecha y seleccionar Proveedor y Tipo válidos.'); return; }
-        const lead = daysDiff(fechaPedido, recepcion) || '—';
+        const nLead = daysDiff(fechaPedido, recepcion);
+        const lead = (nLead == null) ? '—' : (nLead === 0 ? '—' : String(nLead));
         cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
         save();
         renderCuentas();
@@ -374,7 +377,8 @@ if (document.getElementById('panel-cuentas-table')) {
             for (let r = start; r < rows.length; r++) {
                 const row = rows[r]; if (!row || row.length === 0) continue;
                 const fecha = row[0] || '';
-                const lead = daysDiff(row[3] || '', row[4] || '') || '';
+                const nLead = daysDiff(row[3] || '', row[4] || '');
+                const lead = (nLead == null) ? '' : (nLead === 0 ? '—' : String(nLead));
                 const proveedorRaw = String(row[2] || '').toUpperCase().trim();
                 const proveedor = PROVEEDORES.includes(proveedorRaw) ? proveedorRaw : '';
                 const fechaPedido = row[3] || '';
