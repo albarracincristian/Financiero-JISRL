@@ -219,40 +219,33 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 }
 
 /* Ajustes de columnas para las dos tablas nuevas */
-#panel-egresos-table th:nth-child(2),
-#panel-egresos-table td:nth-child(2),
-#panel-ingresos-table th:nth-child(2),
-#panel-ingresos-table td:nth-child(2) {
+#panel-egresos-table th:nth-child(5),
+#panel-egresos-table td:nth-child(5),
+#panel-ingresos-table th:nth-child(5),
+#panel-ingresos-table td:nth-child(5) {
     text-align: center;
-    width: 88px;
+    min-width: 160px;
 }
+#panel-egresos-table th:nth-child(6),
+#panel-egresos-table td:nth-child(6),
+#panel-ingresos-table th:nth-child(6),
+#panel-ingresos-table td:nth-child(6) {
+    text-align: center;
+    width: 120px;
+}
+/* Acciones */
 #panel-egresos-table th:nth-child(7),
 #panel-egresos-table td:nth-child(7),
 #panel-ingresos-table th:nth-child(7),
 #panel-ingresos-table td:nth-child(7) {
     text-align: center;
-    min-width: 160px;
+    width: 132px;
 }
+/* Pagado */
 #panel-egresos-table th:nth-child(8),
 #panel-egresos-table td:nth-child(8),
 #panel-ingresos-table th:nth-child(8),
 #panel-ingresos-table td:nth-child(8) {
-    text-align: center;
-    width: 120px;
-}
-/* Acciones */
-#panel-egresos-table th:nth-child(9),
-#panel-egresos-table td:nth-child(9),
-#panel-ingresos-table th:nth-child(9),
-#panel-ingresos-table td:nth-child(9) {
-    text-align: center;
-    width: 132px;
-}
-/* Pagado */
-#panel-egresos-table th:nth-child(10),
-#panel-egresos-table td:nth-child(10),
-#panel-ingresos-table th:nth-child(10),
-#panel-ingresos-table td:nth-child(10) {
     text-align: center;
     width: 72px;
 }

@@ -334,15 +334,12 @@ if (document.getElementById('panel-cuentas')) {
             const chk = tr.querySelector('input[type="checkbox"]');
             const it = {
                 fecha: (td[0]?.textContent||'').trim(),
-                proveedor: (td[2]?.textContent||'').trim(),
-                fechaPedido: (td[3]?.textContent||'').trim(),
-                recepcion: (td[4]?.textContent||'').trim(),
-                tipo: (td[5]?.textContent||'').trim(),
-                costo: parseNum((td[6]?.textContent||'').trim()),
+                proveedor: (td[1]?.textContent||'').trim(),
+                recepcion: (td[2]?.textContent||'').trim(),
+                tipo: (td[3]?.textContent||'').trim(),
+                costo: parseNum((td[4]?.textContent||'').trim()),
                 pagado: !!(chk && chk.checked)
             };
-            const n = daysDiff(it.fechaPedido, it.recepcion);
-            it.lead = (n == null) ? '' : (n === 0 ? '-' : String(n));
             return it;
         });
         sortCuentas();
@@ -359,16 +356,10 @@ if (document.getElementById('panel-cuentas')) {
             let costoCls = '';
             if (costo < 0) costoCls = 'money positive';
             else if (costo > 0) costoCls = 'money negative';
-            const nLead = daysDiff(it.fechaPedido, it.recepcion);
-            let leadVal = (nLead == null) ? (it.lead ?? '') : String(nLead);
-            if (leadVal === '0') leadVal = '-';
-
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${it.fecha||''}</td>
-                <td>${leadVal}</td>
                 <td>${it.proveedor||''}</td>
-                <td>${it.fechaPedido||''}</td>
                 <td>${it.recepcion||''}</td>
                 <td>${it.tipo||''}</td>
                 <td class="right ${costoCls}">${toCurrency(costo)}</td>
@@ -455,7 +446,6 @@ if (document.getElementById('panel-cuentas')) {
             const cur = { ...cuentas[i] };
             const prov = prompt('Proveedor', cur.proveedor) ?? cur.proveedor;
             const tipo = prompt('Tipo (FACTURA / NOTA DE CREDITO / PAGO / ACREDITACION)', cur.tipo) ?? cur.tipo;
-            const fPed = prompt('Fecha Pedido (yyyy-mm-dd)', cur.fechaPedido) ?? cur.fechaPedido;
             const recep = prompt('Recepción (yyyy-mm-dd)', cur.recepcion) ?? cur.recepcion;
             const costoStr = prompt('$$$ ARS (use punto para decimales, puede ser negativo)', String(cur.costo ?? ''));
             const costo = costoStr==null ? cur.costo : parseNum(costoStr);
@@ -464,12 +454,9 @@ if (document.getElementById('panel-cuentas')) {
             if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipoUp)) { alert('Proveedor o Tipo inválidos'); return; }
             cur.proveedor = proveedor;
             cur.tipo = tipoUp;
-            cur.fechaPedido = fPed || '';
             cur.recepcion = recep || '';
             cur.costo = (costo==null || isNaN(costo)) ? cur.costo : costo;
             cur.fecha = computeFechaPago(cur.proveedor, cur.recepcion);
-            const nLead = daysDiff(cur.fechaPedido, cur.recepcion);
-            cur.lead = (nLead == null) ? '-' : (nLead === 0 ? '-' : String(nLead));
             cuentas[i] = cur;
             sortCuentas();
             save();
@@ -518,7 +505,7 @@ if (document.getElementById('panel-cuentas')) {
     if (exportBtn) exportBtn.addEventListener('click', () => {
         const data = [['Pagar/Cobrar','Lead (días)','Proveedor','Fecha Pedido','Recepción','Tipo','Costo','Estado','Pagado']];
         cuentas.forEach(it => {
-            data.push([it.fecha, it.lead, it.proveedor, it.fechaPedido, it.recepcion, it.tipo, it.costo ?? '', estadoLabel(it.fecha), it.pagado ? 'true':'false']);
+            data.push([it.fecha, it.proveedor, it.recepcion, it.tipo, it.costo ?? '', estadoLabel(it.fecha), it.pagado ? 'true':'false']);
         });
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
