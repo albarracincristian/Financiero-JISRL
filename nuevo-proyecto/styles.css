@@ -555,9 +555,10 @@ section h2 {
 
 /* Inputs de la grilla */
 input.grid-input {
-    /* Permitir que la columna se adapte al contenido */
-    width: auto;                 /* no forzar a ocupar todo el ancho de la celda */
-    min-width: 14ch;             /* ancho mínimo razonable para montos ($ + 10-12 dígitos) */
+    /* Autoajuste real al contenido, sin desbordar la celda */
+    width: max-content;          /* se ajusta al contenido */
+    max-width: 100%;             /* pero nunca más ancho que la celda */
+    min-width: 10ch;             /* base mínima razonable */
     white-space: nowrap;         /* evitar cortes de número */
     background-color: var(--surface-2);
     color: var(--text);
