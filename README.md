@@ -4,23 +4,23 @@ Aplicación web estática para gestión financiera. Incluye una matriz mensual e
 
 ## Estructura del Proyecto
 
-- `nuevo-proyecto/index.html`: Panel inicial y navegación.
-- `nuevo-proyecto/flujo-caja.html`: Tesorería / Flujo de caja.
-- `nuevo-proyecto/input.html`: Operaciones (captura de datos).
-- `nuevo-proyecto/data-entry.html`: Presupuesto mensual (matriz editable e import/export Excel).
-- `nuevo-proyecto/feriados.html`: Calendario laboral (alta/baja de feriados e import/export Excel).
-- `nuevo-proyecto/styles.css`: Estilos globales.
-- `nuevo-proyecto/script.js`: Lógica de Feriados y utilidades generales.
-- `nuevo-proyecto/vendor/xlsx.full.min.js`: Librería local para manejar Excel (SheetJS).
+- `src/index.html`: Panel inicial y navegación.
+- `src/flujo-caja.html`: Tesorería / Flujo de caja.
+- `src/input.html`: Operaciones (captura de datos).
+- `src/data-entry.html`: Presupuesto mensual (matriz editable e import/export Excel).
+- `src/feriados.html`: Calendario laboral (alta/baja de feriados e import/export Excel).
+- `src/styles.css`: Estilos globales.
+- `src/script.js`: Lógica de Feriados y utilidades generales.
+- `vendor/xlsx.full.min.js`: Librería local para manejar Excel (SheetJS).
 - `.vscode/launch.json`: Configuraciones para abrir con Edge/Chrome desde VS Code.
 
 ## Cómo Ejecutar
 
-- Opción rápida: abrir `nuevo-proyecto/index.html` en el navegador.
+- Opción rápida: abrir `src/index.html` en el navegador.
 - VS Code Live Server: click derecho en `index.html` → “Open with Live Server”.
 - Servidor local:
-  - Python: `cd nuevo-proyecto` y `python -m http.server 5500` → abrir `http://localhost:5500`
-  - Node: `npx http-server nuevo-proyecto -p 5500 -o`
+  - Python: `cd src` y `python -m http.server 5500` → abrir `http://localhost:5500`
+  - Node: `npx http-server src -p 5500 -o`
 
 ## Secciones
 
