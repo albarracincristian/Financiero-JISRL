@@ -1,4 +1,4 @@
-﻿// Abrir automáticamente el selector de fecha en clic, pero permitir tipeo
+// Abrir autom�ticamente el selector de fecha en clic, pero permitir tipeo
 (function(){
   const onReady = () => {
     const inputs = document.querySelectorAll('input[type="date"]');
@@ -23,7 +23,7 @@
 // Check if elements exist before adding event listeners
 if (document.getElementById('btn')) {
     document.getElementById('btn').addEventListener('click', function() {
-        document.getElementById('message').textContent = 'Â¡Hola! Has hecho clic en el botÃ³n.';
+        document.getElementById('message').textContent = '¡Hola! Has hecho clic en el botón.';
     });
 }
 
@@ -116,7 +116,7 @@ if (document.getElementById('feriados-table')) {
             const db = parseLocalDate(b.date);
             const aPast = da < today;
             const bPast = db < today;
-            if (aPast !== bPast) return aPast ? 1 : -1; // PrÃ³ximos primero
+            if (aPast !== bPast) return aPast ? 1 : -1; // Próximos primero
             return da - db; // Dentro de cada grupo, ascendente por fecha
         });
     }
@@ -220,14 +220,16 @@ if (document.getElementById('feriados-table')) {
 }
 
 // Panel: Flujo de pagos/cobros (CRUD simple + import/export)
-if (document.getElementById('panel-cuentas-table')) {
+if (document.getElementById('panel-cuentas')) {
     const LS_KEY = 'panel_cuentas_v1';
-    const table = document.getElementById('panel-cuentas-table');
-    const tbody = table.querySelector('tbody');
+    const tableE = document.getElementById('panel-egresos-table');
+    const tableI = document.getElementById('panel-ingresos-table');
+    const tbodyE = tableE ? tableE.querySelector('tbody') : null;
+    const tbodyI = tableI ? tableI.querySelector('tbody') : null;
     const TIPOS = ['FACTURA','NOTA DE CREDITO','PAGO','ACREDITACION'];
     const PROVEEDORES = ['PEPSICO','PERNOD RICARD','PRONOVELTIES','GEORGALOS','ACREDITACION','CTA CTE','BANCO','OTROS'];
 
-    // Helpers de fecha y número
+    // Helpers de fecha y n�mero
     const parseLocalDate = (ymd) => {
         if (!ymd) return null;
         const p = String(ymd).split('-');
@@ -252,7 +254,7 @@ if (document.getElementById('panel-cuentas-table')) {
         const p = String(proveedor||'').toUpperCase();
         if (p === 'PEPSICO' || p === 'GEORGALOS') return addDaysYMD(recepcion, 16);
         if (p === 'PERNOD RICARD' || p === 'PRONOVELTIES') return addDaysYMD(recepcion, 30);
-        return recepcion; // mismo día por defecto
+        return recepcion; // mismo d�a por defecto
     };
     const parseNum = (s) => {
         if (s == null) return null;
@@ -271,7 +273,7 @@ if (document.getElementById('panel-cuentas-table')) {
     const getEstado = (ymd) => {
         const today = new Date(); today.setHours(0,0,0,0);
         const dt = parseLocalDate(ymd);
-        return (dt && dt < today) ? 'Pasado' : 'Próximo';
+        return (dt && dt < today) ? 'Pasado' : 'Pr�ximo';
     };
 
     let cuentas = [];
@@ -282,12 +284,14 @@ if (document.getElementById('panel-cuentas-table')) {
             const db = parseLocalDate(b && b.fecha);
             const ta = da ? da.getTime() : -Infinity;
             const tb = db ? db.getTime() : -Infinity;
-            return ta - tb; // más antiguos primero (orden invertido)
+            return ta - tb; // m�s antiguos primero (orden invertido)
         });
     }
 
     function seedFromExistingRows() {
-        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const rowsE = tbodyE ? Array.from(tbodyE.querySelectorAll('tr')) : [];
+        const rowsI = tbodyI ? Array.from(tbodyI.querySelectorAll('tr')) : [];
+        const rows = rowsE.concat(rowsI);
         cuentas = rows.map((tr) => {
             const td = tr.querySelectorAll('td');
             const chk = tr.querySelector('input[type="checkbox"]');
@@ -301,7 +305,7 @@ if (document.getElementById('panel-cuentas-table')) {
                 pagado: !!(chk && chk.checked)
             };
             const n = daysDiff(it.fechaPedido, it.recepcion);
-            it.lead = (n == null) ? '' : (n === 0 ? '—' : String(n));
+            it.lead = (n == null) ? '' : (n === 0 ? '-' : String(n));
             return it;
         });
         sortCuentas();
@@ -309,18 +313,19 @@ if (document.getElementById('panel-cuentas-table')) {
     }
 
     function renderCuentas() {
-        tbody.innerHTML = '';
+        if (tbodyE) tbodyE.innerHTML = '';
+        if (tbodyI) tbodyI.innerHTML = '';
         cuentas.forEach((it, idx) => {
             const estado = getEstado(it.fecha);
             const estadoClass = estado === 'Pasado' ? 'estado-pasado' : 'estado-proximo';
             const costo = Number(it.costo||0);
-            // Invertir colores: negativo = verde (positive), positivo = rojo (negative)
             let costoCls = '';
             if (costo < 0) costoCls = 'money positive';
             else if (costo > 0) costoCls = 'money negative';
             const nLead = daysDiff(it.fechaPedido, it.recepcion);
             let leadVal = (nLead == null) ? (it.lead ?? '') : String(nLead);
-            if (leadVal === '0') leadVal = '—';
+            if (leadVal === '0') leadVal = '-';
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${it.fecha||''}</td>
@@ -333,13 +338,19 @@ if (document.getElementById('panel-cuentas-table')) {
                 <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
                 <td style="text-align:center"><input type="checkbox" data-idx="${idx}" ${it.pagado? 'checked':''}></td>`;
             if (it.pagado) tr.classList.add('row-paid');
-            tbody.appendChild(tr);
+
+            const isEgreso = (it.tipo === 'FACTURA') || (it.tipo === 'PAGO' && (costo||0) > 0);
+            const isIngreso = (it.tipo === 'NOTA DE CREDITO') || (it.tipo === 'ACREDITACION') || (it.tipo === 'PAGO' && (costo||0) < 0);
+            if (isEgreso && tbodyE) tbodyE.appendChild(tr);
+            else if (isIngreso && tbodyI) tbodyI.appendChild(tr);
+            else if (tbodyE) tbodyE.appendChild(tr); // fallback
         });
     }
 
     function load() {
         try { cuentas = JSON.parse(localStorage.getItem(LS_KEY)||'[]')||[]; } catch { cuentas = []; }
-        if (!cuentas.length && tbody.children.length) {
+        const hasSeed = (tbodyE && tbodyE.children.length) || (tbodyI && tbodyI.children.length);
+        if (!cuentas.length && hasSeed) {
             seedFromExistingRows();
         }
         sortCuentas();
@@ -357,11 +368,11 @@ if (document.getElementById('panel-cuentas-table')) {
         const tipo = document.getElementById('pc-tipo').value;
         const costo = parseNum(document.getElementById('pc-costo').value);
         const pagado = false; // El checkbox de la fila se gestiona en la tabla
-        if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Seleccioná Proveedor y Tipo válidos.'); return; }
+        if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Seleccion� Proveedor y Tipo v�lidos.'); return; }
         const fecha = computeFechaPago(proveedor, recepcion);
-        if (!fecha) { alert('Ingresá fecha de Recepción para calcular Pagar/Cobrar.'); return; }
+        if (!fecha) { alert('Ingres� fecha de Recepci�n para calcular Pagar/Cobrar.'); return; }
         const nLead = daysDiff(fechaPedido, recepcion);
-        const lead = (nLead == null) ? '—' : (nLead === 0 ? '—' : String(nLead));
+        const lead = (nLead == null) ? '�' : (nLead === 0 ? '�' : String(nLead));
         cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, costo, pagado });
         sortCuentas();
         save();
@@ -370,8 +381,8 @@ if (document.getElementById('panel-cuentas-table')) {
         ['pc-fecha','pc-lead','pc-prov','pc-fecha-pedido','pc-recepcion','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
     });
 
-    // Toggle pagado
-    tbody.addEventListener('change', (ev) => {
+    // Toggle pagado (delegado en el contenedor)
+    document.getElementById('panel-cuentas').addEventListener('change', (ev) => {
         const chk = ev.target.closest && ev.target.closest('input[type="checkbox"][data-idx]');
         if (!chk) return;
         const i = parseInt(chk.getAttribute('data-idx'), 10);
@@ -402,7 +413,7 @@ if (document.getElementById('panel-cuentas-table')) {
                 const row = rows[r]; if (!row || row.length === 0) continue;
                 const fecha = row[0] || '';
                 const nLead = daysDiff(row[3] || '', row[4] || '');
-                const lead = (nLead == null) ? '' : (nLead === 0 ? '—' : String(nLead));
+                const lead = (nLead == null) ? '' : (nLead === 0 ? '�' : String(nLead));
                 const proveedorRaw = String(row[2] || '').toUpperCase().trim();
                 const proveedor = PROVEEDORES.includes(proveedorRaw) ? proveedorRaw : '';
                 const fechaPedido = row[3] || '';
@@ -421,7 +432,7 @@ if (document.getElementById('panel-cuentas-table')) {
         reader.readAsArrayBuffer(file);
     });
     if (exportBtn) exportBtn.addEventListener('click', () => {
-        const data = [['Pagar/Cobrar','Lead (días)','Proveedor','Fecha Pedido','Recepción','Tipo','Cantidad','Costo','Estado','Pagado']];
+        const data = [['Pagar/Cobrar','Lead (días)','Proveedor','Fecha Pedido','Recepción','Tipo','Costo','Estado','Pagado']];
         cuentas.forEach(it => {
             data.push([it.fecha, it.lead, it.proveedor, it.fechaPedido, it.recepcion, it.tipo, it.costo ?? '', getEstado(it.fecha), it.pagado ? 'true':'false']);
         });
@@ -433,7 +444,7 @@ if (document.getElementById('panel-cuentas-table')) {
 
     load();
 
-    // Autosize selects (#pc-prov, #pc-tipo) al contenido más largo
+    // Autosize selects (#pc-prov, #pc-tipo) al contenido m�s largo
     function autosizeSelect(sel){
         if (!sel) return;
         const cs = getComputedStyle(sel);
@@ -460,7 +471,7 @@ if (document.getElementById('panel-cuentas-table')) {
     tipoSel && tipoSel.addEventListener('change', ()=>autosizeSelect(tipoSel));
     window.addEventListener('resize', ()=>{ autosizeSelect(provSel); autosizeSelect(tipoSel); });
 
-    // Navegación con Enter: pasar de campo en campo y al final ejecutar Agregar
+    // Navegaci�n con Enter: pasar de campo en campo y al final ejecutar Agregar
     const fieldOrder = ['pc-prov','pc-fecha-pedido','pc-recepcion','pc-tipo','pc-costo'];
     function focusNext(currentId){
         const idx = fieldOrder.indexOf(currentId);
@@ -489,7 +500,7 @@ if (document.getElementById('panel-cuentas-table')) {
 
 
 // === Fechas calculadas (robusto, Edge-friendly) ===
-// Render dinámico + edición (concepto y fecha) con overrides persistentes
+// Render din�mico + edici�n (concepto y fecha) con overrides persistentes
 window.addEventListener('load', function () {
     if (!document.getElementById('op-fechas')) return;
     const tbody = document.getElementById('op-fechas-body');
@@ -504,7 +515,7 @@ window.addEventListener('load', function () {
     // Feriados desde localStorage
     const feriados = (()=>{ try { return JSON.parse(localStorage.getItem('feriados')||'[]')||[]; } catch { return []; } })();
     const feriadosSet = new Set(feriados.map(f=>String(f.date)));
-    // Sábados son hábiles; Domingos NO; excluir feriados
+    // S�bados son h�biles; Domingos NO; excluir feriados
     const isBusiness = (d) => { const wd=d.getDay(); if (wd===0) return false; return !feriadosSet.has(toYMD(d)); };
     const dim = (y,m)=> new Date(y,m+1,0).getDate();
     const lastBusinessInRange = (y,m,a,b)=>{ const end=Math.min(dim(y,m),b), start=Math.max(1,a); for(let d=end; d>=start; d--){const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} for(let d=start-1; d>=1; d--){const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} return new Date(y,m,1); };
@@ -514,20 +525,20 @@ window.addEventListener('load', function () {
 
     // Reglas con IDs estables
     const rules = [
-        { id:'f931',  label:'Sueldos + F931 (últ. hábil 1-10)', type:'range', a:1, b:10 },
-        { id:'sicore',label:'SICORE (últ. hábil 9-11)',          type:'range', a:9, b:11 },
-        { id:'serv',  label:'Servicios (últ. hábil 1-10)',       type:'range', a:1, b:10 },
-        { id:'hon',   label:'Honorarios (últ. hábil 10-20)',     type:'range', a:10, b:20 },
-        { id:'gg',    label:'Gastos Generales (últ. hábil 1-10)',type:'range', a:1, b:10 },
-        { id:'iva',   label:'Impuesto IVA (últ. hábil 15-18)',   type:'range', a:15, b:18 },
-        { id:'iibb',  label:'IIBB/Percepciones (últ. hábil 8-11)',type:'range',a:8, b:11 },
-        { id:'gan',   label:'Ganancia (últ. hábil 8-11)',        type:'range', a:8, b:11 },
-        { id:'otros', label:'Otros (últ. hábil 1-10)',           type:'range', a:1, b:10 },
-        { id:'seg',   label:'Seguros (últ. hábil 25-27)',        type:'range', a:25,b:27 },
-        { id:'comb1', label:'Combustible 1 (últ. hábil ≤10)',    type:'before',day:10 },
-        { id:'comb2', label:'Combustible 2 (últ. hábil ≤25)',    type:'before',day:25 },
-        { id:'rentas',label:'Rentas Automotor (últ. hábil ≤15)', type:'before',day:15 },
-        { id:'nc',    label:'NC (últ. hábil 11-16)',             type:'range', a:11,b:16 }
+        { id:'f931',  label:'Sueldos + F931 (�lt. h�bil 1-10)', type:'range', a:1, b:10 },
+        { id:'sicore',label:'SICORE (�lt. h�bil 9-11)',          type:'range', a:9, b:11 },
+        { id:'serv',  label:'Servicios (�lt. h�bil 1-10)',       type:'range', a:1, b:10 },
+        { id:'hon',   label:'Honorarios (�lt. h�bil 10-20)',     type:'range', a:10, b:20 },
+        { id:'gg',    label:'Gastos Generales (�lt. h�bil 1-10)',type:'range', a:1, b:10 },
+        { id:'iva',   label:'Impuesto IVA (�lt. h�bil 15-18)',   type:'range', a:15, b:18 },
+        { id:'iibb',  label:'IIBB/Percepciones (�lt. h�bil 8-11)',type:'range',a:8, b:11 },
+        { id:'gan',   label:'Ganancia (�lt. h�bil 8-11)',        type:'range', a:8, b:11 },
+        { id:'otros', label:'Otros (�lt. h�bil 1-10)',           type:'range', a:1, b:10 },
+        { id:'seg',   label:'Seguros (�lt. h�bil 25-27)',        type:'range', a:25,b:27 },
+        { id:'comb1', label:'Combustible 1 (�lt. h�bil =10)',    type:'before',day:10 },
+        { id:'comb2', label:'Combustible 2 (�lt. h�bil =25)',    type:'before',day:25 },
+        { id:'rentas',label:'Rentas Automotor (�lt. h�bil =15)', type:'before',day:15 },
+        { id:'nc',    label:'NC (�lt. h�bil 11-16)',             type:'range', a:11,b:16 }
     ];
 
     // Overrides persistentes
@@ -553,13 +564,13 @@ window.addEventListener('load', function () {
     }
 
     function render(){
-        // Si alguien ya llenó (fallback anterior), no duplicar
+        // Si alguien ya llen� (fallback anterior), no duplicar
         if (tbody.children.length>0) return;
         tbody.innerHTML='';
         const rows = computeRows();
         rows.forEach(({id,label,d1,d2})=>{
             const tr=document.createElement('tr');
-            const td0=document.createElement('td'); const span=document.createElement('span'); span.className='concept-text'; span.textContent=label; const b=document.createElement('button'); b.className='edit-fecha'; b.textContent='✎'; b.title='Editar'; b.dataset.id=id; td0.appendChild(span); td0.appendChild(b);
+            const td0=document.createElement('td'); const span=document.createElement('span'); span.className='concept-text'; span.textContent=label; const b=document.createElement('button'); b.className='edit-fecha'; b.textContent='?'; b.title='Editar'; b.dataset.id=id; td0.appendChild(span); td0.appendChild(b);
             const td1=document.createElement('td'); td1.textContent=toDMY(d1);
             const td2=document.createElement('td'); td2.textContent=toDMY(d2);
             tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
@@ -598,20 +609,20 @@ if (document.getElementById('op-fechas')) {
     // Feriados: usar los guardados en localStorage\n    let feriadosSet = new Set();\n    try { const arr = JSON.parse(localStorage.getItem('feriados') || '[]'); arr.forEach(f=>{ if(f&&f.date) feriadosSet.add(String(f.date)); }); } catch {}\n    const isBusiness = (d) => { const wd=d.getDay(); if(wd===0||wd===6) return false; return !feriadosSet.has(toYMD(d)); };\n    const lastBusinessInRange = (y,m,a,b)=>{ const dim=(yy,mm)=> new Date(yy,mm+1,0).getDate(); const end=Math.min(dim(y,m),b), start=Math.max(1,a); for(let d=end; d>=start; d--){ const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} for(let d=start-1; d>=1; d--){ const dt=new Date(y,m,d); if(isBusiness(dt)) return dt;} return new Date(y,m,1); };\n    const lastBusinessOnOrBefore = (y,m,day)=> lastBusinessInRange(y,m,1,day);
 
     const rules = [
-        { label: 'Sueldos + F931 (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
-        { label: 'SICORE (últ. hábil 9-11)', type: 'range', a: 9, b: 11 },
-        { label: 'Servicios (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
-        { label: 'Honorarios (últ. hábil 10-20)', type: 'range', a: 10, b: 20 },
-        { label: 'Gastos Generales (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
-        { label: 'Impuesto IVA (últ. hábil 15-18)', type: 'range', a: 15, b: 18 },
-        { label: 'IIBB/Percepciones (últ. hábil 8-11)', type: 'range', a: 8, b: 11 },
-        { label: 'Ganancia (últ. hábil 8-11)', type: 'range', a: 8, b: 11 },
-        { label: 'Otros (últ. hábil 1-10)', type: 'range', a: 1, b: 10 },
-        { label: 'Seguros (últ. hábil 15-27)', type: 'range', a: 15, b: 27 },
-        { label: 'Combustible 1 (últ. hábil ≤15)', type: 'before', day: 15 },
-        { label: 'Combustible 2 (últ. hábil ≤25)', type: 'before', day: 25 },
-        { label: 'Rentas Automotor (últ. hábil ≤15)', type: 'before', day: 15 },
-        { label: 'NC (últ. hábil 11-16)', type: 'range', a: 11, b: 16 },
+        { label: 'Sueldos + F931 (�lt. h�bil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'SICORE (�lt. h�bil 9-11)', type: 'range', a: 9, b: 11 },
+        { label: 'Servicios (�lt. h�bil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'Honorarios (�lt. h�bil 10-20)', type: 'range', a: 10, b: 20 },
+        { label: 'Gastos Generales (�lt. h�bil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'Impuesto IVA (�lt. h�bil 15-18)', type: 'range', a: 15, b: 18 },
+        { label: 'IIBB/Percepciones (�lt. h�bil 8-11)', type: 'range', a: 8, b: 11 },
+        { label: 'Ganancia (�lt. h�bil 8-11)', type: 'range', a: 8, b: 11 },
+        { label: 'Otros (�lt. h�bil 1-10)', type: 'range', a: 1, b: 10 },
+        { label: 'Seguros (�lt. h�bil 15-27)', type: 'range', a: 15, b: 27 },
+        { label: 'Combustible 1 (�lt. h�bil =15)', type: 'before', day: 15 },
+        { label: 'Combustible 2 (�lt. h�bil =25)', type: 'before', day: 25 },
+        { label: 'Rentas Automotor (�lt. h�bil =15)', type: 'before', day: 15 },
+        { label: 'NC (�lt. h�bil 11-16)', type: 'range', a: 11, b: 16 },
     ];
 
     const today = new Date();
@@ -634,8 +645,8 @@ if (document.getElementById('op-fechas')) {
                 d2 = lastBusinessOnOrBefore(yNext, mNext, r.day);
             }
             const tip = (r.type === 'range')
-                ? `Cálculo: último día hábil entre ${String(r.a).padStart(2,'0')}-${String(r.b).padStart(2,'0')} (excluye fines de semana y feriados).`
-                : `Cálculo: último día hábil no posterior al día ${String(r.day).padStart(2,'0')} (excluye fines de semana y feriados).`;
+                ? `C�lculo: �ltimo d�a h�bil entre ${String(r.a).padStart(2,'0')}-${String(r.b).padStart(2,'0')} (excluye fines de semana y feriados).`
+                : `C�lculo: �ltimo d�a h�bil no posterior al d�a ${String(r.day).padStart(2,'0')} (excluye fines de semana y feriados).`;
             return { label: r.label, d1, d2, tip };
         }).sort((a,b) => a.d1 - b.d1);
 
@@ -648,6 +659,7 @@ if (document.getElementById('op-fechas')) {
         });
     }
 }
+
 
 
 
