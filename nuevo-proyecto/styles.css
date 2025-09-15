@@ -231,8 +231,8 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 /* Layout de dos tablas lado a lado */
 .split-tables {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    grid-template-columns: 1fr; /* apilar verticalmente */
+    gap: 1.25rem;
 }
 .table-title {
     margin: 0 0 .5rem 0;
@@ -243,9 +243,7 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 .table-title.egresos { color: #b91c1c; }
 .table-title.ingresos { color: #047857; }
 
-@media (max-width: 900px) {
-    .split-tables { grid-template-columns: 1fr; }
-}
+.split-tables .table-wrapper { overflow-x: auto; }
 
 /* Centrar datos y encabezados en la tabla del panel */
 #panel-cuentas-table th,
