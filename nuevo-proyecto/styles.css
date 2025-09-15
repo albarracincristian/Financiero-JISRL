@@ -161,6 +161,12 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 .mini-table th:last-child,
 .mini-table td:last-child { width: 72px; text-align: center; }
 
+/* Botones de acciones por fila */
+.table-actions { display: inline-flex; gap: 0.25rem; }
+.action-btn { padding: 0.25rem 0.5rem; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; background: var(--surface-2); }
+.action-btn.edit { color: #0369a1; }
+.action-btn.del { color: #b91c1c; }
+
 /* Mejorar usabilidad de checkboxes en tablas */
 .mini-table input[type="checkbox"] {
     transform: scale(1.35);
@@ -220,10 +226,19 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
     text-align: center;
     width: 120px;
 }
+/* Acciones */
 #panel-egresos-table th:nth-child(9),
 #panel-egresos-table td:nth-child(9),
 #panel-ingresos-table th:nth-child(9),
 #panel-ingresos-table td:nth-child(9) {
+    text-align: center;
+    width: 132px;
+}
+/* Pagado */
+#panel-egresos-table th:nth-child(10),
+#panel-egresos-table td:nth-child(10),
+#panel-ingresos-table th:nth-child(10),
+#panel-ingresos-table td:nth-child(10) {
     text-align: center;
     width: 72px;
 }
@@ -244,6 +259,14 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 .table-title.ingresos { color: #047857; }
 
 .split-tables .table-wrapper { overflow-x: auto; }
+
+/* Uniformar altura/ancho de controles del formulario y acciones */
+#panel-cuentas-form input,
+#panel-cuentas-form select,
+#panel-cuentas-form button,
+#panel-cuentas-actions button { height: 36px; }
+#panel-cuentas-form button,
+#panel-cuentas-actions button { padding: 0.45rem 0.6rem; font-size: 0.95rem; }
 
 /* Centrar datos y encabezados en la tabla del panel */
 #panel-cuentas-table th,
