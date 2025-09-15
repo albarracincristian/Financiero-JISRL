@@ -512,15 +512,21 @@ section h2 {
 }
 
 /* Controles de ediciÃ³n en encabezados del grid */
-#monthly-grid thead th { position: relative; }
+#monthly-grid thead th { position: relative; text-align: center; }
+/* Mantener el título centrado: las acciones no ocupan flujo */
 #monthly-grid thead th .col-actions {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
     display: inline-flex;
     gap: 4px;
-    margin-left: 8px;
     opacity: 0;
     transition: opacity 0.12s ease;
 }
 #monthly-grid thead th:hover .col-actions { opacity: 1; }
+/* Evitar corte del texto del encabezado y mantener centrado */
+#monthly-grid thead th .col-label { display: inline-block; white-space: nowrap; }
 #monthly-grid thead th .col-act {
     background: transparent;
     border: 1px solid var(--border);
