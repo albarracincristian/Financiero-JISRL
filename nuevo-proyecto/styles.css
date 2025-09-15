@@ -167,6 +167,18 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
 .action-btn.edit { color: #0369a1; }
 .action-btn.del { color: #b91c1c; }
 
+/* Usar los mismos botoncitos en encabezados del Presupuesto mensual */
+#monthly-grid thead .col-actions .col-act { 
+    padding: 0.25rem 0.5rem; 
+    border-radius: 6px; 
+    border: 1px solid var(--border); 
+    cursor: pointer; 
+    font-size: 0; /* ocultar texto original */
+    background: var(--surface-2);
+}
+#monthly-grid thead .col-actions .col-act[data-action="rename"]::before { content: '✎'; font-size: 0.85rem; color: #0369a1; }
+#monthly-grid thead .col-actions .col-act[data-action="delete"]::before { content: '🗑'; font-size: 0.85rem; color: #b91c1c; }
+
 /* Mejorar usabilidad de checkboxes en tablas */
 .mini-table input[type="checkbox"] {
     transform: scale(1.35);
@@ -371,7 +383,8 @@ section h2 {
     background-color: var(--primary);
     color: #071108;
     border: none;
-    padding: 0.6rem 1rem;
+    padding: 0.45rem 0.6rem;
+    height: 36px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
@@ -395,6 +408,7 @@ section h2 {
 #panel-cuentas-form button {
     font-size: 0.95rem;
     padding: 0.45rem 0.6rem;
+    height: 36px;
 }
 #panel-cuentas-form input,
 #panel-cuentas-form select {
