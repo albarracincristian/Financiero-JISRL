@@ -183,7 +183,7 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
     width: 88px;
 }
 #panel-cuentas-table th:nth-child(7),
-#panel-cuentas-table td:nth-child(7) { /* Costo AR$ */
+#panel-cuentas-table td:nth-child(7) { /* $$$ ARS */
     text-align: center;
     min-width: 160px;
 }
