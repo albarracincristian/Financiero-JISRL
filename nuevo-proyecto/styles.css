@@ -418,8 +418,11 @@ section h2 {
 #panel-cuentas-form select { width: auto; max-width: 100%; justify-self: start; }
 #pc-prov, #pc-tipo { justify-self: start; }
 /* Anchos ajustados a contenido */
-#pc-fecha-pedido, #pc-recepcion { width: 11ch; text-align: center; }
-#pc-costo { width: 12ch; text-align: right; font-variant-numeric: tabular-nums; }
+#pc-fecha-pedido, #pc-recepcion { width: 130px; text-align: center; }
+#pc-prov { width: 200px; }
+#pc-tipo { width: 170px; }
+#pc-costo { width: 140px; text-align: right; font-variant-numeric: tabular-nums; }
+#pc-add-btn { min-width: 120px; }
 
 /* Ubicación en la grilla para una fila compacta */
 /* Fila 1: Proveedor | Fecha Pedido | Recepción | Tipo | Cantidad | Costo */
