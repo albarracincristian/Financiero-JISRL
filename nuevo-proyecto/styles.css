@@ -412,7 +412,7 @@ section h2 {
 
 /* Proporciones similares a Feriados */
 #pc-prov { flex: 1 1 220px; }
-#pc-fecha-pedido, #pc-recepcion { flex: 0 1 180px; text-align: center; }
+#pc-recepcion { flex: 0 1 180px; text-align: center; }
 #pc-tipo { flex: 0 1 180px; }
 #pc-costo { flex: 0 1 180px; text-align: right; font-variant-numeric: tabular-nums; }
 #pc-add-btn { flex: 0 0 auto; min-width: 130px; }

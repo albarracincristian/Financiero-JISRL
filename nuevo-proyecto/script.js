@@ -227,6 +227,7 @@ if (document.getElementById('feriados-table')) {
         feriados.forEach(feriado => {
             data.push([formatDate(feriado.date), feriado.name]);
         });
+        data[0] = ['Pagar/Cobrar','Proveedor','Recepción','Tipo','Costo','Estado','Pagado'];
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Feriados');
@@ -495,6 +496,8 @@ if (document.getElementById('panel-cuentas')) {
                 const pagado = String(row[8]||'').toLowerCase().trim() === 'true';
                 if (fecha && proveedor) cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, costo, pagado });
             }
+            // Normalizar: quitar campos 'lead' y 'fechaPedido' de los importados
+            cuentas = cuentas.map(it => ({ fecha: it.fecha, proveedor: it.proveedor, recepcion: it.recepcion, tipo: it.tipo, costo: it.costo, pagado: it.pagado }));
             sortCuentas();
             save();
             renderCuentas();
