@@ -123,6 +123,8 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
     box-shadow: inset 0 -2px 0 var(--primary);
     padding-bottom: 0.25rem;
 }
+/* Cuando el título separa formulario y tabla, dar un poco más de aire */
+#panel-cuentas > h3 { margin-top: 0.75rem; }
 
 .card.emphasis { background: linear-gradient(180deg, #ffffff, #f6fafc); }
 .span-2 { grid-column: span 2; }
