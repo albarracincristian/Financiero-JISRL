@@ -183,17 +183,12 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
     width: 88px;
 }
 #panel-cuentas-table th:nth-child(7),
-#panel-cuentas-table td:nth-child(7) { /* Cantid. */
-    text-align: center;
-    width: 88px;
-}
-#panel-cuentas-table th:nth-child(8),
-#panel-cuentas-table td:nth-child(8) { /* Costo AR$ */
+#panel-cuentas-table td:nth-child(7) { /* Costo AR$ */
     text-align: center;
     min-width: 160px;
 }
-#panel-cuentas-table th:nth-child(9),
-#panel-cuentas-table td:nth-child(9) { /* Estado */
+#panel-cuentas-table th:nth-child(8),
+#panel-cuentas-table td:nth-child(8) { /* Estado */
     text-align: center;
     width: 120px;
 }
@@ -340,7 +335,6 @@ section h2 {
 #pc-prov, #pc-tipo { justify-self: start; }
 /* Anchos ajustados a contenido */
 #pc-fecha-pedido, #pc-recepcion { width: 11ch; text-align: center; }
-#pc-cantidad { width: 8ch; text-align: right; font-variant-numeric: tabular-nums; }
 #pc-costo { width: 12ch; text-align: right; font-variant-numeric: tabular-nums; }
 
 /* Ubicación en la grilla para una fila compacta */
@@ -349,9 +343,8 @@ section h2 {
 #pc-fecha-pedido { grid-column: 2; }
 #pc-recepcion { grid-column: 3; }
 #pc-tipo { grid-column: 4; }
-#pc-cantidad { grid-column: 5; }
-#pc-costo { grid-column: 6; }
-#pc-add-btn { grid-column: 7; align-self: end; }
+#pc-costo { grid-column: 5; }
+#pc-add-btn { grid-column: 6; align-self: end; }
 /* Acciones (botones) bajo el título, alineadas con el formulario */
 #panel-cuentas-form { position: relative; }
 #panel-cuentas-actions {
@@ -368,7 +361,6 @@ section h2 {
     #pc-fecha-pedido { grid-column: 3; }
     #pc-recepcion { grid-column: 4; }
     #pc-tipo { grid-column: 1 / span 2; }
-    #pc-cantidad { grid-column: 3; }
     #pc-costo { grid-column: 4; }
     #pc-add-btn { grid-column: 4; justify-self: end; }
     /* acciones absolutas, sin cambio */
@@ -378,7 +370,6 @@ section h2 {
     #pc-prov, #pc-tipo { grid-column: 1 / span 2; }
     #pc-fecha-pedido { grid-column: 1; }
     #pc-recepcion { grid-column: 2; }
-    #pc-cantidad { grid-column: 1; }
     #pc-costo { grid-column: 2; }
     #pc-add-btn { grid-column: 2; justify-self: end; }
     /* acciones absolutas, sin cambio */

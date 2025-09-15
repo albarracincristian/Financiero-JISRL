@@ -297,8 +297,7 @@ if (document.getElementById('panel-cuentas-table')) {
                 fechaPedido: (td[3]?.textContent||'').trim(),
                 recepcion: (td[4]?.textContent||'').trim(),
                 tipo: (td[5]?.textContent||'').trim(),
-                cantidad: parseNum((td[6]?.textContent||'').trim()),
-                costo: parseNum((td[7]?.textContent||'').trim()),
+                costo: parseNum((td[6]?.textContent||'').trim()),
                 pagado: !!(chk && chk.checked)
             };
             const n = daysDiff(it.fechaPedido, it.recepcion);
@@ -330,7 +329,6 @@ if (document.getElementById('panel-cuentas-table')) {
                 <td>${it.fechaPedido||''}</td>
                 <td>${it.recepcion||''}</td>
                 <td>${it.tipo||''}</td>
-                <td class="right">${it.cantidad==null? '—' : String(it.cantidad).replace('.', ',')}</td>
                 <td class="right ${costoCls}">${toCurrency(costo)}</td>
                 <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
                 <td style="text-align:center"><input type="checkbox" data-idx="${idx}" ${it.pagado? 'checked':''}></td>`;
@@ -357,7 +355,6 @@ if (document.getElementById('panel-cuentas-table')) {
         const fechaPedido = document.getElementById('pc-fecha-pedido').value;
         const recepcion = document.getElementById('pc-recepcion').value;
         const tipo = document.getElementById('pc-tipo').value;
-        const cantidad = parseNum(document.getElementById('pc-cantidad').value);
         const costo = parseNum(document.getElementById('pc-costo').value);
         const pagado = false; // El checkbox de la fila se gestiona en la tabla
         if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Seleccioná Proveedor y Tipo válidos.'); return; }
@@ -365,12 +362,12 @@ if (document.getElementById('panel-cuentas-table')) {
         if (!fecha) { alert('Ingresá fecha de Recepción para calcular Pagar/Cobrar.'); return; }
         const nLead = daysDiff(fechaPedido, recepcion);
         const lead = (nLead == null) ? '—' : (nLead === 0 ? '—' : String(nLead));
-        cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
+        cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, costo, pagado });
         sortCuentas();
         save();
         renderCuentas();
         // limpiar
-        ['pc-fecha','pc-lead','pc-prov','pc-fecha-pedido','pc-recepcion','pc-cantidad','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        ['pc-fecha','pc-lead','pc-prov','pc-fecha-pedido','pc-recepcion','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
     });
 
     // Toggle pagado
@@ -412,10 +409,9 @@ if (document.getElementById('panel-cuentas-table')) {
                 const recepcion = row[4] || '';
                 const tipoRaw = String(row[5] || '').toUpperCase().trim();
                 const tipo = TIPOS.includes(tipoRaw) ? tipoRaw : '';
-                const cantidad = parseNum(row[6] || '');
-                const costo = parseNum(row[7] || '');
+                const costo = parseNum(row[6] || '');
                 const pagado = String(row[8]||'').toLowerCase().trim() === 'true';
-                if (fecha && proveedor) cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, cantidad, costo, pagado });
+                if (fecha && proveedor) cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, costo, pagado });
             }
             sortCuentas();
             save();
@@ -427,7 +423,7 @@ if (document.getElementById('panel-cuentas-table')) {
     if (exportBtn) exportBtn.addEventListener('click', () => {
         const data = [['Pagar/Cobrar','Lead (días)','Proveedor','Fecha Pedido','Recepción','Tipo','Cantidad','Costo','Estado','Pagado']];
         cuentas.forEach(it => {
-            data.push([it.fecha, it.lead, it.proveedor, it.fechaPedido, it.recepcion, it.tipo, it.cantidad ?? '', it.costo ?? '', getEstado(it.fecha), it.pagado ? 'true':'false']);
+            data.push([it.fecha, it.lead, it.proveedor, it.fechaPedido, it.recepcion, it.tipo, it.costo ?? '', getEstado(it.fecha), it.pagado ? 'true':'false']);
         });
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
@@ -465,7 +461,7 @@ if (document.getElementById('panel-cuentas-table')) {
     window.addEventListener('resize', ()=>{ autosizeSelect(provSel); autosizeSelect(tipoSel); });
 
     // Navegación con Enter: pasar de campo en campo y al final ejecutar Agregar
-    const fieldOrder = ['pc-prov','pc-fecha-pedido','pc-recepcion','pc-tipo','pc-cantidad','pc-costo'];
+    const fieldOrder = ['pc-prov','pc-fecha-pedido','pc-recepcion','pc-tipo','pc-costo'];
     function focusNext(currentId){
         const idx = fieldOrder.indexOf(currentId);
         if (idx === -1) return;
