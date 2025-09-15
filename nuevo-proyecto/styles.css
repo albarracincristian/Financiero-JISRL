@@ -555,7 +555,10 @@ section h2 {
 
 /* Inputs de la grilla */
 input.grid-input {
-    width: 100%;
+    /* Permitir que la columna se adapte al contenido */
+    width: auto;                 /* no forzar a ocupar todo el ancho de la celda */
+    min-width: 14ch;             /* ancho mínimo razonable para montos ($ + 10-12 dígitos) */
+    white-space: nowrap;         /* evitar cortes de número */
     background-color: var(--surface-2);
     color: var(--text);
     border: 1px solid var(--border);
@@ -563,6 +566,7 @@ input.grid-input {
     padding: 0.35rem 0.5rem;
     font: inherit;
     text-align: right;
+    font-variant-numeric: tabular-nums; /* mejor alineación de dígitos */
 }
 
 input.grid-input:focus {
