@@ -395,13 +395,13 @@ section h2 {
     background-color: var(--primary-600);
 }
 
-#panel-cuentas-form { /* Form compacto para Flujo de pagos/cobros */
-    display: grid;
-    grid-template-columns: max-content max-content max-content max-content max-content max-content max-content; /* + botón Agregar */
-    gap: 0.5rem 0.6rem;
-    align-items: end;
+/* Panel: usar mismas proporciones y layout que Feriados */
+#panel-cuentas-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
     margin-bottom: 0.5rem;
-    justify-items: start;
 }
 #panel-cuentas-form input,
 #panel-cuentas-form select,
@@ -411,55 +411,26 @@ section h2 {
     height: 36px;
 }
 #panel-cuentas-form input,
-#panel-cuentas-form select {
-    min-width: 0; /* permite encoger dentro del grid */
-}
-/* En el formulario del panel, los selects deben ajustar su ancho al contenido */
-#panel-cuentas-form select { width: auto; max-width: 100%; justify-self: start; }
-#pc-prov, #pc-tipo { justify-self: start; }
-/* Anchos ajustados a contenido */
-#pc-fecha-pedido, #pc-recepcion { width: 130px; text-align: center; }
-#pc-prov { width: 200px; }
-#pc-tipo { width: 170px; }
-#pc-costo { width: 140px; text-align: right; font-variant-numeric: tabular-nums; }
-#pc-add-btn { min-width: 120px; }
+#panel-cuentas-form select { min-width: 0; }
+#panel-cuentas-form select { width: auto; max-width: 100%; }
 
-/* Ubicación en la grilla para una fila compacta */
-/* Fila 1: Proveedor | Fecha Pedido | Recepción | Tipo | Cantidad | Costo */
-#pc-prov { grid-column: 1; }
-#pc-fecha-pedido { grid-column: 2; }
-#pc-recepcion { grid-column: 3; }
-#pc-tipo { grid-column: 4; }
-#pc-costo { grid-column: 5; }
-#pc-add-btn { grid-column: 6; align-self: end; }
-/* Acciones (botones) bajo el título, alineadas con el formulario */
-#panel-cuentas-form { position: relative; }
+/* Proporciones similares a Feriados */
+#pc-prov { flex: 1 1 220px; }
+#pc-fecha-pedido, #pc-recepcion { flex: 0 1 160px; text-align: center; }
+#pc-tipo { flex: 0 1 180px; }
+#pc-costo { flex: 0 1 160px; text-align: right; font-variant-numeric: tabular-nums; }
+#pc-add-btn { flex: 0 0 auto; min-width: 130px; }
+
+/* Acciones (Importar/Exportar) al final, como en Feriados */
 #panel-cuentas-actions {
-    position: absolute;
-    top: 0.1rem; /* justo debajo de la línea azul del h3 */
-    right: 0;
+    position: static;
+    margin-left: auto;
     display: inline-flex;
     gap: 0.5rem;
 }
 
-@media (max-width: 900px) {
-    #panel-cuentas-form { grid-template-columns: max-content max-content max-content max-content; }
-    #pc-prov { grid-column: 1 / span 2; }
-    #pc-fecha-pedido { grid-column: 3; }
-    #pc-recepcion { grid-column: 4; }
-    #pc-tipo { grid-column: 1 / span 2; }
-    #pc-costo { grid-column: 4; }
-    #pc-add-btn { grid-column: 4; justify-self: end; }
-    /* acciones absolutas, sin cambio */
-}
 @media (max-width: 600px) {
-    #panel-cuentas-form { grid-template-columns: max-content max-content; }
-    #pc-prov, #pc-tipo { grid-column: 1 / span 2; }
-    #pc-fecha-pedido { grid-column: 1; }
-    #pc-recepcion { grid-column: 2; }
-    #pc-costo { grid-column: 2; }
-    #pc-add-btn { grid-column: 2; justify-self: end; }
-    /* acciones absolutas, sin cambio */
+    #panel-cuentas-actions { width: 100%; justify-content: flex-end; }
 }
 
 #feriados-table {
