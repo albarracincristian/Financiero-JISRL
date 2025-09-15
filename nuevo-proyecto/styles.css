@@ -606,7 +606,7 @@ input.grid-input:focus {
 }
 
 #feriados-table button {
-    background: #ef4444; /* override gradient */
+    background: #ef4444; /* estilo heredado para botones de texto, no iconos */
     color: #ffffff;
     border: 1px solid #dc2626;
     padding: 0.35rem 0.6rem;
@@ -622,33 +622,40 @@ input.grid-input:focus {
 /* Tema oscuro: override de variables */
 /* (removido) overrides de tema oscuro */
 
+/* Botoncitos de acciones (exactamente como la captura) */
+#feriados-table .table-actions { display: inline-flex; gap: 0.5rem; }
+#feriados-table .action-btn,
 #feriados-table .icon-btn {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    min-width: 0;
-    border-radius: 8px;
+    align-items: center; justify-content: center;
+    width: 32px; height: 32px; padding: 0; min-width: 0;
+    background: #ffffff; color: #1f2937;
+    border: 1px solid #e5e7eb; border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06), inset 0 -1px 0 rgba(0,0,0,0.02);
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .02s ease;
+    font-size: 0; /* oculta caracteres heredados */
 }
-
-#feriados-table .icon-btn svg {
-    pointer-events: none;
+#feriados-table .action-btn.edit::before,
+#feriados-table .icon-btn.edit::before {
+    content: '';
+    width: 18px; height: 18px; display: inline-block; background: currentColor;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M16.862 3.487a2.126 2.126 0 1 1 3.006 3.006L8.25 18.112 3 19.5l1.388-5.25L16.862 3.487z\"/></svg>') no-repeat center / contain;
+    color: #1d4ed8;
 }
-
-#feriados-table button:hover {
-    background: #dc2626;
+#feriados-table .action-btn.del::before,
+#feriados-table .icon-btn.del::before {
+    content: '';
+    width: 18px; height: 18px; display: inline-block; background: currentColor;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%23000\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 7h12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m-9 0v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7\"/></svg>') no-repeat center / contain;
+    color: #be123c;
 }
-
-#feriados-table button:active {
-    background: #b91c1c;
-}
-
-#feriados-table button:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(220,38,38,0.25);
-}
+#feriados-table .action-btn:hover,
+#feriados-table .icon-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+#feriados-table .action-btn:active,
+#feriados-table .icon-btn:active { transform: scale(0.98); }
+#feriados-table .action-btn:focus-visible,
+#feriados-table .icon-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,0.25); }
 
 h1 {
     color: var(--text);
