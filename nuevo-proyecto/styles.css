@@ -198,6 +198,55 @@ section#flujo-caja { max-width: clamp(800px, 95vw, 1600px); }
     width: 72px;
 }
 
+/* Ajustes de columnas para las dos tablas nuevas */
+#panel-egresos-table th:nth-child(2),
+#panel-egresos-table td:nth-child(2),
+#panel-ingresos-table th:nth-child(2),
+#panel-ingresos-table td:nth-child(2) {
+    text-align: center;
+    width: 88px;
+}
+#panel-egresos-table th:nth-child(7),
+#panel-egresos-table td:nth-child(7),
+#panel-ingresos-table th:nth-child(7),
+#panel-ingresos-table td:nth-child(7) {
+    text-align: center;
+    min-width: 160px;
+}
+#panel-egresos-table th:nth-child(8),
+#panel-egresos-table td:nth-child(8),
+#panel-ingresos-table th:nth-child(8),
+#panel-ingresos-table td:nth-child(8) {
+    text-align: center;
+    width: 120px;
+}
+#panel-egresos-table th:nth-child(9),
+#panel-egresos-table td:nth-child(9),
+#panel-ingresos-table th:nth-child(9),
+#panel-ingresos-table td:nth-child(9) {
+    text-align: center;
+    width: 72px;
+}
+
+/* Layout de dos tablas lado a lado */
+.split-tables {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.table-title {
+    margin: 0 0 .5rem 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: center;
+}
+.table-title.egresos { color: #b91c1c; }
+.table-title.ingresos { color: #047857; }
+
+@media (max-width: 900px) {
+    .split-tables { grid-template-columns: 1fr; }
+}
+
 /* Centrar datos y encabezados en la tabla del panel */
 #panel-cuentas-table th,
 #panel-cuentas-table td {
