@@ -270,6 +270,13 @@ if (document.getElementById('panel-cuentas')) {
         const abs = Math.abs(n||0);
         return `${sign}$ ${abs.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
     };
+    // Etiqueta de estado: 'Pasado' o 'Próximo' (UTF-8)
+    const estadoLabel = (ymd) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dt = parseLocalDate(ymd);
+        return (dt && dt < today) ? 'Pasado' : 'Próximo';
+    };
     const getEstado = (ymd) => {
         const today = new Date(); today.setHours(0,0,0,0);
         const dt = parseLocalDate(ymd);
@@ -316,7 +323,7 @@ if (document.getElementById('panel-cuentas')) {
         if (tbodyE) tbodyE.innerHTML = '';
         if (tbodyI) tbodyI.innerHTML = '';
         cuentas.forEach((it, idx) => {
-            const estado = getEstado(it.fecha);
+            const estado = estadoLabel(it.fecha);
             const estadoClass = estado === 'Pasado' ? 'estado-pasado' : 'estado-proximo';
             const costo = Number(it.costo||0);
             let costoCls = '';
@@ -434,7 +441,7 @@ if (document.getElementById('panel-cuentas')) {
     if (exportBtn) exportBtn.addEventListener('click', () => {
         const data = [['Pagar/Cobrar','Lead (días)','Proveedor','Fecha Pedido','Recepción','Tipo','Costo','Estado','Pagado']];
         cuentas.forEach(it => {
-            data.push([it.fecha, it.lead, it.proveedor, it.fechaPedido, it.recepcion, it.tipo, it.costo ?? '', getEstado(it.fecha), it.pagado ? 'true':'false']);
+            data.push([it.fecha, it.lead, it.proveedor, it.fechaPedido, it.recepcion, it.tipo, it.costo ?? '', estadoLabel(it.fecha), it.pagado ? 'true':'false']);
         });
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
