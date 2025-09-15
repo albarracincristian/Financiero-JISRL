@@ -343,6 +343,12 @@ if (document.getElementById('panel-cuentas')) {
                 <td>${it.tipo||''}</td>
                 <td class="right ${costoCls}">${toCurrency(costo)}</td>
                 <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
+                <td class="actions" style="text-align:center">
+                    <div class="table-actions">
+                        <button class="action-btn edit" data-idx="${idx}" title="Editar">✎</button>
+                        <button class="action-btn del" data-idx="${idx}" title="Eliminar">🗑</button>
+                    </div>
+                </td>
                 <td style="text-align:center"><input type="checkbox" data-idx="${idx}" ${it.pagado? 'checked':''}></td>`;
             if (it.pagado) tr.classList.add('row-paid');
 
@@ -395,6 +401,47 @@ if (document.getElementById('panel-cuentas')) {
         const i = parseInt(chk.getAttribute('data-idx'), 10);
         if (!isNaN(i) && cuentas[i]) {
             cuentas[i].pagado = !!chk.checked;
+            save();
+            renderCuentas();
+        }
+    });
+
+    // Editar / Eliminar (delegado en el contenedor)
+    document.getElementById('panel-cuentas').addEventListener('click', (ev) => {
+        const btnDel = ev.target.closest && ev.target.closest('button.action-btn.del[data-idx]');
+        const btnEdit = ev.target.closest && ev.target.closest('button.action-btn.edit[data-idx]');
+        if (!btnDel && !btnEdit) return;
+        const i = parseInt((btnDel||btnEdit).getAttribute('data-idx'), 10);
+        if (isNaN(i) || !cuentas[i]) return;
+        if (btnDel) {
+            if (confirm('¿Eliminar este registro?')) {
+                cuentas.splice(i, 1);
+                save();
+                renderCuentas();
+            }
+            return;
+        }
+        if (btnEdit) {
+            const cur = { ...cuentas[i] };
+            const prov = prompt('Proveedor', cur.proveedor) ?? cur.proveedor;
+            const tipo = prompt('Tipo (FACTURA / NOTA DE CREDITO / PAGO / ACREDITACION)', cur.tipo) ?? cur.tipo;
+            const fPed = prompt('Fecha Pedido (yyyy-mm-dd)', cur.fechaPedido) ?? cur.fechaPedido;
+            const recep = prompt('Recepción (yyyy-mm-dd)', cur.recepcion) ?? cur.recepcion;
+            const costoStr = prompt('$$$ ARS (use punto para decimales, puede ser negativo)', String(cur.costo ?? ''));
+            const costo = costoStr==null ? cur.costo : parseNum(costoStr);
+            const proveedor = (prov||'').toUpperCase().trim();
+            const tipoUp = (tipo||'').toUpperCase().trim();
+            if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipoUp)) { alert('Proveedor o Tipo inválidos'); return; }
+            cur.proveedor = proveedor;
+            cur.tipo = tipoUp;
+            cur.fechaPedido = fPed || '';
+            cur.recepcion = recep || '';
+            cur.costo = (costo==null || isNaN(costo)) ? cur.costo : costo;
+            cur.fecha = computeFechaPago(cur.proveedor, cur.recepcion);
+            const nLead = daysDiff(cur.fechaPedido, cur.recepcion);
+            cur.lead = (nLead == null) ? '-' : (nLead === 0 ? '-' : String(nLead));
+            cuentas[i] = cur;
+            sortCuentas();
             save();
             renderCuentas();
         }
