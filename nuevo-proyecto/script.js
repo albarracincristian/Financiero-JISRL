@@ -413,7 +413,7 @@ if (document.getElementById('panel-cuentas')) {
         save();
         renderCuentas();
         // limpiar
-        ['pc-fecha','pc-lead','pc-prov','pc-fecha-pedido','pc-recepcion','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        ['pc-prov','pc-recepcion','pc-tipo','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
     });
 
     // Toggle pagado (delegado en el contenedor)
@@ -496,8 +496,15 @@ if (document.getElementById('panel-cuentas')) {
                 const pagado = String(row[8]||'').toLowerCase().trim() === 'true';
                 if (fecha && proveedor) cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, costo, pagado });
             }
-            // Normalizar: quitar campos 'lead' y 'fechaPedido' de los importados
-            cuentas = cuentas.map(it => ({ fecha: it.fecha, proveedor: it.proveedor, recepcion: it.recepcion, tipo: it.tipo, costo: it.costo, pagado: it.pagado }));
+            // Normalizar: quitar 'lead' y 'fechaPedido' y ajustar fechas dd/mm/aaaa -> yyyy-mm-dd
+            cuentas = cuentas.map(it => ({
+                fecha: toYMDIfDMY(it.fecha),
+                proveedor: it.proveedor,
+                recepcion: toYMDIfDMY(it.recepcion),
+                tipo: it.tipo,
+                costo: it.costo,
+                pagado: it.pagado
+            }));
             sortCuentas();
             save();
             renderCuentas();
