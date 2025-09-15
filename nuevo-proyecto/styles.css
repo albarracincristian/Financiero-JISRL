@@ -409,6 +409,7 @@ section h2 {
     font-size: 0.95rem;
     padding: 0.45rem 0.6rem;
     height: 36px;
+    box-sizing: border-box;
 }
 #panel-cuentas-form input,
 #panel-cuentas-form select { min-width: 0; }
@@ -416,10 +417,19 @@ section h2 {
 
 /* Proporciones similares a Feriados */
 #pc-prov { flex: 1 1 220px; }
-#pc-fecha-pedido, #pc-recepcion { flex: 0 1 160px; text-align: center; }
+#pc-fecha-pedido, #pc-recepcion { flex: 0 1 180px; text-align: center; }
 #pc-tipo { flex: 0 1 180px; }
-#pc-costo { flex: 0 1 160px; text-align: right; font-variant-numeric: tabular-nums; }
+#pc-costo { flex: 0 1 180px; text-align: right; font-variant-numeric: tabular-nums; }
 #pc-add-btn { flex: 0 0 auto; min-width: 130px; }
+
+/* Afinar altura visual de los inputs de fecha para que coincidan */
+#panel-cuentas-form input[type="date"]::-webkit-datetime-edit { 
+    padding: 0 2px; 
+    line-height: 1.1; 
+}
+#panel-cuentas-form input[type="date"]::-webkit-calendar-picker-indicator { 
+    filter: invert(1) opacity(0.65);
+}
 
 /* Acciones (Importar/Exportar) al final, como en Feriados */
 #panel-cuentas-actions {
