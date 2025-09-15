@@ -96,12 +96,11 @@ if (document.getElementById('feriados-table')) {
                 <td>${formatDate(feriado.date)}</td>
                 <td>${feriado.name}</td>
                 <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
-                <td>
-                    <button class="icon-btn danger" title="Eliminar" aria-label="Eliminar" onclick="deleteFeriado(${index})">
-                        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                            <path fill="currentColor" d="M9 3h6a1 1 0 0 1 1 1v1h4v2H4V5h4V4a1 1 0 0 1 1-1zm1 2h4V4h-4v1zM7 10h2v9H7v-9zm4 0h2v9h-2v-9zm4 0h2v9h-2v-9z"/>
-                        </svg>
-                    </button>
+                <td class="actions" style="text-align:center">
+                    <div class="table-actions">
+                        <button class="action-btn edit" data-idx="${index}" title="Editar">✎</button>
+                        <button class="action-btn del" data-idx="${index}" title="Eliminar">🗑</button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -139,6 +138,22 @@ if (document.getElementById('feriados-table')) {
 
     function deleteFeriado(index) {
         feriados.splice(index, 1);
+        localStorage.setItem('feriados', JSON.stringify(feriados));
+        renderFeriados();
+    }
+
+    function editFeriado(index) {
+        const cur = feriados[index];
+        if (!cur) return;
+        const name = prompt('Editar descripción del feriado:', cur.name);
+        if (name === null) return; // cancelado
+        const date = prompt('Editar fecha (yyyy-mm-dd):', cur.date);
+        if (date === null) return;
+        const parsed = parseLocalDate(date);
+        if (!parsed) { alert('Fecha inválida'); return; }
+        cur.name = String(name).trim();
+        cur.date = toYMD(parsed);
+        sortFeriados();
         localStorage.setItem('feriados', JSON.stringify(feriados));
         renderFeriados();
     }
@@ -216,6 +231,21 @@ if (document.getElementById('feriados-table')) {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Feriados');
         XLSX.writeFile(wb, 'feriados.xlsx');
+    });
+
+    // Delegación de clicks para Editar/Eliminar
+    const feriadosTable = document.getElementById('feriados-table');
+    feriadosTable.addEventListener('click', (ev) => {
+        const btnDel = ev.target.closest && ev.target.closest('button.action-btn.del[data-idx]');
+        const btnEdit = ev.target.closest && ev.target.closest('button.action-btn.edit[data-idx]');
+        if (!btnDel && !btnEdit) return;
+        const i = parseInt((btnDel||btnEdit).getAttribute('data-idx'), 10);
+        if (isNaN(i)) return;
+        if (btnDel) {
+            if (confirm('¿Eliminar este feriado?')) deleteFeriado(i);
+        } else if (btnEdit) {
+            editFeriado(i);
+        }
     });
 }
 
