@@ -322,13 +322,16 @@ if (document.getElementById('panel-cuentas-table')) {
             const nLead = daysDiff(it.fechaPedido, it.recepcion);
             let leadVal = (nLead == null) ? (it.lead ?? '') : String(nLead);
             if (leadVal === '0') leadVal = '—';
+            const fechaDisplay = formatDMY(it.fecha) || (it.fecha ?? '');
+            const fechaPedidoDisplay = formatDMY(it.fechaPedido) || (it.fechaPedido ?? '');
+            const recepcionDisplay = formatDMY(it.recepcion) || (it.recepcion ?? '');
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${it.fecha||''}</td>
-                <td>${leadVal}</td>
+                <td>${fechaDisplay}</td>
+                <td class="right">${leadVal}</td>
                 <td>${it.proveedor||''}</td>
-                <td>${it.fechaPedido||''}</td>
-                <td>${it.recepcion||''}</td>
+                <td>${fechaPedidoDisplay}</td>
+                <td>${recepcionDisplay}</td>
                 <td>${it.tipo||''}</td>
                 <td class="right">${it.cantidad==null? '—' : String(it.cantidad).replace('.', ',')}</td>
                 <td class="right ${costoCls}">${toCurrency(costo)}</td>
