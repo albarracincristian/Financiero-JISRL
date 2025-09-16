@@ -280,12 +280,20 @@ if (document.getElementById('panel-cuentas')) {
         return Math.max(0, d); // no negativo
     };
     const addDaysYMD = (ymd, n) => { const d=parseLocalDate(ymd); if(!d) return ''; const r=new Date(d); r.setDate(r.getDate()+n); return toYMD(r); };
-    const computeFechaPago = (proveedor, recepcion) => {
+    const isIngresoRecord = (tipo, costo) => {
+        const t = String(tipo || '').toUpperCase().trim();
+        if (!t) return false;
+        if (t === 'NOTA DE CREDITO' || t === 'ACREDITACION') return true;
+        const amount = Number(costo ?? 0);
+        return t === 'PAGO' && !Number.isNaN(amount) && amount < 0;
+    };
+    const computeFechaPago = (proveedor, recepcion, tipo, costo) => {
         if (!recepcion) return '';
+        if (isIngresoRecord(tipo, costo)) return recepcion;
         const p = String(proveedor||'').toUpperCase();
         if (p === 'PEPSICO' || p === 'GEORGALOS') return addDaysYMD(recepcion, 16);
         if (p === 'PERNOD RICARD' || p === 'PRONOVELTIES') return addDaysYMD(recepcion, 30);
-        return recepcion; // mismo d�a por defecto
+        return recepcion; // mismo dia por defecto
     };
     const parseNum = (s) => {
         if (s == null) return null;
@@ -396,26 +404,46 @@ if (document.getElementById('panel-cuentas')) {
 
     // Add
     const addBtn = document.getElementById('pc-add-btn');
-    if (addBtn) addBtn.addEventListener('click', () => {
-        const proveedor = document.getElementById('pc-prov').value.trim();
-        const fechaPedido = document.getElementById('pc-fecha-pedido').value;
-        const recepcion = document.getElementById('pc-recepcion').value;
-        const tipo = document.getElementById('pc-tipo').value;
-        const costo = parseNum(document.getElementById('pc-costo').value);
+    const provEl = document.getElementById('pc-prov');
+    const fechaPedidoEl = document.getElementById('pc-fecha-pedido');
+    const recepcionEl = document.getElementById('pc-recepcion');
+    const tipoEl = document.getElementById('pc-tipo');
+    const costoEl = document.getElementById('pc-costo');
+    const defaultProvValue = provEl ? provEl.value : '';
+    const defaultTipoValue = tipoEl ? tipoEl.value : '';
+    const handleAddCuenta = () => {
+        const proveedor = ((provEl && provEl.value) || '').toUpperCase().trim();
+        const fechaPedido = fechaPedidoEl ? fechaPedidoEl.value : '';
+        const recepcion = recepcionEl ? recepcionEl.value : '';
+        const tipo = ((tipoEl && tipoEl.value) || '').toUpperCase().trim();
+        const costo = parseNum(costoEl ? costoEl.value : '');
         const pagado = false; // El checkbox de la fila se gestiona en la tabla
-        if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Seleccion� Proveedor y Tipo v�lidos.'); return; }
-        const fecha = computeFechaPago(proveedor, recepcion);
-        if (!fecha) { alert('Ingres� fecha de Recepci�n para calcular Pagar/Cobrar.'); return; }
+        if (!PROVEEDORES.includes(proveedor) || !TIPOS.includes(tipo)) { alert('Selecciona proveedor y tipo validos.'); return; }
+        if (!recepcion) { alert('Ingresa fecha de recepcion para calcular pagar/cobrar.'); return; }
+        const fecha = computeFechaPago(proveedor, recepcion, tipo, costo);
+        if (!fecha) { alert('Ingresa fecha de recepcion para calcular pagar/cobrar.'); return; }
         const nLead = daysDiff(fechaPedido, recepcion);
-        const lead = (nLead == null) ? '�' : (nLead === 0 ? '�' : String(nLead));
+        const lead = (nLead == null) ? '' : (nLead === 0 ? '' : String(nLead));
         cuentas.push({ fecha, lead, proveedor, fechaPedido, recepcion, tipo, costo, pagado });
         sortCuentas();
         save();
         renderCuentas();
-        // limpiar
-        ['pc-prov','pc-recepcion','pc-tipo','pc-costo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+        if (provEl) provEl.value = defaultProvValue;
+        if (recepcionEl) recepcionEl.value = '';
+        if (tipoEl) tipoEl.value = defaultTipoValue;
+        if (costoEl) costoEl.value = '';
+        if (costoEl) costoEl.focus();
+    };
+    if (addBtn) addBtn.addEventListener('click', (ev) => { ev.preventDefault(); handleAddCuenta(); });
+    [provEl, recepcionEl, tipoEl, costoEl].forEach((el) => {
+        if (!el) return;
+        el.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter') {
+                ev.preventDefault();
+                handleAddCuenta();
+            }
+        });
     });
-
     // Toggle pagado (delegado en el contenedor)
     document.getElementById('panel-cuentas').addEventListener('change', (ev) => {
         const chk = ev.target.closest && ev.target.closest('input[type="checkbox"][data-idx]');
@@ -457,7 +485,7 @@ if (document.getElementById('panel-cuentas')) {
             cur.tipo = tipoUp;
             cur.recepcion = recep || '';
             cur.costo = (costo==null || isNaN(costo)) ? cur.costo : costo;
-            cur.fecha = computeFechaPago(cur.proveedor, cur.recepcion);
+            cur.fecha = computeFechaPago(cur.proveedor, cur.recepcion, cur.tipo, cur.costo);
             cuentas[i] = cur;
             sortCuentas();
             save();
