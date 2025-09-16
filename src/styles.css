@@ -827,3 +827,101 @@ section#input .cards-grid {
 .money.positive { color: #16a34a; }
 .money.negative { color: #dc2626; }
 
+
+
+#flujo-caja .tesoreria-table-wrapper {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+    background: linear-gradient(180deg, #ffffff, #fbfcff);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 1.25rem;
+    overflow-x: auto;
+}
+
+.tesoreria-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+    color: var(--text);
+}
+
+.tesoreria-table thead th {
+    background: #f2f4f8;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    padding: 0.55rem 0.5rem;
+    border-bottom: 2px solid #d9dde7;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.tesoreria-table td {
+    border: 1px solid #e1e5ef;
+    padding: 0.4rem 0.5rem;
+    background: #fff;
+}
+
+.tesoreria-table td.number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.tesoreria-table td.center {
+    text-align: center;
+}
+
+.tesoreria-table td.positive {
+    color: #15803d;
+    font-weight: 600;
+}
+
+.tesoreria-table td.negative {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.tesoreria-table td.risk-bajo {
+    background: #e3f9ed;
+}
+
+.tesoreria-table td.risk-medio {
+    background: #fff4d6;
+}
+
+.tesoreria-table td.risk-alto {
+    background: #fde2e1;
+}
+
+.tesoreria-table tr.month-summary td {
+    background: #1f2937;
+    color: #f9fafb;
+    font-weight: 700;
+    border-top: 2px solid #0f172a;
+}
+
+.tesoreria-table tr.month-summary td:first-child {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+}
+
+.tesoreria-table tr.month-spacer td {
+    border: none;
+    padding: 0.2rem;
+    background: transparent;
+}
+
+#flujo-caja .tesoreria-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+#flujo-caja .tesoreria-table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+}
+

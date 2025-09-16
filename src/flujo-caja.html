@@ -22,19 +22,1377 @@
 
     <section id="flujo-caja">
         <h2>Tesorería</h2>
-        <p>Sección para gestionar el flujo de caja.</p>
-        <div class="cards-grid">
-            <div class="card" id="panel-datos-iniciales">
-                <h3>Completar datos (grises)</h3>
-                <div class="kv">
-                    <label for="op-saldo-inicial">Saldo inicial (incluye deuda anterior)</label>
-                    <input id="op-saldo-inicial" type="text" placeholder="$ 0">
-
-                    <label for="op-mes-curso">Mes en curso</label>
-                    <input id="op-mes-curso" type="number" min="1" max="12" placeholder="9">
-                </div>
-            </div>
-        </div>
+        <div class="tesoreria-table-wrapper">
+        <table class="tesoreria-table">
+        <thead><tr>
+        <th>Fecha</th>
+        <th>Día</th>
+        <th>Es_habil</th>
+        <th>Feriado</th>
+        <th>Habil_operativo</th>
+        <th>w</th>
+        <th>w_norm</th>
+        <th>Recaudación total (+)</th>
+        <th>NC y Acreditaciones</th>
+        <th>Salariales</th>
+        <th>Servicios</th>
+        <th>Honorarios</th>
+        <th>Gastos Generales</th>
+        <th>Impuestos</th>
+        <th>Otros</th>
+        <th>Compra_Proveedores</th>
+        <th>Flujo_dia</th>
+        <th>Saldo_acum</th>
+        <th>Riesgo_saldo</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+        <td>2025-09-01</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive">990.997,97</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.867.556,55</td>
+        <td class="number positive risk-bajo">30.187.556,55</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-02</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-bajo">36.064.115,12</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-03</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">22.624.320,70</td>
+        <td class="number negative">-16.747.762,12</td>
+        <td class="number positive risk-medio">19.316.353,00</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-09-04</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.52%</td>
+        <td class="number positive">5.596.722,45</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.596.722,45</td>
+        <td class="number positive risk-bajo">24.913.075,45</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-05</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.26%</td>
+        <td class="number positive">2.798.361,23</td>
+        <td class="number positive">9.884.019,05</td>
+        <td class="number positive">17.682.752,18</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number negative">-5.000.371,90</td>
+        <td class="number positive risk-medio">19.912.703,54</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-09-06</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.58%</td>
+        <td class="number positive">1.958.852,86</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">1.958.852,86</td>
+        <td class="number positive risk-bajo">21.871.556,40</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-07</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive risk-bajo">21.871.556,40</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-08</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-bajo">27.748.114,98</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-09</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-bajo">33.624.673,55</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-10</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">420.000,00</td>
+        <td class="number"></td>
+        <td class="number positive">1.287.928,75</td>
+        <td class="number"></td>
+        <td class="number positive">848.842,62</td>
+        <td class="number"></td>
+        <td class="number positive">3.319.787,20</td>
+        <td class="number positive risk-bajo">36.944.460,75</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-11</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.52%</td>
+        <td class="number positive">5.596.722,45</td>
+        <td class="number positive">1.262.707,20</td>
+        <td class="number positive">1.340.052,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.900.345,86</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number negative">-1.380.968,21</td>
+        <td class="number positive risk-bajo">35.563.492,54</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-12</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.26%</td>
+        <td class="number positive">2.798.361,23</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">48.531.325,26</td>
+        <td class="number negative">-45.732.964,03</td>
+        <td class="number negative risk-alto">-10.169.471,49</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-09-13</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.58%</td>
+        <td class="number positive">1.958.852,86</td>
+        <td class="number positive">5.542.788,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">7.501.640,86</td>
+        <td class="number negative risk-alto">-2.667.830,63</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-09-14</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number negative risk-alto">-2.667.830,63</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-09-15</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">266.006,86</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.610.551,72</td>
+        <td class="number positive risk-medio">2.942.721,08</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-09-16</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive">1.146.250,45</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">7.022.809,03</td>
+        <td class="number positive risk-medio">9.965.530,11</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-09-17</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-medio">15.842.088,68</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-09-18</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.52%</td>
+        <td class="number positive">5.596.722,45</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.581.779,21</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">3.014.943,24</td>
+        <td class="number positive risk-medio">18.857.031,92</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-09-19</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.26%</td>
+        <td class="number positive">2.798.361,23</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.798.361,23</td>
+        <td class="number positive risk-bajo">21.655.393,15</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-20</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.58%</td>
+        <td class="number positive">1.958.852,86</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">1.446.192,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">512.660,86</td>
+        <td class="number positive risk-bajo">22.168.054,01</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-21</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive risk-bajo">22.168.054,01</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-22</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-bajo">28.044.612,58</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-23</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-bajo">33.921.171,16</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-24</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-bajo">39.797.729,73</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-25</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.52%</td>
+        <td class="number positive">5.596.722,45</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">446.000,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.150.722,45</td>
+        <td class="number positive risk-bajo">44.948.452,19</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-09-26</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.26%</td>
+        <td class="number positive">2.798.361,23</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">50.717.474,97</td>
+        <td class="number negative">-47.919.113,74</td>
+        <td class="number negative risk-alto">-2.970.661,56</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-09-27</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.58%</td>
+        <td class="number positive">1.958.852,86</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">1.958.852,86</td>
+        <td class="number negative risk-alto">-1.011.808,70</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-09-28</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number negative risk-alto">-1.011.808,70</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-09-29</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number positive risk-medio">4.864.749,88</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-09-30</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.75%</td>
+        <td class="number positive">5.876.558,58</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">8.000.000,00</td>
+        <td class="number negative">-2.123.441,42</td>
+        <td class="number positive risk-medio">2.741.308,45</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-01</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive risk-medio">2.741.308,45</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr class="month-summary">
+        <td>SEPTIEMBRE</td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="positive summary-cell">123.687.566,20</td>
+        <td class="positive summary-cell">18.826.762,67</td>
+        <td class="positive summary-cell">33.219.899,49</td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="positive summary-cell">129.873.120,93</td>
+        <td class="summary-cell"></td>
+        <td class="positive summary-cell">2.741.308,45</td>
+        <td class="summary-cell"></td>
+        </tr>
+        <tr class="month-spacer"><td colspan="19"></td></tr>
+        <tr>
+        <td>2025-10-02</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.65%</td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number positive risk-medio">8.494.218,51</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-03</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.33%</td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number positive risk-medio">11.370.673,54</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-04</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.63%</td>
+        <td class="number positive">2.013.518,52</td>
+        <td class="number"></td>
+        <td class="number positive">17.682.752,18</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number negative">-15.669.233,66</td>
+        <td class="number negative risk-alto">-4.298.560,13</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-10-05</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number negative risk-alto">-4.298.560,13</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-10-06</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-medio">1.741.995,43</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-07</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-medio">7.782.550,99</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-08</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-medio">13.823.106,55</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-09</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.65%</td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">420.000,00</td>
+        <td class="number"></td>
+        <td class="number positive">841.928,75</td>
+        <td class="number"></td>
+        <td class="number positive">848.842,62</td>
+        <td class="number"></td>
+        <td class="number positive">3.642.138,68</td>
+        <td class="number positive risk-medio">17.465.245,23</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-10</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.33%</td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">446.000,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.430.455,03</td>
+        <td class="number positive risk-medio">19.895.700,26</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-11</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.63%</td>
+        <td class="number positive">2.013.518,52</td>
+        <td class="number"></td>
+        <td class="number positive">1.340.052,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.900.345,86</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number negative">-6.226.879,34</td>
+        <td class="number positive risk-medio">13.668.820,92</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-12</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive risk-medio">13.668.820,92</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-13</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-medio">19.709.376,47</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-14</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-bajo">25.749.932,03</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-15</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive">5.700.000,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">266.006,86</td>
+        <td class="number"></td>
+        <td class="number positive">50.000.000,00</td>
+        <td class="number negative">-38.525.451,30</td>
+        <td class="number negative risk-alto">-12.775.519,27</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-10-16</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.65%</td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number negative risk-alto">-7.022.609,21</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-10-17</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.33%</td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.581.779,21</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">294.675,82</td>
+        <td class="number negative risk-alto">-6.727.933,39</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-10-18</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.63%</td>
+        <td class="number positive">2.013.518,52</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.013.518,52</td>
+        <td class="number negative risk-alto">-4.714.414,88</td>
+        <td class="risk-alto center">ALTO</td>
+        </tr>
+        <tr>
+        <td>2025-10-19</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number positive">5.000.000,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.000.000,00</td>
+        <td class="number positive risk-medio">285.585,12</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-20</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">1.446.192,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">4.594.363,56</td>
+        <td class="number positive risk-medio">4.879.948,68</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-21</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-medio">10.920.504,24</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-22</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-medio">16.961.059,80</td>
+        <td class="risk-medio center">MEDIO</td>
+        </tr>
+        <tr>
+        <td>2025-10-23</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.65%</td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number positive risk-bajo">22.713.969,86</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-24</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.33%</td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number positive risk-bajo">25.590.424,88</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-25</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center">1.63%</td>
+        <td class="number positive">2.013.518,52</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">446.000,00</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">1.567.518,52</td>
+        <td class="number positive risk-bajo">27.157.943,40</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-26</td>
+        <td>domingo</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">FALSO</td>
+        <td class="center">0%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive risk-bajo">27.157.943,40</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-27</td>
+        <td>lunes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-bajo">33.198.498,96</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-28</td>
+        <td>martes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-bajo">39.239.054,52</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-29</td>
+        <td>miércoles</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">21%</td>
+        <td class="center">4.88%</td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">6.040.555,56</td>
+        <td class="number positive risk-bajo">45.279.610,08</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-30</td>
+        <td>jueves</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">20%</td>
+        <td class="center">4.65%</td>
+        <td class="number positive">5.752.910,06</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">10.000.000,00</td>
+        <td class="number negative">-4.247.089,94</td>
+        <td class="number positive risk-bajo">41.032.520,14</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-10-31</td>
+        <td>viernes</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">10%</td>
+        <td class="center">2.33%</td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive">2.876.455,03</td>
+        <td class="number positive risk-bajo">43.908.975,16</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr>
+        <td>2025-11-01</td>
+        <td>sábado</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">FALSO</td>
+        <td class="center">VERDADERO</td>
+        <td class="center">7%</td>
+        <td class="center"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number"></td>
+        <td class="number positive risk-bajo">43.908.975,16</td>
+        <td class="risk-bajo center">BAJO</td>
+        </tr>
+        <tr class="month-summary">
+        <td>OCTUBRE</td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="positive summary-cell">123.687.566,20</td>
+        <td class="positive summary-cell">10.700.000,00</td>
+        <td class="positive summary-cell">33.219.899,49</td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="summary-cell"></td>
+        <td class="positive summary-cell">60.000.000,00</td>
+        <td class="summary-cell"></td>
+        <td class="positive summary-cell">43.908.975,16</td>
+        <td class="summary-cell"></td>
+        </tr>
+        <tr class="month-spacer"><td colspan="19"></td></tr>
+        </tbody></table></div>
     </section>
     <script src="script.js"></script>
 </body>
