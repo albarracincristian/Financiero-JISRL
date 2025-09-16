@@ -81,6 +81,12 @@ nav a:hover {
     color: var(--text);
 }
 
+nav a.active,
+nav a[aria-current='page'] {
+    background-color: rgba(37, 99, 235, 0.2);
+    color: var(--text);
+}
+
 /* (removido) estilos de botÃ³n de tema */
 
 section {

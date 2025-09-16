@@ -20,6 +20,27 @@
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onReady); else onReady();
 })();
+// Marcar la seccion activa en la navegacion
+(function(){
+  const markActiveNav = () => {
+    const links = document.querySelectorAll('nav a[href]');
+    if (!links.length) return;
+    const current = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    links.forEach((link) => {
+      const href = (link.getAttribute('href') || '').split('/').pop().toLowerCase();
+      const isMatch = href === current || (href === 'index.html' && current === '');
+      if (isMatch) {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      }
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', markActiveNav); else markActiveNav();
+})();
+
 // Check if elements exist before adding event listeners
 if (document.getElementById('btn')) {
     document.getElementById('btn').addEventListener('click', function() {
@@ -343,10 +364,10 @@ if (document.getElementById('panel-cuentas')) {
             const chk = tr.querySelector('input[type="checkbox"]');
             const it = {
                 fecha: (td[0]?.textContent||'').trim(),
-                proveedor: (td[1]?.textContent||'').trim(),
-                recepcion: (td[2]?.textContent||'').trim(),
-                tipo: (td[3]?.textContent||'').trim(),
-                costo: parseNum((td[4]?.textContent||'').trim()),
+                proveedor: (td[2]?.textContent||'').trim(),
+                recepcion: (td[3]?.textContent||'').trim(),
+                tipo: (td[4]?.textContent||'').trim(),
+                costo: parseNum((td[5]?.textContent||'').trim()),
                 pagado: !!(chk && chk.checked)
             };
             return it;
@@ -368,11 +389,11 @@ if (document.getElementById('panel-cuentas')) {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${it.fecha||''}</td>
+                <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
                 <td>${it.proveedor||''}</td>
                 <td>${it.recepcion||''}</td>
                 <td>${it.tipo||''}</td>
                 <td class="right ${costoCls}">${toCurrency(costo)}</td>
-                <td><span class="estado-chip ${estadoClass}">${estado}</span></td>
                 <td class="actions" style="text-align:center">
                     <div class="table-actions">
                         <button class="action-btn edit" data-idx="${idx}" title="Editar">✎</button>
@@ -768,6 +789,7 @@ if (document.getElementById('op-fechas')) {
         });
     }
 }
+
 
 
 
