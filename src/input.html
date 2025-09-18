@@ -1,233 +1,158 @@
 ﻿<!DOCTYPE html>
+
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Operaciones - Aplicación</title>
-  <link rel="icon" href="assets/favicon-32x32.png" type="image/png">
-  <link rel="icon" href="assets/favicon-16x16.png" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css">
-    <meta name="color-scheme" content="light dark">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Panel de operaciones con tarjetas organizadas">
-    <script defer src="vendor/xlsx.full.min.js"></script>
-    <script defer src="script.js"></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Operaciones - Aplicación</title>
+<link href="assets/favicon-32x32.png" rel="icon" type="image/png"/>
+<link href="assets/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
+<link href="assets/apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="styles.css" rel="stylesheet"/>
+<meta content="light dark" name="color-scheme"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="Panel de operaciones con tarjetas organizadas" name="description"/>
+<script defer="" src="vendor/xlsx.full.min.js"></script>
+<script defer="" src="script.js"></script>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="index.html">Panel</a></li>
-            <li><a href="flujo-caja.html">Tesorería</a></li>
-            <li><a href="input.html">Operaciones</a></li>
-            <li><a href="data-entry.html">Presupuesto Mensual</a></li>
-            <li><a href="feriados.html">Calendario Laboral</a></li>
-        </ul>
-    </nav>
+<nav>
+<ul>
+<li><a href="index.html">Panel</a></li>
+<li><a href="flujo-caja.html">Tesorería</a></li>
+<li><a href="input.html">Operaciones</a></li>
+<li><a href="data-entry.html">Presupuesto Mensual</a></li>
+<li><a href="feriados.html">Calendario Laboral</a></li>
+</ul>
+</nav>
+<section id="input">
+<h2>Operaciones</h2>
+<p>Panel de operaciones: organizamos en tarjetas para luego completar cálculos y lógica.</p>
+<div class="cards-grid">
+<div class="card" id="op-objetivo-stock">
+<h3>Objetivo y Stock</h3>
+<div class="kv">
+<label for="op-dias-cobertura">Días objetivo de cobertura (días)</label>
+<input id="op-dias-cobertura" placeholder="16" type="number"/>
+<label for="op-objetivo-retiro">Objetivo Retiro (Tn)</label>
+<input id="op-objetivo-retiro" placeholder="3,5" step="0.1" type="number"/>
+<label for="op-stock-actual">Stock actual (ton)</label>
+<input id="op-stock-actual" placeholder="3,514" step="0.001" type="number"/>
+<label for="op-tn-retiradas">Tn Retiradas a la fecha</label>
+<input id="op-tn-retiradas" placeholder="1,00" step="0.01" type="number"/>
+<label class="muted">Días stock en piso</label>
+<input placeholder="19,1" step="0.1" type="number"/>
+<label class="muted">Stock al cierre (tn)</label>
+<input placeholder="-0,2" step="0.1" type="number"/>
+<label class="muted">Stock ideal (ton)</label>
+<input placeholder="2,9" step="0.1" type="number"/>
+</div>
+</div>
+<div class="card emphasis" id="op-brecha-stock">
+<h3>Brecha a Stock ideal</h3>
+<div class="kv">
+<label class="muted">Falta recuperar stock KG ideal</label>
+<input placeholder="-3,112507143" readonly="" type="text"/>
+<label class="muted">(ARS) Retiro faltante a stock ideal</label>
+<input placeholder="-$ 72.020.747" readonly="" type="text"/>
+<label class="muted">Tn vs Obj + Stock ideal</label>
+<input placeholder="-5,61" readonly="" type="text"/>
+<label class="muted">(ARS) Retiro faltante vs OBJ</label>
+<input placeholder="-$ 84.120.618,44" readonly="" type="text"/>
+</div>
+</div>
+<div class="card" id="op-periodo">
+<h3>Período y días</h3>
+<div class="kv">
+<label for="op-fecha-inicio">Fecha inicio</label>
+<input id="op-fecha-inicio" type="date"/>
+<label for="op-fecha-fin">Fecha fin</label>
+<input id="op-fecha-fin" type="date"/>
+<label class="muted">Días trabajados</label>
+<input placeholder="6" type="number"/>
+<label class="muted">Días laborales</label>
+<input placeholder="26" type="number"/>
+<label class="muted">Días restantes</label>
+<input placeholder="20" type="number"/>
+<label class="muted">Tn a vender (días restantes)</label>
+<input placeholder="3,68" type="number"/>
+<label for="op-capacidad-equipo">Capacidad por equipo (ton)</label>
+<input id="op-capacidad-equipo" placeholder="2,7" step="0.1" type="number"/>
+<label for="op-peso-lunes">Peso Lunes</label>
+<input id="op-peso-lunes" placeholder="21" step="0.1" type="number"/>
+<label for="op-peso-martes">Peso Martes</label>
+<input id="op-peso-martes" placeholder="21" step="0.1" type="number"/>
+<label for="op-peso-miercoles">Peso Miércoles</label>
+<input id="op-peso-miercoles" placeholder="21" step="0.1" type="number"/>
+<label for="op-peso-jueves">Peso Jueves</label>
+<input id="op-peso-jueves" placeholder="20" step="0.1" type="number"/>
+<label for="op-peso-viernes">Peso Viernes</label>
+<input id="op-peso-viernes" placeholder="10" step="0.1" type="number"/>
+<label for="op-peso-sabado">Peso Sábado</label>
+<input id="op-peso-sabado" placeholder="7" step="0.1" type="number"/>
+<label for="op-peso-domingo">Peso Domingo</label>
+<input id="op-peso-domingo" placeholder="0" step="0.1" type="number"/>
+<label for="op-nc-monto">NC monto (+)</label>
+<input id="op-nc-monto" placeholder="$ 5.700.000,00" type="text"/>
+</div>
+</div>
+<div class="card" id="op-parametros">
+<h3>Parámetros</h3>
+<table class="mini-table">
+<thead><tr><th>Parámetro</th><th class="right">Valor</th></tr></thead>
+<tbody>
+<tr><td>KG/Lts base mensual (prom KG/Lts_Mensual)</td><td class="param-value right" data-format="decimal" data-param="kg_lts_base">–</td></tr>
+<tr><td>ARS base mensual (prom ARS_Mensual)</td><td class="param-value right" data-format="currency" data-param="ars_base">–</td></tr>
+<tr><td>Sueldos + F931 (prom)</td><td class="param-value right" data-format="currency" data-param="sueldos">–</td></tr>
+<tr><td>SICORE</td><td class="param-value right" data-format="currency" data-param="sicore">–</td></tr>
+<tr><td>Servicios</td><td class="param-value right" data-format="currency" data-param="servicios">–</td></tr>
+<tr><td>Honorarios</td><td class="param-value right" data-format="currency" data-param="honorarios">–</td></tr>
+<tr><td>Gastos Generales</td><td class="param-value right" data-format="currency" data-param="generales">–</td></tr>
+<tr><td>IIBB / Percepciones</td><td class="param-value right" data-format="currency" data-param="iibb">–</td></tr>
+<tr><td>Otros (prom)</td><td class="param-value right" data-format="currency" data-param="otros">–</td></tr>
+<tr><td>Imp. Ganancias</td><td class="param-value right" data-format="currency" data-param="ganancias">–</td></tr>
+<tr><td>Imp. IVA</td><td class="param-value right" data-format="currency" data-param="iva">–</td></tr>
+<tr><td>Combustible 1era Quincena</td><td class="param-value right" data-format="currency" data-param="combustible_q1">–</td></tr>
+<tr><td>Combustible 2da Quincena</td><td class="param-value right" data-format="currency" data-param="combustible_q2">–</td></tr>
+<tr><td>Seguros</td><td class="param-value right" data-format="currency" data-param="seguros">–</td></tr>
+<tr><td>Rentas Patentes Automotor</td><td class="param-value right" data-format="currency" data-param="rentas">–</td></tr>
+<tr><td>Recaudación diaria estimada (ARS)</td><td class="param-value right" data-format="currency" data-param="recaudacion_diaria">–</td></tr>
+</tbody>
+</table>
+</div>
+<div class="card" id="op-fechas">
+<h3>Fechas calculadas</h3>
+<table class="mini-table" id="op-fechas-table">
+<thead><tr><th>Concepto</th><th>Fecha</th><th>Mes Sig</th></tr></thead>
+<tbody id="op-fechas-body"></tbody>
+</table>
+</div>
+<div class="card" id="op-variables">
+<h3>Variables</h3>
+<table class="mini-table">
+<thead><tr><th>Variable</th><th class="right">Valor</th></tr></thead>
+<tbody>
+<tr><td>Lead time L (días) Camión Completo</td><td class="right">5</td></tr>
+<tr><td>Lead time L (días) Camión Parcial</td><td class="right">10</td></tr>
+<tr><td>Ventas diarias promedio (ton/día)</td><td class="right">0,18</td></tr>
+<tr><td>Desvío estándar ventas diarias (ton/día)</td><td class="right">0,045</td></tr>
+<tr><td>Término de pago (días) Cta Cte proveedor</td><td class="right">14</td></tr>
+<tr><td>Días de recaudación para cubrir 1 equipo</td><td class="right">8,5</td></tr>
+<tr><td><strong>Cobertura por equipo (días)</strong></td><td class="right"><strong>14,7</strong></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
 
-    <section id="input">
-        <h2>Operaciones</h2>
-        <p>Panel de operaciones: organizamos en tarjetas para luego completar cálculos y lógica.</p>
 
-        <div class="cards-grid">
+<script>\nfunction formatValue(value, fmt) {\n  if (value == null || Number.isNaN(value)) return '–';\n  const opts = fmt === 'decimal'\n    ? { minimumFractionDigits: 2, maximumFractionDigits: 2 }\n    : fmt === 'currency'\n      ? { style: 'currency', currency: 'ARS', minimumFractionDigits: 0, maximumFractionDigits: 0 }\n      : { minimumFractionDigits: 0, maximumFractionDigits: 0 };\n  return new Intl.NumberFormat('es-AR', opts).format(value);\n}\n\nfunction populateParametros(payload) {\n  const entries = payload?.inputs?.parameter_table || [];\n  const index = Object.create(null);\n  entries.forEach(item => { if (item?.key) index[item.key] = item; });\n  document.querySelectorAll('.param-value').forEach(cell => {\n    const key = cell.dataset.param;\n    if (!key) return;\n    const entry = index[key];\n    const fmt = cell.dataset.format || entry?.format || 'currency';\n    const value = entry?.value ?? null;\n    cell.textContent = formatValue(value, fmt);\n  });\n}\n\nasync function fetchFinanciero() {\n  try {\n    const res = await fetch('data/financiero.json', { cache: 'no-store' });\n    if (!res.ok) throw new Error(`HTTP ${res.status}`);\n    const data = await res.json();\n    populateParametros(data);\n    return data;\n  } catch (err) {\n    console.warn('No se pudo cargar datos de financiamiento', err);\n    return null;\n  }\n}\n\nwindow.addEventListener('load', function(){\n  if (window.FINANCIERO_DATA) {\n    populateParametros(window.FINANCIERO_DATA);\n  }\n  fetchFinanciero();\n});\n</script>\n</body>\n</html>
 
-            <div class="card" id="op-objetivo-stock">
-                <h3>Objetivo y Stock</h3>
-                <div class="kv">
-                    <label for="op-dias-cobertura">Días objetivo de cobertura (días)</label>
-                    <input id="op-dias-cobertura" type="number" placeholder="16">
 
-                    <label for="op-objetivo-retiro">Objetivo Retiro (Tn)</label>
-                    <input id="op-objetivo-retiro" type="number" step="0.1" placeholder="3,5">
 
-                    <label for="op-stock-actual">Stock actual (ton)</label>
-                    <input id="op-stock-actual" type="number" step="0.001" placeholder="3,514">
 
-                    <label for="op-tn-retiradas">Tn Retiradas a la fecha</label>
-                    <input id="op-tn-retiradas" type="number" step="0.01" placeholder="1,00">
 
-                    <label class="muted">Días stock en piso</label>
-                    <input type="number" step="0.1" placeholder="19,1">
 
-                    <label class="muted">Stock al cierre (tn)</label>
-                    <input type="number" step="0.1" placeholder="-0,2">
 
-                    <label class="muted">Stock ideal (ton)</label>
-                    <input type="number" step="0.1" placeholder="2,9">
-                </div>
-            </div>
 
-            <div class="card emphasis" id="op-brecha-stock">
-                <h3>Brecha a Stock ideal</h3>
-                <div class="kv">
-                    <label class="muted">Falta recuperar stock KG ideal</label>
-                    <input type="text" placeholder="-3,112507143" readonly>
-
-                    <label class="muted">(ARS) Retiro faltante a stock ideal</label>
-                    <input type="text" placeholder="-$ 72.020.747" readonly>
-
-                    <label class="muted">Tn vs Obj + Stock ideal</label>
-                    <input type="text" placeholder="-5,61" readonly>
-
-                    <label class="muted">(ARS) Retiro faltante vs OBJ</label>
-                    <input type="text" placeholder="-$ 84.120.618,44" readonly>
-                </div>
-            </div>
-
-            <div class="card" id="op-periodo">
-                <h3>Período y días</h3>
-                <div class="kv">
-                    <label for="op-fecha-inicio">Fecha inicio</label>
-                    <input id="op-fecha-inicio" type="date">
-
-                    <label for="op-fecha-fin">Fecha fin</label>
-                    <input id="op-fecha-fin" type="date">
-
-                    <label class="muted">Días trabajados</label>
-                    <input type="number" placeholder="6">
-
-                    <label class="muted">Días laborales</label>
-                    <input type="number" placeholder="26">
-
-                    <label class="muted">Días restantes</label>
-                    <input type="number" placeholder="20">
-
-                    <label class="muted">Tn a vender (días restantes)</label>
-                    <input type="number" placeholder="3,68">
-                </div>
-            </div>
-
-            <div class="card" id="op-parametros">
-                <h3>Parámetros</h3>
-                <table class="mini-table">
-                    <thead><tr><th>Parámetro</th><th class="right">Valor</th></tr></thead>
-                    <tbody>
-                        <tr><td>KG/Lts base mensual (prom KG/Lts_Mensual)</td><td class="right">4,42</td></tr>
-                        <tr><td>ARS base mensual (prom ARS_Mensual)</td><td class="right">$ 120.000.000</td></tr>
-                        <tr><td>Sueldos + F931 (prom)</td><td class="right">$ 16.000.000</td></tr>
-                        <tr><td>SICORE</td><td class="right">$ 1.000.000</td></tr>
-                        <tr><td>Servicios</td><td class="right">$ 200.000</td></tr>
-                        <tr><td>Honorarios</td><td class="right">$ 1.500.000</td></tr>
-                        <tr><td>Gastos Generales</td><td class="right">$ 830.597</td></tr>
-                        <tr><td>IIBB / Percepciones</td><td class="right">$ 5.182.811</td></tr>
-                        <tr><td>Otros (prom)</td><td class="right">$ 835.119</td></tr>
-                        <tr><td>Imp. Ganancias</td><td class="right">$ 1.832.421</td></tr>
-                        <tr><td>Imp. IVA</td><td class="right">$ 3.018.511</td></tr>
-                        <tr><td>Combustible 1era Quincena</td><td class="right">$ 446.000</td></tr>
-                        <tr><td>Combustible 2da Quincena</td><td class="right">$ 502.000</td></tr>
-                        <tr><td>Seguros</td><td class="right">$ 149.353</td></tr>
-                        <tr><td>Rentas Patentes Automotor</td><td class="right">$ 149.353</td></tr>
-                        <tr><td>Recaudación diaria estimada (ARS)</td><td class="right">$ 4.757.214,08</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-                        <div class="card" id="op-fechas">
-                <h3>Fechas calculadas</h3>
-                <table class="mini-table" id="op-fechas-table">
-                    <thead><tr><th>Concepto</th><th>Fecha</th><th>Mes Sig</th></tr></thead>
-                    <tbody id="op-fechas-body"></tbody>
-                </table>
-            </div>
-
-            <div class="card" id="op-variables">
-                <h3>Variables</h3>
-                <table class="mini-table">
-                    <thead><tr><th>Variable</th><th class="right">Valor</th></tr></thead>
-                    <tbody>
-                        <tr><td>Lead time L (días) Camión Completo</td><td class="right">5</td></tr>
-                        <tr><td>Lead time L (días) Camión Parcial</td><td class="right">10</td></tr>
-                        <tr><td>Ventas diarias promedio (ton/día)</td><td class="right">0,18</td></tr>
-                        <tr><td>Desvío estándar ventas diarias (ton/día)</td><td class="right">0,045</td></tr>
-                        <tr><td>Término de pago (días) Cta Cte proveedor</td><td class="right">14</td></tr>
-                        <tr><td>Días de recaudación para cubrir 1 equipo</td><td class="right">8,5</td></tr>
-                        <tr><td><strong>Cobertura por equipo (días)</strong></td><td class="right"><strong>14,7</strong></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-<script>
-// Fallback temporal (ya unificado en script.js). Si script.js pobló, no hacer nada.
-window.addEventListener('load', function(){
-  const tbody = document.getElementById('op-fechas-body');
-  const table = document.getElementById('op-fechas-table');
-  if (!tbody || !table) return;
-  if (tbody.children.length > 0) return; // script.js ya llenó
-
-  const toYMD = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const toDMY = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  const parseDMY = s => { const m=String(s||'').match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/); if(!m) return null; const dt=new Date(+m[3],+m[2]-1,+m[1]); return isNaN(dt.getTime())?null:dt; };
-  const ymdToDate = ymd => { const p=String(ymd||'').split('-'); if(p.length!==3) return null; const dt=new Date(+p[0],+p[1]-1,+p[2]); return isNaN(dt.getTime())?null:dt; };
-
-  // Base proporcionada (se puede overridear sin perder info)
-  const BASE = [
-    {id:'sicore', label:'SICORE (últ. hábil 9-11)', d1:'2025-09-11', d2:'2025-10-11'},
-    {id:'serv', label:'Servicios (últ. hábil 1-10)', d1:'2025-09-10', d2:'2025-10-10'},
-    {id:'hon', label:'Honorarios (últ. hábil 10-20)', d1:'2025-09-20', d2:'2025-10-20'},
-    {id:'gg', label:'Gastos Generales (últ. hábil 1-10)', d1:'2025-09-10', d2:'2025-10-09'},
-    {id:'iva', label:'Impuesto IVA (últ. hábil 15-18)', d1:'2025-09-18', d2:'2025-10-17'},
-    {id:'iibb', label:'IIBB/Percepciones (últ. hábil 8-11)', d1:'2025-09-11', d2:'2025-10-11'},
-    {id:'gan', label:'Ganancia (últ. hábil 8-11)', d1:'2025-09-11', d2:'2025-10-11'},
-    {id:'otros', label:'Otros (últ. hábil 1-10)', d1:'2025-09-10', d2:'2025-10-09'},
-    {id:'seg', label:'Seguros (últ. hábil 25-27)', d1:'2025-09-27', d2:'2025-10-27'},
-    {id:'comb1', label:'Combustible 1 (últ. hábil ≤10)', d1:'2025-09-10', d2:'2025-10-10'},
-    {id:'comb2', label:'Combustible 2 (últ. hábil ≤25)', d1:'2025-09-25', d2:'2025-10-25'},
-    {id:'rentas', label:'Rentas Automotor (últ. hábil ≤15)', d1:'2025-09-15', d2:'2025-10-15'},
-    {id:'nc', label:'NC (últ. hábil 11-16)', d1:'2025-09-15', d2:'2025-10-15'}
-  ];
-
-  // Feriados + días hábiles
-  const feriados = (()=>{ try { return JSON.parse(localStorage.getItem('feriados')||'[]')||[]; } catch { return []; } })();
-  const feriadosSet = new Set(feriados.map(f=>String(f.date)));
-  const isBusiness = d => { const wd=d.getDay(); if (wd===0) return false; return !feriadosSet.has(toYMD(d)); };
-  const dim = (y,m)=> new Date(y,m+1,0).getDate();
-  const adjustToBusiness = d => { const dt=new Date(d.getFullYear(),d.getMonth(),d.getDate()); while(!isBusiness(dt)) dt.setDate(dt.getDate()-1); return dt; };
-  const nextMonthBusinessFrom = d => { const yN = d.getMonth()===11? d.getFullYear()+1 : d.getFullYear(); const mN=(d.getMonth()+1)%12; const day=Math.min(d.getDate(), dim(yN,mN)); return adjustToBusiness(new Date(yN,mN,day)); };
-
-  // Overrides persistentes
-  const OKEY='op_fechas_overrides_v1';
-  const loadO = () => { try { return JSON.parse(localStorage.getItem(OKEY)||'{}')||{}; } catch { return {}; } };
-  const saveO = (o) => { try { localStorage.setItem(OKEY, JSON.stringify(o||{})); } catch {} };
-
-  function render(){
-    tbody.innerHTML='';
-    const ovr = loadO();
-    const rows = BASE.map(r=>{
-      let d1 = ovr[r.id]?.d1 ? ymdToDate(ovr[r.id].d1) : new Date(r.d1);
-      let d2;
-      if (ovr[r.id]?.d1) {
-        d1 = adjustToBusiness(d1);
-        d2 = nextMonthBusinessFrom(d1);
-      } else if (ovr[r.id]?.d2) {
-        d2 = adjustToBusiness(ymdToDate(ovr[r.id].d2));
-      } else {
-        d2 = new Date(r.d2);
-      }
-      const label = ovr[r.id]?.label || r.label;
-      return {id:r.id,label,d1,d2};
-    });
-    rows.forEach(row=>{
-      const tr=document.createElement('tr');
-      const td0=document.createElement('td'); const span=document.createElement('span'); span.className='concept-text'; span.textContent=row.label; const b=document.createElement('button'); b.className='edit-fecha'; b.textContent='✎'; b.title='Editar fecha'; b.dataset.id=row.id; td0.appendChild(span); td0.appendChild(b);
-      const td1=document.createElement('td'); td1.textContent=toDMY(row.d1);
-      const td2=document.createElement('td'); td2.textContent=toDMY(row.d2);
-      tr.appendChild(td0); tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
-    });
-  }
-  // Solo como backup
-  render();
-
-  if (!table.__editFallback) {
-    table.addEventListener('click', (ev)=>{
-      const btn=ev.target.closest && ev.target.closest('.edit-fecha'); if(!btn) return;
-      const id=btn.dataset.id; const row=btn.closest('tr');
-      const curLabel=row.querySelector('.concept-text')?.textContent.trim()||'';\n      const newLabel=prompt('Editar concepto:',curLabel) ?? curLabel;\n      const curD1=row.cells[1].textContent.trim();\n      const newD1s=prompt('Editar Fecha (dd/mm/aaaa):',curD1)||'';\n      const nd1=parseDMY(newD1s); if(!nd1) return;\n      const adj1 = adjustToBusiness(nd1);\n      const adj2 = nextMonthBusinessFrom(adj1);\n      const o=loadO(); const e=o[id]||{}; if(newLabel && newLabel.trim()) e.label=newLabel.trim(); e.d1=toYMD(adj1); e.d2=toYMD(adj2); o[id]=e; saveO(o); render();
-    });
-    table.__editFallback=true;
-  }
-});
-</script>
-</body>
-</html>
 
