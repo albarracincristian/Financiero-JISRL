@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,10 +8,12 @@
     <link rel="icon" href="assets/favicon-16x16.png" sizes="16x16" type="image/png">
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
     <link rel="stylesheet" href="styles.css">
+    <script defer src="vendor/xlsx.full.min.js"></script>
+    <script defer src="data/financial-seed.js"></script>
+    <script defer src="finance-model.js"></script>
+    <script defer src="panel.js"></script>
 </head>
 <body>
-    
-
     <nav>
         <ul>
             <li><a href="index.html">Panel</a></li>
@@ -23,132 +25,102 @@
     </nav>
 
     <section id="panel">
-        <div class="cards-grid">
-            
-        
-            <div class="card span-3" id="panel-cuentas">
-                <div class="add-feriado" id="panel-cuentas-form">
-                    <div id="panel-cuentas-actions" class="card-actions">
-                        <button id="pc-import-btn" title="Importar Excel">Importar Excel</button>
-                        <button id="pc-export-btn" title="Exportar Excel">Exportar Excel</button>
-                    </div>
-                    <select id="pc-prov" required>
-                        <option value="PEPSICO">PEPSICO</option>
-                        <option value="PERNOD RICARD">PERNOD RICARD</option>
-                        <option value="PRONOVELTIES">PRONOVELTIES</option>
-                        <option value="GEORGALOS">GEORGALOS</option>
-                        <option value="ACREDITACION">ACREDITACION</option>
-                        <option value="CTA CTE">CTA CTE</option>
-                        <option value="BANCO">BANCO</option>
-                        <option value="OTROS">OTROS</option>
-                    </select>
-                    <input type="date" id="pc-recepcion" placeholder="Recepción">
-                    <select id="pc-tipo" required>
-                        <option value="FACTURA">FACTURA</option>
-                        <option value="NOTA DE CREDITO">NOTA DE CREDITO</option>
-                        <option value="PAGO">PAGO</option>
-                        <option value="ACREDITACION">ACREDITACION</option>
-                    </select>
-                    <input type="text" id="pc-costo" placeholder="$$$ ARS" inputmode="decimal">
-                    <button id="pc-add-btn" title="Agregar">Agregar</button>
-                    <input type="file" id="pc-excel-file" accept=".xlsx,.xls" style="display:none">
+        <div class="page-heading">
+            <div>
+                <h2>Panel</h2>
+                <p class="muted-copy">Carga diaria de facturas, notas de crédito, devoluciones y acreditaciones de cuenta corriente.</p>
+            </div>
+            <div class="toolbar">
+                <button id="panel-import" type="button">Importar Excel</button>
+                <button id="panel-export" type="button">Exportar Excel</button>
+                <input type="file" id="panel-file" accept=".xlsx,.xls" hidden>
+            </div>
+        </div>
+
+        <div class="panel-summary" id="panel-summary"></div>
+
+        <div class="card" id="panel-cuentas">
+            <form class="panel-entry-form" id="panel-entry-form">
+                <input type="hidden" id="panel-edit-id">
+                <div class="segmented-control" role="group" aria-label="Tipo de registro">
+                    <label><input type="radio" name="panel-kind" value="purchase" checked> Compra / Factura</label>
+                    <label><input type="radio" name="panel-kind" value="credit"> Acreditación / NC</label>
                 </div>
-                <h3 style="margin-top: 0.75rem;">Flujo de pagos/cobros</h3>
-                <div class="split-tables">
-                    <div class="table-wrapper">
-                        <h4 class="table-title egresos">Egresos - Compras</h4>
-                        <table class="mini-table" id="panel-egresos-table">
-                            <thead>
-                                <tr>
-                                    <th>Pagar/Cobrar</th>
-                                    <th>Estado</th>
-                                    <th>Proveedor</th>
-                                    <th>Recepción</th>
-                                    <th>Tipo</th>
-                                    <th class="right">$$$ ARS</th>
-                                    <th>Acciones</th>
-                                    <th>Pagado/Cobrado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2025-09-05</td>
-                                    <td><span class="estado-chip estado-proximo">Próximo</span></td>
-                                    <td>PEPSICO</td>
-                                    <td>2025-08-18</td>
-                                    <td>FACTURA</td>
-                                    <td class="right money negative">$ 47.575.443,00</td>
-                                    <td class="actions" style="text-align:center">-</td>
-                                    <td style="text-align:center"><input type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>2025-09-26</td>
-                                    <td><span class="estado-chip estado-proximo">Próximo</span></td>
-                                    <td>PERNOD RICARD</td>
-                                    <td>2025-08-27</td>
-                                    <td>FACTURA</td>
-                                    <td class="right money negative">$ 2.575.124,34</td>
-                                    <td class="actions" style="text-align:center">-</td>
-                                    <td style="text-align:center"><input type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>2025-09-30</td>
-                                    <td><span class="estado-chip estado-proximo">Próximo</span></td>
-                                    <td>BANCO</td>
-                                    <td>2025-09-30</td>
-                                    <td>PAGO</td>
-                                    <td class="right money negative">$ 10.000.000,00</td>
-                                    <td class="actions" style="text-align:center">-</td>
-                                    <td style="text-align:center"><input type="checkbox"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="table-wrapper">
-                        <h4 class="table-title ingresos">Ingresos - Acreditaciones</h4>
-                        <table class="mini-table" id="panel-ingresos-table">
-                            <thead>
-                                <tr>
-                                    <th>Pagar/Cobrar</th>
-                                    <th>Estado</th>
-                                    <th>Proveedor</th>
-                                    <th>Recepción</th>
-                                    <th>Tipo</th>
-                                    <th class="right">$$$ ARS</th>
-                                    <th>Acciones</th>
-                                    <th>Pagado/Cobrado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2025-09-13</td>
-                                    <td><span class="estado-chip estado-proximo">Próximo</span></td>
-                                    <td>CTA CTE</td>
-                                    <td>2025-09-13</td>
-                                    <td>PAGO</td>
-                                    <td class="right money positive">$ -5.542.788,00</td>
-                                    <td class="actions" style="text-align:center">-</td>
-                                    <td style="text-align:center"><input type="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>2025-09-28</td>
-                                    <td><span class="estado-chip estado-proximo">Próximo</span></td>
-                                    <td>PEPSICO</td>
-                                    <td>2025-09-12</td>
-                                    <td>NOTA DE CREDITO</td>
-                                    <td class="right money positive">$ -33.670,05</td>
-                                    <td class="actions" style="text-align:center">-</td>
-                                    <td style="text-align:center"><input type="checkbox"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
+                <label>
+                    <span>Fecha pago/cobro</span>
+                    <input type="date" id="panel-date" required>
+                </label>
+                <label>
+                    <span>Proveedor</span>
+                    <input type="text" id="panel-provider" list="panel-providers" required>
+                </label>
+                <label id="panel-reception-wrap">
+                    <span>Fecha recepción</span>
+                    <input type="date" id="panel-reception-date">
+                </label>
+                <label id="panel-credited-wrap" hidden>
+                    <span>Fecha acreditada</span>
+                    <input type="date" id="panel-credited-date">
+                </label>
+                <label>
+                    <span>Tipo</span>
+                    <select id="panel-type" required></select>
+                </label>
+                <label>
+                    <span>Importe ARS</span>
+                    <input type="number" id="panel-amount" step="0.01" required>
+                </label>
+                <label class="panel-note-field">
+                    <span>Nota</span>
+                    <input type="text" id="panel-note">
+                </label>
+                <div class="panel-form-actions">
+                    <button id="panel-submit" type="submit">Agregar</button>
+                    <button id="panel-cancel" type="button">Cancelar</button>
                 </div>
+            </form>
+
+            <datalist id="panel-providers"></datalist>
+        </div>
+
+        <div class="split-tables panel-ledger">
+            <div class="table-wrapper">
+                <h3 class="table-title egresos">Egresos - Compras de mercadería</h3>
+                <table class="mini-table ledger-table" id="panel-purchases-table">
+                    <thead>
+                        <tr>
+                            <th>Pagar</th>
+                            <th>Proveedor</th>
+                            <th>Tipo</th>
+                            <th>Recepción</th>
+                            <th class="right">Importe</th>
+                            <th>Nota</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="table-wrapper">
+                <h3 class="table-title ingresos">Ingresos - Acreditaciones / NC / devoluciones</h3>
+                <table class="mini-table ledger-table" id="panel-credits-table">
+                    <thead>
+                        <tr>
+                            <th>Cobrar</th>
+                            <th>Proveedor</th>
+                            <th>Tipo</th>
+                            <th>Acreditada</th>
+                            <th class="right">Importe</th>
+                            <th>Nota</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>
-
